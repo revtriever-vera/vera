@@ -52,6 +52,9 @@ Registro das decisões tomadas na fase de design, com o motivo de cada uma. Deci
 
 | Decisão | Motivo |
 | --- | --- |
+| Na versão **auto-hospedada**, cada pessoa cadastra as próprias chaves (modelo de linguagem, WhatsApp, Google); sem a chave, a função some | Quem hospeda não depende da Revtriever nem paga a ela, e não vê função que não funciona. |
+| Vera no WhatsApp **sem Pix**, por enquanto | Iniciar pagamento exige credencial comercial do Open Finance. A Vera só lê os dados. |
+| Permissão do **Google Agenda** pedida só ao conectar, nunca no login | O login pede só nome e e-mail; quem não usa a agenda não precisa conceder acesso a ela. |
 | Grupo do menu **Carteira** (antes "Patrimônio") e tela **Onde aportar** (antes "Aporte inteligente") | Nomes curtos e concretos, como pede o [tom de voz](tom-de-voz.md); "Onde aportar" faz par com "Onde cortar". |
 | Dois ambientes (dev e prod) com AWS CDK no formato do GetCart; dev desligado na versão hospedada | O projeto fica completo para quem clonar, sem custo de um ambiente de dev que a Revtriever não usa no dia a dia. `deploy-dev` só roda por disparo manual. |
 | Login só social (Google e Facebook) | Não guardar senha própria reduz a superfície de ataque e o atrito no cadastro. |
