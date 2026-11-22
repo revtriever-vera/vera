@@ -344,6 +344,11 @@ tr.click:hover td{background:var(--hover)}
 @media (prefers-reduced-motion:no-preference){.gauge .fill,.stack span,.hbar .track span{transition:width .35s ease,filter .15s}}
 /* Premium, WhatsApp, Google Agenda, Configurações: componentes no padrão do nexu-fe */
 .pagetabs{margin-bottom:16px}
+.avatar.sm{width:36px;height:36px;font-size:14px}
+.setrow.member{grid-template-columns:36px minmax(0,1fr) auto}
+.invite{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(140px,.8fr);gap:12px;align-items:end}
+.invite .row{grid-column:1 / -1}
+@media (max-width:540px){.invite{grid-template-columns:minmax(0,1fr)}}
 .issuerlist{display:grid;gap:6px;max-height:210px;overflow:auto}
 .issuerbox .input{padding-block:10px;font-size:15px}
 .alerts{display:grid;gap:8px;margin-top:16px}
@@ -600,28 +605,28 @@ const CLASSES = [
 const CLS = Object.fromEntries(CLASSES.map(c => [c.id, c]));
 
 const SAMPLE = [
-  {id:1, ticker:'CDB Inter', kind:'rf', cur:'BRL', rf:{type:'cdb', issuer:'inter', idx:'cdi', rate:110, applied:150000, date:'2024-08-15', mat:'2028-08-15'}},
-  {id:14, ticker:'LCI Itaú', kind:'rf', cur:'BRL', rf:{type:'lci', issuer:'itau', idx:'cdi', rate:95, applied:120000, date:'2025-04-10', mat:'2027-04-12'}},
+  {id:1, ticker:'CDB Inter', owner:'u1', kind:'rf', cur:'BRL', rf:{type:'cdb', issuer:'inter', idx:'cdi', rate:110, applied:150000, date:'2024-08-15', mat:'2028-08-15'}},
+  {id:14, ticker:'LCI Itaú', owner:'u2', kind:'rf', cur:'BRL', rf:{type:'lci', issuer:'itau', idx:'cdi', rate:95, applied:120000, date:'2025-04-10', mat:'2027-04-12'}},
   {id:20, ticker:'CDB BTG Pactual', kind:'rf', cur:'BRL', rf:{type:'cdb', issuer:'btg', idx:'pre', rate:12.4, applied:140000, date:'2025-06-02', mat:'2029-06-04'}},
-  {id:21, ticker:'LCA Banco Pan', kind:'rf', cur:'BRL', rf:{type:'lca', issuer:'pan', idx:'cdi', rate:93, applied:110000, date:'2025-09-15', mat:'2027-09-15'}},
+  {id:21, ticker:'LCA Banco Pan', owner:'u2', kind:'rf', cur:'BRL', rf:{type:'lca', issuer:'pan', idx:'cdi', rate:93, applied:110000, date:'2025-09-15', mat:'2027-09-15'}},
   {id:22, ticker:'CDB Sofisa', kind:'rf', cur:'BRL', rf:{type:'cdb', issuer:'sofisa', idx:'cdi', rate:112, applied:10000, date:'2024-11-04', mat:'2026-11-03'}},
   {id:23, ticker:'Debênture Eletrobras', kind:'rf', cur:'BRL', rf:{type:'deb', issuer:'eletrobras', idx:'ipca', rate:6.1, applied:50000, date:'2024-03-15', mat:'2031-03-15'}},
   {id:2, ticker:'Tesouro Selic 2029', name:'Tesouro Direto', cls:'rf_pos', kind:'rv', qty:3.2, price:16200, cur:'BRL', src:'Preço oficial do Tesouro', mat:'2029-03-01'},
   {id:3, ticker:'Tesouro Pré 2027', name:'Tesouro Direto', cls:'rf_pre', kind:'rv', qty:120, price:812, cur:'BRL', src:'Preço oficial do Tesouro', mat:'2027-01-01'},
   {id:19, ticker:'Treasury 2027', name:'US Treasury Note 4,25%', kind:'rf', cur:'USD', rf:{type:'treasury', idx:'pre', rate:4.25, applied:19200, date:'2025-05-15', mat:'2027-11-15'}},
-  {id:4, ticker:'Tesouro IPCA+ 2035', name:'Tesouro Direto', cls:'rf_ipca', kind:'rv', qty:60, price:2150, cur:'BRL', src:'Preço oficial do Tesouro', mat:'2035-05-15'},
+  {id:4, ticker:'Tesouro IPCA+ 2035', owner:'u2', name:'Tesouro Direto', cls:'rf_ipca', kind:'rv', qty:60, price:2150, cur:'BRL', src:'Preço oficial do Tesouro', mat:'2035-05-15'},
   {id:5, ticker:'ITUB4', name:'Itaú Unibanco PN', cls:'acoes_br', kind:'rv', qty:2000, price:37.80, cur:'BRL', src:'B3 via brapi'},
   {id:6, ticker:'WEGE3', name:'WEG ON', cls:'acoes_br', kind:'rv', qty:1500, price:52.10, cur:'BRL', src:'B3 via brapi'},
   {id:7, ticker:'PETR4', name:'Petrobras PN', cls:'acoes_br', kind:'rv', qty:1800, price:36.90, cur:'BRL', src:'B3 via brapi'},
   {id:8, ticker:'HGLG11', name:'CSHG Logística', cls:'fii', kind:'rv', qty:400, price:158.00, cur:'BRL', src:'B3 via brapi'},
-  {id:15, ticker:'KNRI11', name:'Kinea Renda Imobiliária', cls:'fii', kind:'rv', qty:350, price:152.00, cur:'BRL', src:'B3 via brapi'},
+  {id:15, ticker:'KNRI11', owner:'u2', name:'Kinea Renda Imobiliária', cls:'fii', kind:'rv', qty:350, price:152.00, cur:'BRL', src:'B3 via brapi'},
   {id:9, ticker:'IVVB11', name:'ETF S&P 500 na B3', cls:'acoes_eua', kind:'rv', qty:300, price:362.00, cur:'BRL', src:'B3 via brapi', usdExp:true, flag:'ETF na B3, classificado por exposição'},
   {id:10, ticker:'VOO', name:'Vanguard S&P 500 ETF', cls:'acoes_eua', kind:'rv', qty:40, price:545, cur:'USD', src:'Finnhub'},
-  {id:16, ticker:'AAPL', name:'Apple', cls:'acoes_eua', kind:'rv', qty:60, price:228, cur:'USD', src:'Finnhub'},
+  {id:16, ticker:'AAPL', owner:'u1', name:'Apple', cls:'acoes_eua', kind:'rv', qty:60, price:228, cur:'USD', src:'Finnhub'},
   {id:17, ticker:'MSFT', name:'Microsoft', cls:'acoes_eua', kind:'rv', qty:30, price:430, cur:'USD', src:'Finnhub'},
   {id:11, ticker:'O', name:'Realty Income', cls:'reits', kind:'rv', qty:300, price:58, cur:'USD', src:'Finnhub'},
   {id:18, ticker:'VNQ', name:'Vanguard Real Estate ETF', cls:'reits', kind:'rv', qty:120, price:92, cur:'USD', src:'Finnhub'},
-  {id:12, ticker:'BTC', name:'Bitcoin', cls:'cripto', kind:'rv', qty:0.45, price:62000, cur:'USD', src:'CoinGecko'},
+  {id:12, ticker:'BTC', owner:'u1', name:'Bitcoin', cls:'cripto', kind:'rv', qty:0.45, price:62000, cur:'USD', src:'CoinGecko'},
   {id:13, ticker:'ETH', name:'Ethereum', cls:'cripto', kind:'rv', qty:4, price:2600, cur:'USD', src:'CoinGecko'}
 ];
 /* renda fixa: tipo do título, emissor (com o conglomerado, para o FGC) e setor/emissor dos ativos do catálogo */
@@ -749,10 +754,22 @@ const esc = s => String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>
 
 const valueBRL = p => (p.kind === 'rf' ? p.value : p.qty * p.price) * (p.cur === 'USD' ? FX : 1);
 
+/* pessoas da conta e titular dos ativos: só aparecem com 2 pessoas ou mais */
+const activeMembers = () => state.members.filter(m => m.status === 'ativo');
+const multi = () => activeMembers().length >= 2;
+const memberName = id => (state.members.find(m => m.id === id) || {}).name;
+const ownerOf = p => p.owner && memberName(p.owner) && state.members.find(m => m.id === p.owner).status === 'ativo' ? p.owner : 'all';
+const ownerLabel = id => id === 'all' ? 'Conta toda' : memberName(id);
+function pos() {
+  if (!multi() || !state.owner || state.owner === 'any' || !['visao', 'ativos', 'classe'].includes(state.screen)) return positions;
+  return positions.filter(p => ownerOf(p) === state.owner);
+}
+const ownerSeg = () => multi() ? `<div class="seg" role="group" aria-label="Filtrar por titular">${[['any', 'Todos'], ['all', 'Conta toda'], ...activeMembers().map(m => [m.id, m.name])].map(([k, l]) => `<button data-act="owner" data-arg="${k}" aria-pressed="${(state.owner || 'any') === k}">${esc(l)}</button>`).join('')}</div>` : '';
+const ownerSelect = (id, val, extra = '') => `<select class="input" id="${id}" ${extra}>${[['all', 'Conta toda'], ...activeMembers().map(m => [m.id, m.name])].map(([k, l]) => `<option value="${k}" ${val === k ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select>`;
 function classRows() {
-  const total = positions.reduce((s, p) => s + valueBRL(p), 0);
+  const total = pos().reduce((s, p) => s + valueBRL(p), 0);
   return {total, rows: CLASSES.map(c => {
-    const value = positions.filter(p => p.cls === c.id).reduce((s, p) => s + valueBRL(p), 0);
+    const value = pos().filter(p => p.cls === c.id).reduce((s, p) => s + valueBRL(p), 0);
     const share = total ? value / total * 100 : 0;
     const target = classTargets[c.id] || 0;
     return {cls:c.id, value, share, target, dev: share - target};
@@ -761,7 +778,7 @@ function classRows() {
 
 function assetGroups(cls) {
   const map = new Map();
-  positions.filter(p => p.cls === cls).forEach(p => {
+  pos().filter(p => p.cls === cls).forEach(p => {
     const g = map.get(p.ticker) || {ticker:p.ticker, name:p.name, value:0, sample:p};
     g.value += valueBRL(p); map.set(p.ticker, g);
   });
@@ -814,13 +831,14 @@ function visaoAlerts() {
 }
 screens.visao = () => {
   const {total, rows} = classRows();
-  const usdExp = positions.filter(p => p.cur === 'USD' || p.usdExp).reduce((s, p) => s + valueBRL(p), 0);
+  const usdExp = pos().filter(p => p.cur === 'USD' || p.usdExp).reduce((s, p) => s + valueBRL(p), 0);
   const worst = [...rows].sort((a, b) => Math.abs(b.dev) - Math.abs(a.dev))[0];
   const outside = rows.filter(r => Math.abs(r.dev) > state.tol).length;
   return `
-  <div class="head"><div>${title('pie', 'Seu patrimônio')}<p>Como a carteira está distribuída hoje, comparada com a distribuição que você definiu.</p></div><div class="controls">${baseSeg()}</div></div>
+  <div class="head"><div>${title('pie', 'Seu patrimônio')}<p>Como a carteira está distribuída hoje, comparada com a distribuição que você definiu.</p></div><div class="controls">${ownerSeg()}${baseSeg()}</div></div>
+  ${pos().length ? '' : `<div class="emptybox" style="padding:40px 24px"><div class="emptytext" style="padding:0"><h3>Nenhum ativo de ${esc(ownerLabel(state.owner))}</h3><p>Troque o filtro de titular ou marque o titular de cada ativo em Meus ativos.</p></div></div>`}
   <div class="kpis">
-    <div class="kpi focus"><div class="label">Patrimônio</div><div class="v num">${money(total)}</div><span class="kpisub">${positions.length} ativos em ${rows.filter(r => r.value > 0).length} classes</span></div>
+    <div class="kpi focus"><div class="label">Patrimônio</div><div class="v num">${money(total)}</div><span class="kpisub">${pos().length} ativos em ${rows.filter(r => r.value > 0).length} classes</span></div>
     <div class="kpi"><div class="label">Exposto ao dólar</div><div class="v num">${pct(total ? usdExp / total * 100 : 0)}</div><span class="kpisub">${money(usdExp)} · US$ 1 = R$ ${FX.toFixed(2).replace('.', ',')}</span></div>
     <div class="kpi"><div class="label">Classes fora da meta</div><div class="v num">${outside} de ${rows.length}</div><span class="kpisub">faixa de ±${state.tol} pp</span></div>
     <div class="kpi"><div class="label">Maior desvio</div><div class="v num" style="color:${Math.abs(worst.dev) > state.tol ? 'var(--warn)' : 'var(--ink)'}">${pp(worst.dev)}</div><span class="kpisub">${CLS[worst.cls].name}, ${worst.dev > 0 ? 'acima' : 'abaixo'} da meta · <button class="linkbtn" data-go="aporte">Onde aportar</button></span></div>
@@ -947,7 +965,7 @@ const daysTo = iso => Math.round((new Date(iso + 'T12:00:00') - NOW) / DAY);
 const whenTxt = d => d <= 60 ? `em ${d} dias` : d < 730 ? `em ${Math.round(d / 30.4)} meses` : `em ${(d / 365.25).toFixed(1).replace('.', ',')} anos`;
 function maturities() {
   const out = [];
-  positions.forEach(p => {
+  pos().forEach(p => {
     if (p.rf) {
       const c = rfCalc(p.rf), yrs = (new Date(p.rf.mat + 'T12:00:00') - new Date(p.rf.date + 'T12:00:00')) / (365.25 * DAY);
       out.push({p, mat:p.rf.mat, value:p.rf.applied * Math.pow(1 + c.yr, yrs) * (p.cur === 'USD' ? FX : 1)});
@@ -966,14 +984,14 @@ function realRate(p) {
 }
 function fgc() {
   const by = new Map();
-  positions.filter(p => p.rf && FGC_TYPES.includes(p.rf.type) && ISS[p.rf.issuer] && ISS[p.rf.issuer].bank).forEach(p => {
+  pos().filter(p => p.rf && FGC_TYPES.includes(p.rf.type) && ISS[p.rf.issuer] && ISS[p.rf.issuer].bank).forEach(p => {
     const cong = ISS[p.rf.issuer].cong;
     const g = by.get(cong) || {cong, total:0, items:[]};
     g.total += valueBRL(p); g.items.push(p); by.set(cong, g);
   });
   const groups = [...by.values()].map(g => ({...g, covered:Math.min(g.total, FGC_LIMIT), over:Math.max(0, g.total - FGC_LIMIT)})).sort((a, b) => b.total - a.total);
   const covered = groups.reduce((t, g) => t + g.covered, 0);
-  const outside = positions.filter(p => (p.rf && !FGC_TYPES.includes(p.rf.type)) || /^Tesouro/.test(p.ticker));
+  const outside = pos().filter(p => (p.rf && !FGC_TYPES.includes(p.rf.type)) || /^Tesouro/.test(p.ticker));
   return {groups, covered, overCap:Math.max(0, covered - FGC_CAP), outside};
 }
 function issuerOf(p) {
@@ -996,7 +1014,7 @@ const concRows = (groups, total, note) => groups.map(g => `<div class="conc">
 
 function rfTab() {
   const ms = maturities();
-  const rfs = positions.filter(p => p.rf && p.rf.type !== 'treasury');
+  const rfs = pos().filter(p => p.rf && p.rf.type !== 'treasury');
   const f = fgc();
   const capPct = Math.min(100, f.covered / FGC_CAP * 100);
   return `
@@ -1030,16 +1048,17 @@ function rfTab() {
         <td class="r num">${brl.format(g.total)}</td><td class="r num">${brl.format(g.covered)}</td>
         <td class="r">${g.over ? `<span class="chip up">${brl.format(g.over)}</span>` : '<span class="chip ok">dentro</span>'}</td></tr>`).join('')}
     </tbody></table></div>` : ''}
+    ${multi() && (state.owner || 'any') === 'any' ? `<p class="tipbox" style="margin:12px 0 0">O limite do FGC vale por CPF. Filtre por titular, no alto da tela, para ver a cobertura de cada pessoa.</p>` : ''}
     ${f.outside.length ? `<p class="hint" style="margin:12px 0 0">Fora do FGC: ${esc(f.outside.map(p => p.ticker).join(', '))}. Tesouro Direto tem garantia do Tesouro Nacional; debênture depende só da empresa.</p>` : ''}
   </section>`;
 }
 function concTab() {
-  const total = positions.reduce((t, p) => t + valueBRL(p), 0);
-  const eq = positions.filter(p => ['acoes_br', 'acoes_eua', 'fii', 'reits'].includes(p.cls));
+  const total = pos().reduce((t, p) => t + valueBRL(p), 0);
+  const eq = pos().filter(p => ['acoes_br', 'acoes_eua', 'fii', 'reits'].includes(p.cls));
   const eqTotal = eq.reduce((t, p) => t + valueBRL(p), 0);
   return `<div class="two">
     <section class="card"><div class="cardhead"><div><h2>Por emissor</h2><p>Quanto do patrimônio depende de cada empresa ou banco. Renda fixa e ações do mesmo grupo somam juntas.</p></div></div>
-      ${concRows(groupBy(positions, issuerOf).slice(0, 10), total, 'ETFs, fundos imobiliários e cripto não têm um emissor único e aparecem agrupados.')}</section>
+      ${concRows(groupBy(pos(), issuerOf).slice(0, 10), total, 'ETFs, fundos imobiliários e cripto não têm um emissor único e aparecem agrupados.')}</section>
     <section class="card"><div class="cardhead"><div><h2>Por setor</h2><p>Ações, FIIs e REITs, em percentual da renda variável (${money(eqTotal)}).</p></div></div>
       ${eq.length ? concRows(groupBy(eq, p => (PROFILE[p.ticker] || [])[0] || 'Sem setor no catálogo'), eqTotal, 'O setor vem do catálogo de ativos. ETFs de índice somam vários setores.') : '<p class="muted" style="margin:0">Nenhuma ação, FII ou REIT cadastrado.</p>'}</section>
   </div>`;
@@ -1047,15 +1066,16 @@ function concTab() {
 
 screens.ativos = () => {
   const tab = state.atab || 'lista';
-  const list = positions.slice().sort((a, b) => CLASSES.findIndex(c => c.id === a.cls) - CLASSES.findIndex(c => c.id === b.cls) || valueBRL(b) - valueBRL(a));
+  const list = pos().slice().sort((a, b) => CLASSES.findIndex(c => c.id === a.cls) - CLASSES.findIndex(c => c.id === b.cls) || valueBRL(b) - valueBRL(a));
   const tabs = [['lista', 'Ativos'], ['rf', 'Renda fixa'], ['conc', 'Emissores e setores']];
   const body = tab === 'rf' ? rfTab() : tab === 'conc' ? concTab() : `
   <section class="card">
     <div class="tablewrap"><table style="min-width:760px">
-      <thead><tr><th>Ativo</th><th>Classe</th><th class="r">Quantidade</th><th class="r">Valor</th><th>Fonte do valor</th><th></th></tr></thead>
+      <thead><tr><th>Ativo</th><th>Classe</th>${multi() ? '<th>Titular</th>' : ''}<th class="r">Quantidade</th><th class="r">Valor</th><th>Fonte do valor</th><th></th></tr></thead>
       <tbody>${list.map(p => `<tr>
         <td><span class="who"><span class="tile" style="${tint(p.cls)}">${ic(CLS[p.cls].icon)}</span><span><span class="cname">${esc(p.ticker)}</span><span class="sub">${esc(p.name)}</span></span></span></td>
         <td><select class="input" style="width:auto;padding:5px 8px" data-reclass="${p.id}" id="rc-${p.id}" aria-label="Classe de ${esc(p.ticker)}">${CLASSES.map(c => `<option value="${c.id}" ${c.id === p.cls ? 'selected' : ''}>${c.name}</option>`).join('')}</select></td>
+        ${multi() ? `<td>${ownerSelect('ow-' + p.id, ownerOf(p), `style="width:auto;padding:5px 8px" data-owner="${p.id}" aria-label="Titular de ${esc(p.ticker)}"`)}</td>` : ''}
         <td class="r">${p.kind === 'rv' ? `<input class="input num tiny" style="width:96px" type="number" min="0" step="any" id="q-${p.id}" data-qty="${p.id}" value="${p.qty}" aria-label="Quantidade de ${esc(p.ticker)}">` : '<span class="chip plain">título</span>'}</td>
         <td class="r num">${money(valueBRL(p))}</td>
         <td class="muted" style="font-size:12.5px">${esc(p.src)}</td>
@@ -1063,7 +1083,7 @@ screens.ativos = () => {
     </table></div>
   </section>`;
   return `
-  <div class="head"><div>${title('wallet', 'Meus ativos')}<p>Cadastro manual. Ações, fundos e cripto atualizam pela cotação; renda fixa é calculada pelo indexador.</p></div><div class="controls">${baseSeg()}<button class="btn" data-export="ativos">${ic('download')}Baixar planilha</button><button class="btn primary" data-add="">${ic('plus')}Adicionar ativo</button></div></div>
+  <div class="head"><div>${title('wallet', 'Meus ativos')}<p>Cadastro manual. Ações, fundos e cripto atualizam pela cotação; renda fixa é calculada pelo indexador.</p></div><div class="controls">${ownerSeg()}${baseSeg()}<button class="btn" data-export="ativos">${ic('download')}Baixar planilha</button><button class="btn primary" data-add="">${ic('plus')}Adicionar ativo</button></div></div>
   <div class="seg pagetabs" role="tablist" aria-label="Visões de Meus ativos">${tabs.map(([k, l]) => `<button role="tab" data-act="atab" data-arg="${k}" aria-pressed="${tab === k}" aria-selected="${tab === k}">${l}</button>`).join('')}</div>
   ${body}`;
 };
@@ -1269,7 +1289,7 @@ const typeCards = (attr) => `<div class="typegrid">${TYPES.map(t => { const n = 
 function openAdd(cls, opts = {}) {
   const fromCls = cls ? (cls.startsWith('rf_') ? null : cls) : null;
   const m = {q:'', pick:null, type: opts.type || fromCls, qty:null, pickCls:null,
-    iq:'', nameTouched:false,
+    iq:'', nameTouched:false, owner:'all',
     rf:{name:'CDB Banco XP', type:'cdb', issuer:'xp', idx:'cdi', rate:105, applied:50000, date:'2025-03-10', mat:'2028-03-10'}};
   const autoName = () => { if (!m.nameTouched) m.rf.name = `${RF_TYPES[m.rf.type]} ${ISS[m.rf.issuer].name}`; };
   const root = document.getElementById('modal-root');
@@ -1285,6 +1305,7 @@ function openAdd(cls, opts = {}) {
       <div class="formgrid">
         <div class="field"><label for="add-qty">Quantidade</label><input class="input num" id="add-qty" type="number" min="0" step="any" value="${qty}"></div>
         <div class="field"><label for="add-cls">Classe</label><select class="input" id="add-cls">${CLASSES.map(x => `<option value="${x.id}" ${x.id === c ? 'selected' : ''}>${x.name}</option>`).join('')}</select></div>
+        ${multi() ? `<div class="field" style="grid-column:1 / -1"><label for="add-owner">Titular</label>${ownerSelect('add-owner', m.owner)}</div>` : ''}
       </div>
       <div class="pvalue"><div class="label">Valor hoje</div><div class="big num" id="pv">${brl.format(v)}</div><span class="muted" style="font-size:12.5px">atualizado todo dia ${p.type === 'Tesouro' ? 'pelo preço oficial do Tesouro' : 'pela cotação'}</span></div>
       ${p.flag ? `<p class="note" style="margin:0">${ic('info')}<span>${p.flag}, por isso entra em <b>${CLS[p.cls].name}</b>. Você pode trocar a classe.</span></p>` : ''}
@@ -1331,6 +1352,7 @@ function openAdd(cls, opts = {}) {
             <div class="field"><label for="rf-applied">Valor aplicado (R$)</label><input class="input num" id="rf-applied" data-rf="applied" type="number" step="100" value="${m.rf.applied}"></div>
             <div class="field"><label for="rf-date">Data da aplicação</label><input class="input" id="rf-date" data-rf="date" type="date" value="${m.rf.date}"></div>
             <div class="field"><label for="rf-mat">Vencimento</label><input class="input" id="rf-mat" data-rf="mat" type="date" value="${m.rf.mat}"></div>
+            ${multi() ? `<div class="field"><label for="add-owner">Titular</label>${ownerSelect('add-owner', m.owner)}</div>` : ''}
           </div>
           <p class="note" style="margin:0">${ic('info')}<span>Tem Tesouro Direto? Volte e escolha "Tesouro Direto": lá você informa só a quantidade de títulos.</span></p>
         ` : `
@@ -1365,6 +1387,7 @@ function openAdd(cls, opts = {}) {
     const el = e.target;
     if (el.id === 'q') { m.q = el.value; m.focusQ = true; return draw(); }
     if (el.id === 'rf-iq') { m.iq = el.value; m.focusIq = true; return draw(); }
+    if (el.id === 'add-owner') { m.owner = el.value; return; }
     if (el.id === 'add-qty') { m.qty = Number(el.value) || 0; const p = m.pick; root.querySelector('#pv').textContent = brl.format(m.qty * p.price * (p.cur === 'USD' ? FX : 1)); return; }
     if (el.id === 'add-cls') { m.pickCls = el.value; root.querySelector('#preview').innerHTML = rvPreview(); return; }
     if (el.dataset.rf) {
@@ -1385,11 +1408,11 @@ function openAdd(cls, opts = {}) {
     if (TYPEMAP[m.type].mode !== 'rf') {
       if (!m.pick) return;
       const p = m.pick, qty = m.qty ?? (p.cls === 'cripto' ? 0.1 : p.type === 'Tesouro' ? 1 : 100), c = m.pickCls || p.cls;
-      positions.push({id:nextId++, ticker:p.ticker, name:p.name, cls:c, kind:'rv', qty, price:p.price, cur:p.cur, src:p.src, usdExp:p.usdExp, flag:p.flag, mat:p.mat});
+      positions.push({id:nextId++, ticker:p.ticker, name:p.name, cls:c, kind:'rv', qty, price:p.price, cur:p.cur, src:p.src, usdExp:p.usdExp, flag:p.flag, mat:p.mat, owner:m.owner});
       toast(`${p.ticker} adicionado em ${CLS[c].name}`);
     } else {
       const r = rfCalc(m.rf);
-      const np = {id:nextId++, ticker:m.rf.name || 'Título', kind:'rf', cur:'BRL', rf:{type:m.rf.type, issuer:m.rf.issuer, idx:m.rf.idx, rate:m.rf.rate, applied:m.rf.applied, date:m.rf.date, mat:m.rf.mat}};
+      const np = {id:nextId++, ticker:m.rf.name || 'Título', kind:'rf', cur:'BRL', owner:m.owner, rf:{type:m.rf.type, issuer:m.rf.issuer, idx:m.rf.idx, rate:m.rf.rate, applied:m.rf.applied, date:m.rf.date, mat:m.rf.mat}};
       positions.push(Object.assign(np, rfFields(np)));
       toast(`${m.rf.name}: ${brl.format(r.value)} hoje, em ${CLS[r.cls].name}`);
     }
@@ -1784,12 +1807,19 @@ document.addEventListener('input', e => {
   if (el.hasAttribute('data-goal')) { state.goal = Number(el.value); return render(); }
   if (el.id === 'wa-phone') { state.wa.phone = el.value; return; }
   if (el.id === 'wa-code') { state.wa.code = el.value; return; }
+  if (el.id === 'inv-email') { state.invite.email = el.value; return; }
 });
 
 document.addEventListener('change', e => {
   const el = e.target;
   if (el.closest('#modal-root')) return;
   if (el.dataset.reclass) { const p = positions.find(x => x.id === Number(el.dataset.reclass)); p.cls = el.value; toast(`${p.ticker} agora em ${CLS[p.cls].name}`); return render(); }
+  if (el.dataset.role) {
+    const m = state.members.find(x => x.id === el.dataset.role);
+    m.role = el.value; toast(`${m.name}: ${el.options[el.selectedIndex].text}`); return render();
+  }
+  if (el.id === 'inv-role') { state.invite.role = el.value; return; }
+  if (el.dataset.owner) { const p = positions.find(x => x.id === Number(el.dataset.owner)); p.owner = el.value; toast(`${p.ticker}: titular ${ownerLabel(el.value)}`); return render(); }
   if (el.dataset.qty) { const p = positions.find(x => x.id === Number(el.dataset.qty)); p.qty = Math.max(0, Number(el.value) || 0); return render(); }
   if (el.dataset.done) { state.done[el.dataset.done] = el.checked; return render(); }
   if (el.id === 'wa-consent') { state.wa.consent = el.checked; return render(); }
@@ -1799,6 +1829,16 @@ document.addEventListener('change', e => {
 });
 
 document.addEventListener('submit', e => {
+  if (e.target.id === 'invite-form') {
+    e.preventDefault();
+    const email = state.invite.email.trim().toLowerCase();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return toast('Informe um e-mail válido');
+    if (state.members.some(m => m.email === email)) return toast('Essa pessoa já está na lista');
+    const name = email.split('@')[0].split(/[._-]/)[0];
+    state.members.push({id:email === 'ana.exemplo@gmail.com' ? 'u2' : 'u' + (state.members.length + 1) + Date.now() % 1000, name:name.charAt(0).toUpperCase() + name.slice(1), email, role:state.invite.role, status:'convidado'});
+    state.invite = {email:'', role:'editor'};
+    toast(`Convite enviado para ${email}`); return render();
+  }
   if (e.target.id === 'wa-form') { e.preventDefault(); return waSend(e.target.querySelector('input').value); }
   if (!['pluggy-form', 'onb-pluggy-form'].includes(e.target.id)) return;
   e.preventDefault();
@@ -1820,7 +1860,8 @@ Object.assign(state, {
   gcal:{on:false, email:'lucas.exemplo@gmail.com'},
   events:[{d:'ter 13/10', h:'10:00', t:'Revisão da carteira com a Ana'}, {d:'qua 14/10', h:'19:30', t:'Jantar de aniversário da Bia'}],
   reminders:[],
-  selfhost:false, keys:{ia:false, wa:false, gcal:false}, lang:'pt-BR'
+  selfhost:false, keys:{ia:false, wa:false, gcal:false}, lang:'pt-BR',
+  members:[{id:'u1', name:'Lucas', email:'lucas.exemplo@gmail.com', role:'dono', status:'ativo', you:true}], owner:'any', invite:{email:'', role:'editor'}
 });
 
 /* acesso: 'on' liberado, 'locked' (hospedada, no Free) ou 'hidden' (auto-hospedada, sem a chave) */
@@ -2015,6 +2056,7 @@ const CFG = {
     return `
       <section class="card">
         <div class="cardhead"><div><h2>Assinatura</h2><p>${PRICE}/mês · assinante desde ${TODAY}</p></div><span class="chip ${sub.status === 'canceling' ? 'up' : 'ok'}">${sub.status === 'canceling' ? 'cancelada' : 'Premium ativo'}</span></div>
+        ${activeMembers().length > 1 ? setrow('wallet', 'Pessoas', `Vale para as ${activeMembers().length} pessoas da conta.`, `<button class="btn sm ghost" data-act="cfg" data-arg="pessoas">Ver pessoas</button>`) : ''}
         ${setrow('calendar', 'Próxima cobrança', sub.status === 'canceling' ? `Nenhuma. O Premium vale até ${NEXT_BILL}; depois a conta volta ao Free sem perder nada.` : `${NEXT_BILL} · ${PRICE}${sub.method === 'pix' ? ' · a cobrança Pix chega por e-mail 3 dias antes' : ''}`)}
         ${setrow(sub.method === 'pix' ? 'qr' : 'card', 'Forma de pagamento', sub.method === 'pix' ? 'Pix, uma cobrança por mês' : 'Cartão final 4242, renovação automática', `<button class="btn sm" data-act="sub-method">${sub.method === 'pix' ? 'Usar cartão' : 'Usar Pix'}</button>`)}
         ${setrow('receipt', 'Histórico', `${TODAY} · ${PRICE} · pago via Asaas`, `<button class="btn sm ghost" data-act="receipt">${ic('download')}Recibo</button>`)}
@@ -2090,6 +2132,37 @@ const CFG = {
       <div>${state.events.map(e => `<div class="evt"><span class="when">${e.d} · ${e.h}</span><span>${esc(e.t)}${e.mine ? ' <span class="chip plain">pela Vera</span>' : ''}</span></div>`).join('')}</div>
     </section>`;
   },
+  pessoas:() => {
+    const ROLES = {dono:['Dono', 'Pode tudo, inclusive o plano e as pessoas.'], editor:['Editor', 'Mexe em carteira e gastos.'], leitura:['Leitura', 'Só vê.']};
+    const owners = state.members.filter(m => m.role === 'dono' && m.status === 'ativo');
+    const me = state.members.find(m => m.you);
+    const soleOwner = me.role === 'dono' && owners.length === 1;
+    const roleSel = m => `<select class="input" style="width:auto;padding:6px 10px" data-role="${m.id}" aria-label="Papel de ${esc(m.name)}" ${m.you && soleOwner ? 'disabled' : ''}>${Object.entries(ROLES).map(([k, [l]]) => `<option value="${k}" ${m.role === k ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
+    return `
+    <section class="card">
+      <div class="cardhead"><div><h2>Pessoas da conta</h2><p>Quem entra aqui vê a mesma carteira e os mesmos gastos. ${state.selfhost ? '' : 'Um Premium por conta vale para todas as pessoas.'}</p></div><span class="chip plain">${activeMembers().length} ${activeMembers().length > 1 ? 'pessoas' : 'pessoa'}</span></div>
+      ${state.members.map(m => `<div class="setrow member">
+        <span class="avatar sm">${esc(m.name[0].toUpperCase())}</span>
+        <span><b>${esc(m.name)}${m.you ? ' <span class="chip plain">você</span>' : ''}${m.status === 'convidado' ? ' <span class="chip up">convite enviado</span>' : ''}</b><span class="sub">${esc(m.email)}${m.status === 'convidado' ? ' · o link vale 7 dias' : ` · ${ROLES[m.role][1]}`}</span></span>
+        <span class="actions">${roleSel(m)}
+          ${m.status === 'convidado' ? `<button class="btn sm ghost" data-act="inv-resend" data-arg="${m.id}">Reenviar</button><button class="btn sm ghost" data-act="inv-accept" data-arg="${m.id}">Simular aceite</button>` : ''}
+          ${m.you ? '' : `<button class="btn sm danger" data-act="mem-remove" data-arg="${m.id}">Remover</button>`}</span>
+      </div>`).join('')}
+    </section>
+    <section class="card">
+      <div class="cardhead"><div><h2>Convidar</h2><p>A pessoa recebe um link por e-mail e entra com Google ou Facebook. Não precisa criar senha.</p></div></div>
+      <form id="invite-form" class="invite">
+        <div class="field"><label for="inv-email">E-mail</label><input class="input" id="inv-email" type="email" placeholder="nome@exemplo.com" value="${esc(state.invite.email)}" autocomplete="off"></div>
+        <div class="field"><label for="inv-role">Papel</label><select class="input" id="inv-role">${Object.entries(ROLES).map(([k, [l]]) => `<option value="${k}" ${state.invite.role === k ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+        <div class="row"><button class="btn primary" type="submit">Enviar convite</button><button class="btn ghost" type="button" data-act="inv-fill">Preencher exemplo</button></div>
+      </form>
+      <p class="hint" style="margin:12px 0 0">Dono: pode tudo, inclusive o plano e as pessoas. Editor: mexe em carteira e gastos. Leitura: só vê.</p>
+    </section>
+    <section class="card">
+      <div class="cardhead"><div><h2>Sair da conta</h2><p>Você perde o acesso a esta carteira e a estes gastos. Os dados continuam com as outras pessoas.</p></div></div>
+      ${soleOwner ? `<p class="tipbox" style="margin:0">Você é o único dono. Para sair, passe o papel de Dono a outra pessoa${activeMembers().length > 1 ? '' : ' ou exclua a conta em Dados e privacidade'}.</p>` : `<button class="btn sm danger" data-act="mem-leave">Sair da conta</button>`}
+    </section>`;
+  },
   bancos:() => bancosBody(),
   preferencias:() => `
     <section class="card"><div class="cardhead"><div><h2>Idioma</h2><p>Textos da interface e das respostas.</p></div></div>
@@ -2113,7 +2186,7 @@ const CFG = {
   }
 };
 function cfgTabs() {
-  return [state.selfhost ? ['integracoes', 'Integrações'] : ['plano', 'Plano e uso'], ['whatsapp', 'WhatsApp'], ['agenda', 'Google Agenda'], ['bancos', 'Bancos'], ['preferencias', 'Preferências'], ['dados', 'Dados e privacidade']];
+  return [state.selfhost ? ['integracoes', 'Integrações'] : ['plano', 'Plano e uso'], ['pessoas', 'Pessoas'], ['whatsapp', 'WhatsApp'], ['agenda', 'Google Agenda'], ['bancos', 'Bancos'], ['preferencias', 'Preferências'], ['dados', 'Dados e privacidade']];
 }
 screens.config = () => {
   const tabs = cfgTabs();
@@ -2277,6 +2350,18 @@ function act(a, arg) {
   switch (a) {
     case 'umenu': state.umenu = !state.umenu; render(); if (state.umenu) document.querySelector('.umenu .mi')?.focus(); return;
     case 'atab': state.atab = arg; return go('ativos');
+    case 'owner': state.owner = arg; return render();
+    case 'inv-fill': state.invite = {email:'ana.exemplo@gmail.com', role:'editor'}; return render();
+    case 'inv-resend': return toast(`Convite reenviado para ${state.members.find(m => m.id === arg).email}`);
+    case 'inv-accept': { const m = state.members.find(x => x.id === arg); m.status = 'ativo'; toast(`${m.name} entrou na conta`); return render(); }
+    case 'mem-remove': {
+      const m = state.members.find(x => x.id === arg);
+      return confirmSheet({t:`Remover ${m.name}?`, ok:'Remover', body:`<p style="margin:0">${esc(m.name)} perde o acesso à conta. ${m.status === 'ativo' ? 'Os ativos com titular ' + esc(m.name) + ' passam para Conta toda.' : 'O link do convite deixa de funcionar.'}</p>`,
+        onOk:() => { state.members = state.members.filter(x => x.id !== arg); positions.forEach(p => { if (p.owner === arg) p.owner = 'all'; }); if (state.owner === arg) state.owner = 'any'; toast(`Acesso de ${m.name} removido`); render(); }});
+    }
+    case 'mem-leave':
+      return confirmSheet({t:'Sair da conta?', ok:'Sair da conta', body:'<p style="margin:0">Você perde o acesso a esta carteira e a estes gastos. Para voltar, alguém da conta precisa te convidar de novo.</p>',
+        onOk:() => { state.auth = false; toast('Você saiu da conta (protótipo)'); render(); }});
     case 'realloc': state.aporte = Math.round(Number(arg) / 100) * 100; toast(`${brl.format(state.aporte)} para aportar`); return go('aporte');
     case 'file-del': state.imported = null; toast('Extrato removido'); return render();
     case 'checkout': return openCheckout();
