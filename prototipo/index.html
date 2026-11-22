@@ -138,6 +138,7 @@ tr.click:hover td{background:var(--hover)}
 .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 .kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}
 .kpi .label{text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--ink-2)}
+.kpisub{font-size:12.5px;color:var(--ink-3)}
 .kpi .v{font-size:26px;font-weight:800;letter-spacing:-.025em;font-variant-numeric:tabular-nums;line-height:1.1}
 .kpi.focus{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
 .kpi.focus .v{color:var(--accent-strong)}
@@ -342,6 +343,23 @@ tr.click:hover td{background:var(--hover)}
 }
 @media (prefers-reduced-motion:no-preference){.gauge .fill,.stack span,.hbar .track span{transition:width .35s ease,filter .15s}}
 /* Premium, WhatsApp, Google Agenda, Configurações: componentes no padrão do nexu-fe */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.drop{display:grid;justify-items:center;gap:6px;text-align:center;padding:26px 18px;border:1.5px dashed #e3c9d6;border-radius:16px;background:var(--surface);cursor:pointer;transition:border-color .15s,background .15s}
+.drop:hover,.drop.over{border-color:var(--accent);background:var(--accent-tint)}
+.drop:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 12%,transparent)}
+.dropico{width:44px;height:44px;border-radius:13px;background:var(--surface-2);color:var(--ink-2);display:grid;place-items:center;margin-bottom:4px}
+.drop.over .dropico{background:var(--accent-soft);color:var(--accent-strong)}
+.dropico svg{width:20px;height:20px}
+.droptitle{font-weight:600;font-size:14px;color:var(--ink)}
+.droptitle u{color:var(--accent-strong);text-decoration:none;font-weight:700}
+.filerow{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.fileico{width:40px;height:40px;border-radius:12px;background:var(--surface-2);color:var(--ink-2);display:grid;place-items:center}
+.filemeta{min-width:0}
+.filemeta b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px}
+.filemeta > span{font-size:12.5px;color:var(--ink-3)}
+.filemeta .ok{color:var(--good);font-weight:600;display:inline-flex;align-items:center;gap:4px}
+.filemeta .ok svg{width:13px;height:13px}
+.field-title{margin:0 0 8px;font-weight:600;font-size:14px}
 .linkbtn{border:0;background:none;padding:0;color:var(--accent-strong);font-weight:700;cursor:pointer;font-size:inherit;text-underline-offset:3px}
 .linkbtn:hover{text-decoration:underline}
 .hint{font-size:12.5px;color:var(--ink-3);display:inline-flex;align-items:center;gap:6px}
@@ -735,17 +753,13 @@ screens.visao = () => {
   const outside = rows.filter(r => Math.abs(r.dev) > state.tol).length;
   return `
   <div class="head"><div>${title('pie', 'Seu patrimônio')}<p>Como a carteira está distribuída hoje, comparada com a distribuição que você definiu.</p></div><div class="controls">${baseSeg()}</div></div>
-  <div class="hero">
-    <section class="card herocard">
-      <div class="label">Patrimônio total</div>
-      <div class="big num">${money(total)}</div>
-      <div class="pills">
-        <span class="pill">${ic('globe')}Exposição ao dólar <b class="num">${pct(total ? usdExp / total * 100 : 0)}</b></span>
-        <span class="pill">${ic('alert')}Fora da faixa <b class="num">${outside} de ${rows.length}</b></span>
-        <span class="pill">${ic('dollar')}US$ 1 = <b class="num">R$ ${FX.toFixed(2).replace('.', ',')}</b></span>
-      </div>
-      <div class="callout">${ic('target')}<span>Maior desvio: <b>${CLS[worst.cls].name}</b>, ${pp(worst.dev).replace('+', '')} ${worst.dev > 0 ? 'acima' : 'abaixo'} da meta.</span><button class="btn sm primary" data-go="aporte" style="margin-left:auto">${ic('zap')}Onde aportar</button></div>
-    </section>
+  <div class="kpis">
+    <div class="kpi focus"><div class="label">Patrimônio</div><div class="v num">${money(total)}</div><span class="kpisub">${positions.length} ativos em ${rows.filter(r => r.value > 0).length} classes</span></div>
+    <div class="kpi"><div class="label">Exposto ao dólar</div><div class="v num">${pct(total ? usdExp / total * 100 : 0)}</div><span class="kpisub">${money(usdExp)} · US$ 1 = R$ ${FX.toFixed(2).replace('.', ',')}</span></div>
+    <div class="kpi"><div class="label">Classes fora da meta</div><div class="v num">${outside} de ${rows.length}</div><span class="kpisub">faixa de ±${state.tol} pp</span></div>
+    <div class="kpi"><div class="label">Maior desvio</div><div class="v num" style="color:${Math.abs(worst.dev) > state.tol ? 'var(--warn)' : 'var(--ink)'}">${pp(worst.dev)}</div><span class="kpisub">${CLS[worst.cls].name}, ${worst.dev > 0 ? 'acima' : 'abaixo'} da meta · <button class="linkbtn" data-go="aporte">Onde aportar</button></span></div>
+  </div>
+  <div style="margin-top:16px">
     <section class="card">
       <h2>Atual × meta</h2><p>Passe o mouse sobre as barras para ver os valores.</p>
       <div class="stackwrap">
@@ -792,7 +806,7 @@ screens.classe = () => {
       <button class="btn" data-add="${c.id}">${ic('plus')}Adicionar ativo à classe</button>
     </div>` : `<div class="empty">${ic(c.icon)}<p>Nenhum ativo nesta classe ainda.</p><button class="btn primary" data-add="${c.id}">${ic('plus')}Adicionar ativo</button></div>`}
   </section>
-  <p class="note" style="margin-top:14px">${ic('info')}<span>Quer incluir um ativo que ainda não tem? Adicione com quantidade zero e dê uma meta a ele: o aporte inteligente passa a direcionar dinheiro para ele.</span></p>`;
+  <p class="note" style="margin-top:14px">${ic('info')}<span>Quer incluir um ativo que ainda não tem? Adicione com quantidade zero e dê uma meta a ele: Onde aportar passa a sugerir dinheiro para ele.</span></p>`;
 };
 
 screens.meta = () => {
@@ -833,7 +847,7 @@ screens.aporte = () => {
   const newTotal = total + amount;
   const blocks = rows.map((r, i) => ({r, a:alloc[i]})).filter(x => x.a >= 1).sort((a, b) => b.a - a.a);
   return `
-  <div class="head"><div>${title('zap', 'Aporte inteligente')}<p>Diga quanto vai investir e veja onde colocar para aproximar a carteira da meta, sem vender nada (vender gera imposto).</p></div><div class="controls">${baseSeg()}</div></div>
+  <div class="head"><div>${title('zap', 'Onde aportar')}<p>Diga quanto vai investir e veja onde colocar para aproximar a carteira da meta, sem vender nada (vender gera imposto).</p></div><div class="controls">${baseSeg()}</div></div>
   <section class="card herocard">
     <div class="row" style="align-items:flex-end;gap:16px">
       <div class="field" style="max-width:260px"><label for="aporte">Quanto você vai aportar (R$)</label><input class="input num" style="font-size:20px;font-family:var(--f-display)" id="aporte" type="number" min="0" step="500" value="${amount}" data-aporte></div>
@@ -923,7 +937,7 @@ screens.transacoes = () => {
   const unc = txs.filter(t => !t.cat);
   const opts = CATS.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
   return `
-  <div class="head"><div>${title('list', 'Transações')}<p>A maior parte se classifica sozinha (categoria do Pluggy, dicionário de estabelecimentos e as suas regras). O que sobra, você ensina uma vez.</p></div><div class="controls"><button class="btn" data-export="transacoes">${ic('download')}Baixar planilha</button></div></div>
+  <div class="head"><div>${title('list', 'Transações')}<p>A maior parte recebe categoria na importação (categoria do Pluggy, dicionário de estabelecimentos e as suas regras). O que sobra, você ensina uma vez.</p></div><div class="controls"><button class="btn" data-export="transacoes">${ic('download')}Baixar planilha</button></div></div>
   ${unc.length ? `<p class="note" style="margin-bottom:14px;background:var(--warn-soft)">${ic('alert')}<span><b>${unc.length} transações sem categoria</b>, geralmente Pix para pessoa física. Escolha a categoria e marque "sempre" para criar uma regra.</span></p>` : `<p class="note" style="margin-bottom:14px;background:var(--good-soft)">${ic('check')}<span><b>Tudo categorizado.</b> As próximas transações iguais vão cair na categoria certa.</span></p>`}
   <section class="card">
     ${txs.map(t => { const c = t.cat ? CATMAP[t.cat] : null; return `<div class="tx ${t.cat ? '' : 'unc'}">
@@ -967,7 +981,7 @@ screens.cortes = () => {
     <section class="card" style="background:${gap > 0 ? 'linear-gradient(140deg,var(--warn-soft),var(--surface) 70%)' : 'linear-gradient(140deg,var(--good-soft),var(--surface) 70%)'};border-color:${gap > 0 ? 'var(--warn)' : 'var(--good)'}">
       <div class="label">${gap > 0 ? 'Falta por mês' : 'Meta atingida'}</div>
       <div class="big num" style="color:${gap > 0 ? 'var(--warn)' : 'var(--good)'}">${brl.format(gap > 0 ? gap : saved - goalAmt)}</div>
-      <p class="muted" style="margin:0">${gap > 0 ? (impossible ? 'Mais do que todos os gastos flexíveis somados. Para essa meta, seria preciso rever algum gasto fixo ou a renda.' : `Dá pra chegar lá cortando ${brl.format(totalCut)} em ${flex.filter(f => f.cut >= 1).length} categorias flexíveis.`) : 'Você guardou mais do que a meta. Esse valor pode ir direto para o aporte inteligente.'}</p>
+      <p class="muted" style="margin:0">${gap > 0 ? (impossible ? 'Mais do que todos os gastos flexíveis somados. Para essa meta, seria preciso rever algum gasto fixo ou a renda.' : `Dá pra chegar lá cortando ${brl.format(totalCut)} em ${flex.filter(f => f.cut >= 1).length} categorias flexíveis.`) : 'Você guardou mais do que a meta. Esse valor pode ir para o próximo aporte.'}</p>
       ${gap <= 0 ? `<button class="btn sm primary" data-go="aporte" style="margin-top:12px">${ic('zap')}Ir para o aporte</button>` : ''}
     </section>
   </div>
@@ -1044,9 +1058,8 @@ function bancosBody() {
         <p class="note" style="margin:14px 0 0">${ic('shield')}<span>O código é aberto: dá pra conferir o que é feito com as credenciais, ou rodar tudo no seu servidor.</span></p>
       </section>
       <section class="card">
-        <h2>Importar arquivo</h2><p>Funciona com qualquer banco: OFX, CSV ou fatura do cartão.</p>
-        <div class="field"><label for="ofx">Arquivo do banco</label><input class="input" id="ofx" type="file" accept=".ofx,.csv,.txt,.pdf"></div>
-        ${state.imported ? `<p class="note" style="margin-top:12px">${ic('check')}<span><b>${esc(state.imported)}</b> lido (protótipo: o arquivo não é processado de verdade).</span></p>` : ''}
+        <h2>Importar extrato</h2><p>Funciona com qualquer banco: exporte o extrato ou a fatura em OFX ou CSV.</p>
+        ${dropzone('ofx')}
       </section>
     </div>
   </div>`;
@@ -1181,6 +1194,32 @@ function openAdd(cls, opts = {}) {
   draw();
 }
 
+/* área de soltar arquivo: o input nativo fica escondido, mas segue focável e acionável pelo teclado */
+const fmtSize = b => b >= 1048576 ? (b / 1048576).toFixed(1).replace('.', ',') + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB';
+function dropzone(id) {
+  const f = state.imported;
+  if (f) return `<div class="filerow">
+      <span class="fileico">${ic('receipt')}</span>
+      <span class="filemeta"><b>${esc(f.name)}</b><span>${fmtSize(f.size)} · <span class="ok">${ic('check')}47 transações de setembro lidas</span></span></span>
+      <button class="iconbtn" data-act="file-del" aria-label="Remover ${esc(f.name)}">${ic('trash')}</button>
+    </div>
+    <p class="hint" style="margin:8px 0 0">Protótipo: o arquivo não é lido de verdade.</p>`;
+  return `<label class="drop" for="${id}" data-drop>
+      <input class="sr-only" id="${id}" type="file" accept=".ofx,.csv" aria-describedby="${id}-hint">
+      <span class="dropico">${ic('upload')}</span>
+      <span class="droptitle">Arraste o extrato aqui ou <u>escolha o arquivo</u></span>
+      <span class="hint" id="${id}-hint">OFX ou CSV, até 10 MB</span>
+    </label>`;
+}
+function pickFile(file) {
+  if (!/\.(ofx|csv)$/i.test(file.name)) { toast('Use um arquivo OFX ou CSV'); return render(); }
+  state.imported = {name:file.name, size:file.size || 48000};
+  toast(`${file.name} importado`);
+  return render();
+}
+document.addEventListener('dragover', e => { const z = e.target.closest && e.target.closest('[data-drop]'); if (!z) return; e.preventDefault(); z.classList.add('over'); });
+document.addEventListener('dragleave', e => { const z = e.target.closest && e.target.closest('[data-drop]'); if (z && !z.contains(e.relatedTarget)) z.classList.remove('over'); });
+document.addEventListener('drop', e => { const z = e.target.closest && e.target.closest('[data-drop]'); if (!z) return; e.preventDefault(); z.classList.remove('over'); const f = e.dataTransfer.files[0]; if (f) pickFile(f); });
 const hasSpend = () => state.sample || state.pluggy === 'ok' || !!state.imported;
 /* ilustrações leves dos estados vazios, desenhadas com as cores do tema */
 const ART = {
@@ -1203,8 +1242,8 @@ const ART = {
   </svg>`
 };
 const EMPTY_STEPS = {
-  wallet:[['Escolha o tipo', 'Ações, FIIs, renda fixa, Tesouro, ativos nos EUA ou cripto.'], ['Informe a quantidade', 'Cotações e indexadores atualizam o valor todo dia.'], ['Compare com a meta', 'A distribuição e o aporte inteligente aparecem na hora.']],
-  plug:[['Conecte pelo Meu Pluggy', 'Uns 15 minutos, uma vez só. Ou importe um extrato.'], ['Os gastos chegam sozinhos', 'Já categorizados; você ensina só o que for novo.'], ['Veja onde cortar', 'Cada categoria comparada com a sua própria média.']]
+  wallet:[['Escolha o tipo', 'Ações, FIIs, renda fixa, Tesouro, ativos nos EUA ou cripto.'], ['Informe a quantidade', 'Cotações e indexadores atualizam o valor todo dia.'], ['Compare com a meta', 'A Vera mostra a distribuição e onde colocar o próximo aporte.']],
+  plug:[['Conecte pelo Meu Pluggy', 'Uns 15 minutos, uma vez só. Ou importe um extrato.'], ['Os gastos entram com categoria', 'Você categoriza só o que for novo, uma vez.'], ['Veja onde cortar', 'Cada categoria comparada com a sua média dos últimos 3 meses.']]
 };
 const emptyState = (art, h, p, actions) => `<section class="emptybox">
   <div class="emptyart">${ART[art] || ''}</div>
@@ -1214,16 +1253,16 @@ const emptyState = (art, h, p, actions) => `<section class="emptybox">
 const sampleBtn = `<button class="btn ghost" data-onb="sample">Explorar com dados de exemplo</button>`;
 
 function gate(screen) {
-  const pat = {visao:['pie', 'Seu patrimônio'], ativos:['wallet', 'Meus ativos'], aporte:['zap', 'Aporte inteligente'], classe:['pie', 'Seu patrimônio']};
+  const pat = {visao:['pie', 'Seu patrimônio'], ativos:['wallet', 'Meus ativos'], aporte:['zap', 'Onde aportar'], classe:['pie', 'Seu patrimônio']};
   const gas = {gastos:['receipt', 'Resumo do mês'], transacoes:['list', 'Transações'], cortes:['scissors', 'Onde cortar']};
   if (pat[screen] && positions.length === 0) {
-    return `<div class="head"><div>${title(...pat[screen])}</div></div>` + emptyState('wallet', 'Sua carteira ainda está vazia',
-      'Cadastre o que você tem e a Vera mostra como o patrimônio está distribuído, em reais ou em dólar, comparado com a carteira que você quer.',
+    return `<div class="head"><div>${title(...pat[screen])}</div></div>` + emptyState('wallet', 'Nenhum ativo cadastrado',
+      'Cadastre cada investimento com a quantidade. A Vera calcula o valor, soma em reais ou em dólar e compara com a sua carteira-alvo.',
       `<button class="btn primary" data-add="">${ic('plus')}Adicionar primeiro ativo</button>${sampleBtn}`);
   }
   if (gas[screen] && !hasSpend()) {
-    return `<div class="head"><div>${title(...gas[screen])}</div></div>` + emptyState('plug', 'Nenhum gasto por aqui ainda',
-      'Conecte seus bancos e os gastos do cartão e da conta passam a chegar sozinhos, já separados por categoria.',
+    return `<div class="head"><div>${title(...gas[screen])}</div></div>` + emptyState('plug', 'Nenhum gasto importado',
+      'Conecte o cartão e a conta pelo Open Finance ou importe um extrato OFX ou CSV. Os gastos entram com categoria.',
       `<button class="btn primary" data-go="conexoes">${ic('plug')}Conectar bancos</button>${sampleBtn}`);
   }
   return '';
@@ -1239,16 +1278,16 @@ function onbHTML() {
   let body = '';
   if (s === 0) body = `<div class="onb-grid">
     <div>
-      <span class="eyebrow">Bem-vinda à Vera</span>
-      <h2 class="display">Seu patrimônio e seus gastos, <em>de verdade</em>.</h2>
-      <p class="lead">A Vera responde duas perguntas: o dinheiro que você investiu está distribuído do jeito que você quer? E para onde vai o dinheiro que você gasta todo mês?</p>
-      <p class="lead" style="margin-bottom:0">A configuração tem duas etapas. <b style="color:var(--ink)">As duas são opcionais</b>: dá pra pular qualquer uma e fazer depois.</p>
-      ${state.selfhost ? '' : `<div class="trust"><span class="pill">${ic('check')}Grátis, sem cartão</span><span class="pill">${ic('check')}Premium opcional, quando quiser</span></div>`}
+      <span class="eyebrow">2 etapas, as duas opcionais</span>
+      <h2 class="display">Some seus investimentos e acompanhe os gastos do mês.</h2>
+      <p class="lead">A Vera soma o que você tem no Brasil, nos EUA e em cripto, em reais ou em dólar, e compara com a carteira que você quer ter.</p>
+      <p class="lead" style="margin-bottom:0">Nos gastos, ela lê o cartão e a conta pelo Open Finance e mostra quanto falta para a sua meta de economia.</p>
+      ${state.selfhost ? '' : `<div class="trust"><span class="pill">${ic('check')}Grátis, sem cartão</span><span class="pill">${ic('check')}Premium opcional, R$ 14,90 por mês</span></div>`}
     </div>
     <div class="pathcards">
-      <div class="pathcard"><span class="tile" style="background:var(--accent-soft);color:var(--accent-strong)">${ic('wallet')}</span><span><b>1. Cadastrar seus ativos</b><span class="d">Para ver a distribuição da carteira, comparar com a sua meta e saber onde aportar.</span></span><span class="chip plain">~5 min</span></div>
-      <div class="pathcard"><span class="tile" style="background:#fff0e8;color:var(--c-fii)">${ic('plug')}</span><span><b>2. Conectar seus bancos</b><span class="d">Para os gastos chegarem sozinhos, categorizados, com sugestões de onde cortar.</span></span><span class="chip plain">~15 min</span></div>
-      <div class="onb-foot" style="border:0;padding-top:4px"><button class="btn ghost" data-onb="sample">Só explorar com dados de exemplo</button><button class="btn primary" data-onb="next" style="padding:11px 20px;font-size:15px">Começar ${ic('left').replace('class="i"', 'class="i" style="transform:rotate(180deg)"')}</button></div>
+      <div class="pathcard"><span class="tile" style="background:var(--accent-soft);color:var(--accent-strong)">${ic('wallet')}</span><span><b>1. Cadastrar seus ativos</b><span class="d">Mostra a distribuição da carteira e onde colocar o próximo aporte.</span></span><span class="chip plain">~5 min</span></div>
+      <div class="pathcard"><span class="tile" style="background:#fff0e8;color:var(--c-fii)">${ic('plug')}</span><span><b>2. Conectar seus bancos</b><span class="d">Os gastos entram todo dia, já com categoria, e a Vera calcula onde cortar.</span></span><span class="chip plain">~15 min</span></div>
+      <div class="onb-foot" style="border:0;padding-top:4px"><button class="btn ghost" data-onb="sample">Ver com dados de exemplo</button><button class="btn primary" data-onb="next" style="padding:11px 20px;font-size:15px">Começar ${ic('left').replace('class="i"', 'class="i" style="transform:rotate(180deg)"')}</button></div>
     </div>
   </div>`;
   if (s === 1) {
@@ -1260,10 +1299,10 @@ function onbHTML() {
       <p class="lead">Informe o que você tem e onde. A Vera soma tudo, em reais ou em dólar, e compara com a carteira que você considera ideal.</p>
       ${WHY([
         ['globe', 'Ver tudo somado', 'Brasil, EUA e cripto numa moeda só, separados por tipo: renda fixa, ações, FIIs, REITs, cripto.'],
-        ['target', 'Comparar com a sua meta', 'Ex.: "você tem 18% em ações dos EUA e queria 25%". Sem saber o que você tem, não há o que comparar.'],
-        ['zap', 'Saber onde aportar', 'O aporte inteligente divide cada novo aporte para aproximar a carteira da meta, sem vender nada.']
+        ['target', 'Comparar com a sua meta', 'Ex.: "você tem 18% em ações dos EUA e queria 25%".'],
+        ['zap', 'Saber onde aportar', 'Cada aporte novo é dividido entre as classes abaixo da meta, sem vender nada.']
       ])}
-      <p class="note">${ic('info')}<span><b>Por que o cadastro é manual?</b> Não existe forma gratuita e confiável de puxar posições de todas as corretoras, bancos de fora e exchanges. Você informa só a quantidade; os valores se atualizam sozinhos todo dia pela cotação ou pelo indexador.</span></p>
+      <p class="note">${ic('info')}<span><b>Por que o cadastro é manual?</b> Não existe forma gratuita e confiável de puxar posições de todas as corretoras, bancos de fora e exchanges. Você informa só a quantidade; a Vera atualiza o valor todo dia pela cotação ou pelo indexador.</span></p>
     </div>
     <section class="card">
       <h2>Adicione seus ativos</h2><p>Escolha um tipo de investimento. Comece pelos maiores; dá pra completar depois em "Meus ativos".</p>
@@ -1283,16 +1322,16 @@ function onbHTML() {
     <div>
       <span class="eyebrow">${ic('plug')}Etapa 2 de 2 · opcional</span>
       <h2 class="display">Conecte seus bancos</h2>
-      <p class="lead">Com os bancos conectados, cada gasto do cartão e da conta entra na Vera sozinho. Você não digita nada.</p>
+      <p class="lead">Com os bancos conectados, os gastos do cartão e da conta entram todo dia. Você não digita nada.</p>
       ${WHY([
-        ['receipt', 'Gastos chegam sozinhos', 'Cartão de crédito e conta corrente, atualizados todo dia, sem planilha.'],
+        ['receipt', 'Gastos entram todo dia', 'Cartão de crédito e conta corrente, sem planilha.'],
         ['list', 'Categorias automáticas', 'Mercado, delivery, transporte e assinaturas são reconhecidos. Você só ensina o que for novo, uma vez.'],
-        ['scissors', 'Sugestões de onde cortar', 'Com o histórico, a Vera compara cada categoria com a sua média e mostra onde economizar para bater sua meta.']
+        ['scissors', 'Onde cortar', 'A Vera compara cada categoria com a sua média dos últimos 3 meses e calcula quanto cortar em cada uma.']
       ])}
       <p class="note">${ic('shield')}<span><b>Por que pelo Meu Pluggy?</b> O Open Finance só entrega dados a instituições autorizadas pelo Banco Central. O Meu Pluggy é a ponte gratuita: você conecta seus bancos lá e autoriza a leitura. Sua senha do banco nunca passa pela Vera, e o acesso é só de leitura.</span></p>
     </div>
     <section class="card">
-      ${ok ? `<h2>Bancos conectados</h2><p>Seus gastos dos últimos meses já estão chegando.</p>
+      ${ok ? `<h2>Bancos conectados</h2><p>Os gastos dos últimos 3 meses estão sendo importados.</p>
         <div class="conn"><span class="bank" style="background:#8a05be">Nu</span><span><b>Nubank</b><span class="sub">Cartão e conta</span></span><span class="chip ok" style="margin-left:auto">${ic('check')}ativo</span></div>
         <div class="conn"><span class="bank" style="background:#ec7000">It</span><span><b>Itaú</b><span class="sub">Conta corrente</span></span><span class="chip ok" style="margin-left:auto">${ic('check')}ativo</span></div>`
       : `<h2>Em 4 passos</h2><p>Uns 15 minutos, uma vez só. O passo a passo detalhado fica em Configurações › Bancos.</p>
@@ -1310,8 +1349,8 @@ function onbHTML() {
           <div class="row"><button class="btn primary" type="submit">${ic('plug')}${state.pluggy === 'testing' ? 'Testando…' : 'Testar e conectar'}</button><button class="btn ghost" type="button" data-onb="fill">Preencher exemplo</button></div>
         </form>
         <div style="margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)">
-          <div class="field"><label for="onb-ofx">${ic('upload')} Prefere não conectar? Importe um extrato (OFX ou CSV)</label><input class="input" id="onb-ofx" type="file" accept=".ofx,.csv,.txt,.pdf"></div>
-          ${imp ? `<p class="note" style="margin:10px 0 0">${ic('check')}<span><b>${esc(state.imported)}</b> lido (protótipo).</span></p>` : ''}
+          <p class="field-title">Prefere não conectar? Importe um extrato</p>
+          ${dropzone('onb-ofx')}
         </div>`}
       <div class="onb-foot"><button class="btn ghost" data-onb="back">${ic('left')}Voltar</button><div class="row">${ok || imp ? `<button class="btn primary" data-onb="next">Continuar</button>` : `<button class="btn primary" data-onb="skip">Pular por enquanto</button>`}</div></div>
     </section>
@@ -1319,16 +1358,16 @@ function onbHTML() {
   }
   if (s === 3) {
     const total = positions.reduce((t, p) => t + valueBRL(p), 0);
-    const spend = state.pluggy === 'ok' ? 'Nubank e Itaú conectados pelo Meu Pluggy' : state.imported ? `Extrato ${esc(state.imported)} importado` : '';
+    const spend = state.pluggy === 'ok' ? 'Nubank e Itaú conectados pelo Meu Pluggy' : state.imported ? `Extrato ${esc(state.imported.name)} importado` : '';
     const row = (ok, icon, t, d, btn) => `<div class="srow"><span class="tile" style="background:${ok ? 'var(--good-soft)' : 'var(--surface-2)'};color:${ok ? 'var(--good)' : 'var(--ink-2)'}">${ic(ok ? 'check' : icon)}</span><span><b>${t}</b><span class="sub">${d}</span></span>${btn || ''}</div>`;
     body = `<div class="done-hero">
       <div class="burst">${ic('check')}</div>
-      <h2 class="display">${positions.length || spend ? 'Tudo pronto' : 'Pronto para começar'}</h2>
-      <p class="lead" style="margin-inline:auto">${positions.length || spend ? 'Veja o que já está configurado. O que ficou para depois pode ser feito a qualquer momento.' : 'Você pulou as duas etapas, sem problema. A Vera mostra onde começar quando você quiser.'}</p>
+      <h2 class="display">${positions.length || spend ? 'Configuração feita' : 'Nada configurado ainda'}</h2>
+      <p class="lead" style="margin-inline:auto">${positions.length || spend ? 'O que ficou para depois está abaixo, com um atalho para fazer agora.' : 'Você pulou as duas etapas. Cada tela vazia mostra como começar.'}</p>
       <div class="summary" style="text-align:left">
-        ${row(positions.length > 0, 'wallet', positions.length ? `${positions.length} ${positions.length > 1 ? 'ativos cadastrados' : 'ativo cadastrado'} · ${brl.format(total)}` : 'Ativos: para depois', positions.length ? 'A distribuição e a comparação com a meta já estão na Visão geral.' : 'Cadastre quando quiser em "Meus ativos".', positions.length ? '' : `<button class="btn sm" data-onb="goto-1">Cadastrar agora</button>`)}
+        ${row(positions.length > 0, 'wallet', positions.length ? `${positions.length} ${positions.length > 1 ? 'ativos cadastrados' : 'ativo cadastrado'} · ${brl.format(total)}` : 'Ativos: para depois', positions.length ? 'A distribuição e a comparação com a meta estão na Visão geral.' : 'Cadastre quando quiser em "Meus ativos".', positions.length ? '' : `<button class="btn sm" data-onb="goto-1">Cadastrar agora</button>`)}
         ${row(!!spend, 'plug', spend || 'Bancos: para depois', spend ? 'Seus gastos aparecem em "Resumo do mês".' : 'Conecte quando quiser em Configurações › Bancos ou importe um extrato.', spend ? '' : `<button class="btn sm" data-onb="goto-2">Conectar agora</button>`)}
-        ${row(true, 'target', 'Carteira-alvo moderada como ponto de partida', 'Uma distribuição inicial para comparar. Ajuste para a sua visão em "Carteira-alvo".', `<button class="btn sm" data-onb="finish-meta">Ajustar</button>`)}
+        ${row(true, 'target', 'Carteira-alvo moderada, para começar', 'Ajuste os percentuais em Carteira-alvo quando quiser.', `<button class="btn sm" data-onb="finish-meta">Ajustar</button>`)}
       </div>
       ${onbOffer()}
       <div class="row" style="justify-content:center;margin-top:24px"><button class="btn primary" data-onb="finish" style="padding:12px 22px;font-size:15px">${ic('pie')}Ir para o painel</button></div>
@@ -1357,7 +1396,7 @@ function renderLogin() {
       <div class="login-box">
         <div class="brand" style="padding:0"><span class="logo"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.8 6 L12 19.2 L19.2 6" fill="none" stroke="#fff" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="8.6" r="2.2" fill="#fff"/></svg></span><div><b>vera</b></div></div>
         <h2>Entrar</h2>
-        <p class="muted" style="margin:0 0 24px">Use sua conta do Google ou do Facebook. Na primeira vez, sua conta é criada automaticamente.</p>
+        <p class="muted" style="margin:0 0 24px">Entre com Google ou Facebook. Na primeira vez, a conta é criada nesse momento. A Vera não guarda senha.</p>
         <div class="grid" style="gap:10px">
           <button class="social" data-login="Google">${GOOGLE}Continuar com Google</button>
           <button class="social fb" data-login="Facebook">${FACEBOOK}Continuar com Facebook</button>
@@ -1551,7 +1590,7 @@ document.addEventListener('change', e => {
   if (el.id === 'wa-consent') { state.wa.consent = el.checked; return render(); }
   if (el.id === 'ai-switch') return act(el.checked ? 'ai-on' : 'ai-off');
   if (el.id === 'lang') { state.lang = el.value; toast(el.value === 'pt-BR' ? 'Idioma: português' : 'No produto a interface troca na hora; o protótipo fica em português'); return render(); }
-  if ((el.id === 'ofx' || el.id === 'onb-ofx') && el.files[0]) { state.imported = el.files[0].name; return render(); }
+  if ((el.id === 'ofx' || el.id === 'onb-ofx') && el.files[0]) return pickFile(el.files[0]);
 });
 
 document.addEventListener('submit', e => {
@@ -1661,14 +1700,14 @@ function textCarteira(amount = state.aporte || 10000) {
   ].filter(Boolean);
 }
 const EXPLAIN = {
-  mes:{t:'Setembro em poucas palavras', d:'O que mudou no mês e por quê.', text:textMes, ok:() => hasSpend()},
-  cortes:{t:'O caminho mais leve até a meta', d:'A mesma conta da sugestão, explicada.', text:textCortes, ok:() => hasSpend()},
-  carteira:{t:'Sua carteira em poucas palavras', d:'O que está fora da meta e para onde vai o próximo aporte.', text:textCarteira, ok:() => positions.length > 0}
+  mes:{t:'Resumo de setembro', d:'O que mudou no mês e por quê.', text:textMes, ok:() => hasSpend()},
+  cortes:{t:'Como chegar à meta de economia', d:'A conta da sugestão acima, em texto.', text:textCortes, ok:() => hasSpend()},
+  carteira:{t:'Resumo da carteira', d:'O que está fora da meta e para onde vai o próximo aporte.', text:textCarteira, ok:() => positions.length > 0}
 };
 function explainCard(k) {
   const E = EXPLAIN[k], f = feat('ia');
   if (f === 'hidden' || !E.ok()) return '';
-  if (f === 'locked') return `<section class="card explain">${lockLine(`<b>${E.t}.</b> No Premium, a Vera escreve aqui um resumo curto destes números.`)}</section>`;
+  if (f === 'locked') return `<section class="card explain">${lockLine(`<b>${E.t}.</b> No Premium, a Vera escreve aqui um resumo destes números em 3 ou 4 frases.`)}</section>`;
   if (!state.ai.optin) return `<section class="card explain">
       <div class="cardhead"><div><h2>${E.t}</h2><p>${E.d}</p></div></div>
       <p class="tipbox">Para escrever este resumo, a Vera envia totais agregados (sem nomes de pessoas nem de estabelecimentos) a um modelo de linguagem. <button class="linkbtn" data-act="payload">Ver o que é enviado</button></p>
@@ -1676,7 +1715,7 @@ function explainCard(k) {
     </section>`;
   const p = paused();
   return `<section class="card explain">
-    <div class="cardhead"><div><h2>${E.t}</h2><p>Escrito hoje às ${state.ai.gen} a partir dos totais. <button class="linkbtn" data-act="payload">O que é enviado</button></p></div><button class="btn sm" data-act="regen" ${p ? 'disabled' : ''}>${ic('repeat')}Escrever de novo</button></div>
+    <div class="cardhead"><div><h2>${E.t}</h2><p>Escrito hoje às ${state.ai.gen} a partir dos totais do mês. <button class="linkbtn" data-act="payload">O que é enviado</button></p></div><button class="btn sm" data-act="regen" ${p ? 'disabled' : ''}>${ic('repeat')}Escrever de novo</button></div>
     <div class="prose">${E.text().map(x => `<p>${x}</p>`).join('')}</div>
     ${quotaBanner()}
   </section>`;
@@ -1689,14 +1728,14 @@ const NO_POS = 'Sua carteira ainda está vazia. Cadastre os ativos em Meus ativo
 function waReply(q) {
   const s = q.toLowerCase();
   const amt = (() => { const m = s.match(/(\d+(?:[.,]\d+)?)\s*(mil|k)?/); return m ? Number(m[1].replace('.', '').replace(',', '.')) * (m[2] ? 1000 : 1) : 0; })();
-  if (/\bpix\b|transfer|pagar|pague|boleto/.test(s)) return 'Isso eu não faço: a Vera só lê seus dados, não movimenta dinheiro nem faz Pix. Para pagar ou transferir, use o app do seu banco.';
+  if (/\bpix\b|transfer|pagar|pague|boleto/.test(s)) return 'A Vera não faz Pix, pagamentos nem transferências: ela só lê seus dados. Use o app do seu banco.';
   if (/(meus|quais|listar?)\s+lembretes/.test(s)) return state.reminders.length ? 'Seus lembretes:\n' + state.reminders.map(r => `• ${r.t}, ${r.when}`).join('\n') : 'Você não tem lembretes. É só pedir: "me lembra de aportar todo dia 5".';
   if (/lembr/.test(s)) {
     const day = (s.match(/dia\s*(\d{1,2})/) || [])[1];
     const what = /aport/.test(s) ? 'Fazer o aporte do mês' : /fatura/.test(s) ? 'Pagar a fatura do cartão' : (q.replace(/.*?lembr\w*\s*(de\s+|que\s+)?/i, '').replace(/\s*(todo\s+)?dia\s*\d+.*/i, '').trim() || 'Lembrete');
     const r = {t:what.charAt(0).toUpperCase() + what.slice(1), when:day ? `todo dia ${day}, 09:00` : 'amanhã, 09:00'};
     state.reminders.push(r);
-    return `Combinado. Vou te lembrar aqui: "${r.t}", ${r.when}. Para ver ou apagar, peça "meus lembretes".`;
+    return `Lembrete criado: ${lower(r.t)}, ${r.when.replace(', ', ' às ')}. Para ver ou apagar, mande "meus lembretes".`;
   }
   if (/reuni|agenda|compromisso|marc[ae]/.test(s)) {
     if (!gcalOn()) return 'Para criar e listar reuniões, conecte o Google Agenda em Configurações › Google Agenda. A permissão é pedida só para isso.';
@@ -1704,7 +1743,7 @@ function waReply(q) {
       const h = (s.match(/(\d{1,2})\s*(h|:)/) || [])[1];
       const ev = {d:/amanh/.test(s) ? 'sáb 10/10' : 'sex 16/10', h:h ? h.padStart(2, '0') + ':00' : '15:00', t:/contador/.test(s) ? 'Reunião com o contador' : /gerente|banco/.test(s) ? 'Reunião com o gerente do banco' : 'Reunião', mine:true};
       state.events.push(ev);
-      return `Criei no seu Google Agenda: ${ev.t}, ${ev.d} às ${ev.h}.`;
+      return `Reunião criada no Google Agenda: ${lower(ev.t)}, ${ev.d} às ${ev.h}.`;
     }
     return 'Seus próximos compromissos:\n' + state.events.map(e => `• ${e.d}, ${e.h}: ${e.t}`).join('\n');
   }
@@ -1717,8 +1756,8 @@ function waReply(q) {
   if (/aport|invest|onde coloc/.test(s)) return positions.length ? strip(textCarteira(amt >= 100 ? amt : undefined).slice(-1)[0]) : NO_POS;
   if (/carteira|patrim|distribu|d[oó]lar/.test(s)) return positions.length ? strip(textCarteira().slice(0, 3).join(' ')) : NO_POS;
   if (/gast|m[eê]s|setembro/.test(s)) return hasSpend() ? strip(textMes().slice(0, 2).join(' ')) : NO_SPEND;
-  if (/^(oi|ol[aá]|bom dia|boa tarde|boa noite)\b/.test(s)) return 'Oi, Lucas. Pergunte sobre a carteira ou os gastos, peça para marcar uma reunião ou criar um lembrete.';
-  return 'No protótipo eu respondo só a algumas mensagens prontas. Tente: "quanto gastei com delivery?", "como está minha carteira?" ou "me lembra de aportar todo dia 5".';
+  if (/^(oi|ol[aá]|bom dia|boa tarde|boa noite)\b/.test(s)) return 'Oi. Pergunte sobre a carteira ou os gastos, peça para marcar uma reunião ou criar um lembrete.';
+  return 'No protótipo, a Vera responde só a algumas mensagens. Tente "quanto gastei com delivery?" ou "me lembra de aportar todo dia 5".';
 }
 function waSend(text) {
   text = (text || '').trim();
@@ -1743,7 +1782,7 @@ function payload() {
 
 /* ---------- Configurações ---------- */
 const COMPARE = [
-  ['Carteira, carteira-alvo e aporte inteligente', true, true],
+  ['Carteira, carteira-alvo e onde aportar', true, true],
   ['Gastos pelo Open Finance, categorias e regras', true, true],
   ['Onde cortar', true, true],
   ['Exportar carteira e transações', true, true],
@@ -1758,10 +1797,10 @@ const CFG = {
     const pro = state.plan === 'premium', sub = state.sub;
     const cell = v => v ? `<span class="yes">${ic('check')}</span>` : '<span class="muted">—</span>';
     if (!pro) return `
-      <section class="card"><div class="cardhead"><div><h2>Seu plano</h2><p>Você está no Free: carteira e gastos completos, sem custo e sem prazo.</p></div><span class="chip ok">Free</span></div></section>
+      <section class="card"><div class="cardhead"><div><h2>Seu plano</h2><p>Free: carteira e gastos completos, sem custo e sem prazo.</p></div><span class="chip ok">Free</span></div></section>
       <div class="plans">
         <section class="card plan"><span class="label">Free</span><div class="price">R$ 0</div><p class="muted" style="margin:0">Tudo que existe hoje na Vera.</p><button class="btn" disabled>Plano atual</button></section>
-        <section class="card plan pro"><span class="label">Premium</span><div class="price">${PRICE}<small>/mês</small></div><p class="muted" style="margin:0">Resumos em texto e a Vera no WhatsApp, com reuniões e lembretes.</p><button class="btn primary" data-act="checkout">Assinar o Premium</button><span class="hint" style="text-align:center">Pix ou cartão · cancele quando quiser, sem multa</span></section>
+        <section class="card plan pro"><span class="label">Premium</span><div class="price">${PRICE}<small>/mês</small></div><p class="muted" style="margin:0">Tudo do Free, mais resumos em texto e a Vera no WhatsApp com reuniões e lembretes.</p><button class="btn primary" data-act="checkout">Assinar o Premium</button><span class="hint" style="text-align:center">Pix ou cartão · cancele quando quiser, sem multa</span></section>
       </div>
       <section class="card"><div class="cardhead"><div><h2>O que muda</h2></div></div>
         <div class="tablewrap"><table style="min-width:0"><thead><tr><th>Recurso</th><th class="r">Free</th><th class="r">Premium</th></tr></thead>
@@ -1776,7 +1815,7 @@ const CFG = {
         ${setrow('receipt', 'Histórico', `${TODAY} · ${PRICE} · pago via Asaas`, `<button class="btn sm ghost" data-act="receipt">${ic('download')}Recibo</button>`)}
         <div class="row" style="margin-top:4px">${sub.status === 'canceling' ? `<button class="btn sm primary" data-act="sub-reactivate">Reativar assinatura</button>` : `<button class="btn sm danger" data-act="sub-cancel">Cancelar assinatura</button>`}</div>
       </section>
-      <section class="card"><div class="cardhead"><div><h2>Uso do mês</h2><p>Resumos em texto e WhatsApp usam a cota; o resto da Vera não.</p></div></div>${meter(true)}</section>`;
+      <section class="card"><div class="cardhead"><div><h2>Uso do mês</h2><p>Só os resumos em texto e o WhatsApp usam a cota.</p></div></div>${meter(true)}</section>`;
   },
   integracoes:() => {
     const keyRow = (k, icon, t, d) => setrow(icon, `${t} ${state.keys[k] ? `<span class="chip ok">configurada</span>` : '<span class="chip plain">sem chave</span>'}`, d, state.keys[k] ? `<button class="btn sm ghost" data-act="key" data-arg="${k}">Trocar</button><button class="btn sm danger" data-act="key-del" data-arg="${k}">Remover</button>` : `<button class="btn sm" data-act="key" data-arg="${k}">${ic('key')}Cadastrar</button>`);
@@ -1884,7 +1923,7 @@ screens.config = () => {
 
 function onbOffer() {
   if (state.selfhost || state.plan === 'premium') return '';
-  return `<div class="offer"><span><b>Premium, se quiser</b><span class="d">A Vera resume seu mês e sua carteira em poucas linhas e responde no WhatsApp, com reuniões e lembretes. ${PRICE}/mês; tudo que você configurou aqui continua grátis.</span></span><button class="btn sm" data-onb="finish-premium">Ver o Premium</button></div>`;
+  return `<div class="offer"><span><b>Premium: ${PRICE} por mês</b><span class="d">Resumo em texto do mês, dos cortes e da carteira, e a Vera no WhatsApp com reuniões e lembretes. O que você configurou aqui continua grátis.</span></span><button class="btn sm" data-onb="finish-premium">Ver o que inclui</button></div>`;
 }
 
 /* ---------- navegação ---------- */
@@ -1903,7 +1942,7 @@ function userMenu() {
 }
 function renderNav() {
   const groups = [
-    ['nav-pat', 'Patrimônio', [['visao', 'Visão geral', 'pie'], ['meta', 'Carteira-alvo', 'target'], ['aporte', 'Aporte inteligente', 'zap'], ['ativos', 'Meus ativos', 'wallet']]],
+    ['nav-pat', 'Carteira', [['visao', 'Visão geral', 'pie'], ['meta', 'Carteira-alvo', 'target'], ['aporte', 'Onde aportar', 'zap'], ['ativos', 'Meus ativos', 'wallet']]],
     ['nav-gas', 'Gastos', [['gastos', 'Resumo do mês', 'receipt'], ['transacoes', 'Transações', 'list'], ['cortes', 'Onde cortar', 'scissors']]]
   ];
   groups.forEach(([id, t, items]) => {
@@ -2032,6 +2071,7 @@ function act(a, arg) {
   const w = state.wa;
   switch (a) {
     case 'umenu': state.umenu = !state.umenu; render(); if (state.umenu) document.querySelector('.umenu .mi')?.focus(); return;
+    case 'file-del': state.imported = null; toast('Extrato removido'); return render();
     case 'checkout': return openCheckout();
     case 'cfg': state.cfg = arg; return go('config');
     case 'mode':
@@ -2058,7 +2098,7 @@ function act(a, arg) {
       if (w.code.replace(/\D/g, '').length !== 6) return toast('O código tem 6 dígitos');
       if (!state.ai.optin) { if (!w.consent) return; state.ai.optin = true; }
       w.status = 'linked'; w.since = TODAY;
-      w.msgs = [{who:'vera', text:'Oi, Lucas. Número confirmado. Pode perguntar sobre a carteira e os gastos, pedir para marcar reuniões no Google Agenda ou criar lembretes. Pix e pagamentos ficam de fora: eu só leio.'}];
+      w.msgs = [{who:'vera', text:'Número confirmado. Exemplos do que você pode mandar: "quanto gastei com delivery?", "marca reunião sexta às 15h", "me lembra de aportar todo dia 5". Pix e pagamentos a Vera não faz.'}];
       toast('WhatsApp vinculado'); return render();
     case 'wa-unlink':
       return confirmSheet({t:'Desvincular o WhatsApp?', ok:'Desvincular', body:`<p style="margin:0">A Vera para de responder em <b>+55 ${esc(w.phone)}</b>, os lembretes criados por lá são cancelados e o histórico da conversa sai daqui. Dá para vincular de novo quando quiser.</p>`,
