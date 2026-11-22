@@ -2043,12 +2043,12 @@ function openCheckout() {
             <div class="field"><label for="pix-code">Pix copia e cola</label><div class="row" style="flex-wrap:nowrap"><input class="input" id="pix-code" readonly value="00020126580014br.gov.bcb.pix0136exemplo-vera-premium-1490" style="font-family:var(--f-mono);font-size:12px"><button class="btn sm" data-m="copy">Copiar</button></div></div>
           </div></div>`
         : `<div class="formgrid">
-            <div class="field" style="grid-column:1 / -1"><label for="cc-num">Número do cartão</label><input class="input" id="cc-num" data-card="num" inputmode="numeric" autocomplete="cc-number" placeholder="0000 0000 0000 0000" value="${esc(m.card.num)}"></div>
-            <div class="field" style="grid-column:1 / -1"><label for="cc-name">Nome impresso</label><input class="input" id="cc-name" data-card="name" autocomplete="cc-name" value="${esc(m.card.name)}"></div>
-            <div class="field"><label for="cc-exp">Validade</label><input class="input" id="cc-exp" data-card="exp" autocomplete="cc-exp" placeholder="MM/AA" value="${esc(m.card.exp)}"></div>
-            <div class="field"><label for="cc-cvv">CVV</label><input class="input" id="cc-cvv" data-card="cvv" inputmode="numeric" autocomplete="cc-csc" value="${esc(m.card.cvv)}"></div>
+            <div class="field" style="grid-column:1 / -1"><label for="cc-num">Número do cartão</label><input class="input" id="cc-num" readonly autocomplete="off" value="4242 4242 4242 4242"></div>
+            <div class="field" style="grid-column:1 / -1"><label for="cc-name">Nome impresso</label><input class="input" id="cc-name" readonly autocomplete="off" value="LUCAS EXEMPLO"></div>
+            <div class="field"><label for="cc-exp">Validade</label><input class="input" id="cc-exp" readonly autocomplete="off" value="12/29"></div>
+            <div class="field"><label for="cc-cvv">CVV</label><input class="input" id="cc-cvv" readonly autocomplete="off" value="123"></div>
           </div>
-          <button class="btn ghost sm" data-m="fill" style="justify-self:start">Preencher exemplo</button>`}
+          <p class="note" style="margin:0">${ic('info')}<span>Protótipo: o cartão é de exemplo e não dá para editar. No produto, os campos são do próprio Asaas.</span></p>`}
         <p class="note" style="margin:0">${ic('lock')}<span>Pagamento processado pelo <b>Asaas</b>.${pix ? ' A Vera só recebe a confirmação.' : ' A Vera não vê nem guarda os dados do cartão.'}</span></p>
       </div>
       <div class="sheet-right">${summary}</div>
@@ -2061,7 +2061,6 @@ function openCheckout() {
     if (a === 'copy') return toast('Código Pix copiado');
     if (a === 'fill') { m.card = {num:'4242 4242 4242 4242', name:'LUCAS EXEMPLO', exp:'12/29', cvv:'123'}; return h.redraw(); }
     if (a === 'pay') {
-      if (m.method === 'card' && m.card.num.replace(/\D/g, '').length < 16) return toast('Preencha o cartão ou use "Preencher exemplo"');
       m.step = 'wait'; h.redraw();
       setTimeout(() => { m.step = 'done'; state.plan = 'premium'; state.sub = {method:m.method, status:'active'}; simUsage(0); render(); h.redraw(); }, 1100);
       return;
@@ -2076,15 +2075,12 @@ function openGcal() {
   if (feat('gcal') !== 'on') return go(feat('gcal') === 'hidden' ? 'config' : 'planos');
   sheet(() => mHead('calendar', 'Conectar o Google Agenda') + `<div class="sheet-single" style="display:grid;gap:14px">
       <p class="muted" style="margin:0">Você vai para o Google autorizar. No login a Vera só recebeu nome e e-mail; a agenda é pedida agora, à parte.</p>
-      <div class="gconsent">
-        <div class="row" style="gap:8px">${GOOGLE.replace('<svg', '<svg width="20" height="20"')}<span style="font-size:13px;color:#5f6368">Fazer login com o Google</span></div>
-        <div style="font-size:20px;color:#202124">A Vera quer acessar sua Conta do Google</div>
-        <div class="row" style="gap:8px;font-size:13px;color:#5f6368"><span class="avatar" style="width:24px;height:24px;font-size:11px">L</span>${state.gcal.email}</div>
-        <div class="perm">${ic('calendar')}<span><b>Ver e editar eventos em todas as suas agendas</b><br><span style="color:#5f6368">Para criar as reuniões que você pedir no WhatsApp e listar seus próximos compromissos.</span></span></div>
-        <p style="margin:0;font-size:12.5px;color:#5f6368">A Vera não lê e-mails, contatos nem arquivos. Você pode revogar o acesso em Configurações ou na sua Conta do Google.</p>
-      </div>
-      <p class="note" style="margin:0">${ic('info')}<span>Protótipo: esta janela imita a tela do Google.</span></p>
-    </div><div class="sheet-foot"><button class="btn ghost" data-close>Cancelar</button><button class="btn primary" data-m="allow">Permitir</button></div>`,
+      <ul class="why" style="margin:0">
+        <li><span class="tile">${ic('calendar')}</span><span><b>Permissão pedida: ver e editar eventos</b><span class="d">Para criar as reuniões que você pedir no WhatsApp e listar seus próximos compromissos.</span></span></li>
+        <li><span class="tile">${ic('x')}</span><span><b>O que a Vera não acessa</b><span class="d">E-mails, contatos e arquivos. Você pode revogar o acesso em Configurações ou na sua Conta do Google.</span></span></li>
+      </ul>
+      <p class="note" style="margin:0">${ic('info')}<span>Protótipo: no produto, aqui você seria levada à tela de autorização do próprio Google. Nenhuma conta é conectada de verdade.</span></p>
+    </div><div class="sheet-foot"><button class="btn ghost" data-close>Cancelar</button><button class="btn primary" data-m="allow">Simular autorização</button></div>`,
   (a, el, h) => { if (a === 'allow') { h.close(); state.gcal.on = true; toast('Google Agenda conectado'); render(); } });
 }
 function openPayload() {
