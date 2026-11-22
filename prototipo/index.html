@@ -48,8 +48,6 @@ a{color:var(--accent-strong);font-weight:600}
 .nav:hover{background:var(--hover);color:var(--ink)}
 .nav[aria-current="page"]{background:var(--accent-soft);color:var(--accent-strong);font-weight:700}
 .nav .count{margin-left:auto;font-size:11px;background:var(--warn);color:#fff;border-radius:99px;padding:0 7px;font-weight:700}
-.proto{margin-top:auto;font-size:12px;color:var(--ink-2);padding:12px;border-radius:var(--rc);background:var(--surface-2);display:flex;gap:8px}
-.proto svg{color:var(--ink-3);margin-top:2px}
 .main{min-width:0;padding-inline:var(--px);padding-block:0 60px}
 .main > :not(.head){max-width:1180px}
 .head{position:sticky;top:0;z-index:6;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 20px;min-height:68px;margin:0 calc(-1 * var(--px)) 22px;padding:12px var(--px);background:var(--surface);box-shadow:var(--shadow-top)}
@@ -257,7 +255,6 @@ tr.click:hover td{background:var(--hover)}
 .done-hero{width:min(720px,100%);text-align:center;margin-top:20px}
 .done-hero .burst{width:64px;height:64px;border-radius:20px;background:var(--good-soft);color:var(--good);display:grid;place-items:center;margin:0 auto 6px}
 .done-hero .burst svg{width:30px;height:30px}
-.side-onb{border:0;background:none;color:var(--accent-strong);font-weight:700;cursor:pointer;padding:0;margin-top:6px;font-size:12px;display:inline-flex;gap:5px;align-items:center}
 @media (max-width:900px){.onb-grid{grid-template-columns:minmax(0,1fr)}.onb-prog span:not(.cur) em{display:none}}
 .typegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
 .typecard{position:relative;display:grid;gap:10px;align-content:start;text-align:left;border:1px solid var(--line);border-radius:16px;padding:16px;background:var(--surface);cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s}
@@ -305,20 +302,31 @@ tr.click:hover td{background:var(--hover)}
 .social.fb:hover{background:#166fe5}
 .social svg{width:20px;height:20px;flex:none}
 .legal{font-size:12px;color:var(--ink-2);margin:20px 0 0;line-height:1.5}
-.userbox{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;border:1px solid var(--line)}
-.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(140deg,var(--accent),#f08a5d);color:#fff;display:grid;place-items:center;font-weight:700;flex:none}
-.userbox .meta{min-width:0;flex:1}
-.userbox .meta b{display:block;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.userbox .meta span{display:block;font-size:11.5px;color:var(--ink-2)}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:800;flex:none}
+.head > div:first-child{flex:1;min-width:0}
+.usermenu{position:relative;flex:none}
+.usermenu > button{border:0;padding:0;background:none;border-radius:50%;cursor:pointer;display:block;transition:box-shadow .15s}
+.usermenu > button:hover,.usermenu > button[aria-expanded="true"]{box-shadow:0 0 0 3px var(--accent-soft)}
+.umenu{position:absolute;right:0;top:calc(100% + 8px);width:260px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 1px 3px rgba(40,18,30,.07),0 12px 28px -20px rgba(40,18,30,.45),0 8px 24px -12px rgba(40,18,30,.18);padding:6px;z-index:30;animation:menu-in .16s cubic-bezier(.2,.8,.3,1) both}
+@keyframes menu-in{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.umenu{animation:none}}
+.umenu .who{display:flex;align-items:center;gap:10px;padding:8px 10px 10px}
+.umenu .who b{display:block;font-size:14px}
+.umenu .who span span{display:block;font-size:12px;color:var(--ink-3)}
+.umenu hr{border:0;border-top:1px solid var(--line);margin:4px 2px}
+.umenu .mi{display:flex;align-items:center;gap:10px;width:100%;min-height:38px;padding:7px 10px;border:0;background:none;border-radius:9px;cursor:pointer;font-weight:600;font-size:13.5px;color:var(--ink-2);text-align:left}
+.umenu .mi:hover,.umenu .mi:focus-visible{background:var(--hover);color:var(--ink)}
+.umenu .mi svg{width:16px;height:16px}
+.umenu .mi .chip{margin-left:auto}
+.umenu .mi.out{color:var(--accent-strong)}
 .logout{border:0;background:none;color:var(--ink-2);cursor:pointer;padding:6px;border-radius:8px;display:grid;place-items:center}
 .logout:hover{background:var(--bad-soft);color:var(--bad)}
 @media (max-width:860px){.login{grid-template-columns:minmax(0,1fr);grid-template-rows:220px auto}.photo-mark{display:none}}
-@media (max-width:820px){.userbox{padding:4px;border:0}.userbox .meta{display:none}}
 @media (max-width:1040px){.hero,.two,.split{grid-template-columns:minmax(0,1fr)}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:820px){
   .app{grid-template-columns:minmax(0,1fr)}
   .side{position:sticky;top:env(safe-area-inset-top,0px);height:auto;flex-direction:row;align-items:center;gap:14px;padding:10px 16px;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);z-index:10}
-  .brand small,.proto,.navgroup h6{display:none}
+  .brand small,.navgroup h6{display:none}
   .navgroup{flex-direction:row;gap:2px}
   .nav{white-space:nowrap;width:auto;padding:6px 8px}
   .sheet{height:calc(100% - 32px)}
@@ -442,8 +450,6 @@ tr.click:hover td{background:var(--hover)}
 .offer{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;text-align:left;margin-top:12px;padding:16px 18px;border-radius:16px;border:1px solid var(--line);background:var(--surface-2)}
 .offer b{display:block}
 .offer .d{display:block;color:var(--ink-2);font-size:13.5px}
-.proto .seg{display:flex;flex-wrap:wrap;margin-top:10px}
-.proto .seg button{flex:1 1 auto;justify-content:center;font-size:11.5px;padding:3px 8px;min-height:26px}
 @media (max-width:1100px){.wa-grid{grid-template-columns:minmax(0,1fr)}.phone{justify-self:center}}
 @media (max-width:900px){.cfg-layout{grid-template-columns:minmax(0,1fr)}.cfg-nav{position:static;flex-direction:row;overflow-x:auto;gap:6px}.cfg-nav button{white-space:nowrap;border:1px solid var(--line);border-radius:99px;min-height:32px;padding:4px 12px;font-size:13px;background:var(--surface)}}
 @media (max-width:820px){.head{position:static}.navgroup.sep{border-top:0;padding-top:0;margin-top:0}}
@@ -463,8 +469,6 @@ tr.click:hover td{background:var(--hover)}
     <nav class="navgroup" aria-label="Patrimônio" id="nav-pat"></nav>
     <nav class="navgroup" aria-label="Gastos" id="nav-gas"></nav>
     <nav class="navgroup sep" aria-label="Conta" id="nav-conta"></nav>
-    <div class="userbox" id="userbox"></div>
-    <div class="proto" id="proto"></div>
   </aside>
   <main class="main" id="view"></main>
 </div>
@@ -1307,8 +1311,6 @@ const FACEBOOK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" 
 
 function renderLogin() {
   const root = document.getElementById('login-root');
-  const ub = document.getElementById('userbox');
-  ub.innerHTML = state.user ? `<span class="avatar">${state.user.name[0]}</span><span class="meta"><b>${state.user.name}</b><span>via ${state.user.provider} · ${state.selfhost ? 'auto-hospedada' : state.plan === 'premium' ? 'Premium' : 'Free'}</span></span><button class="logout" data-logout aria-label="Sair" title="Sair">${ic('logout')}</button>` : '';
   if (state.auth) { root.innerHTML = ''; return; }
   root.innerHTML = `<div class="login" role="dialog" aria-modal="true" aria-label="Entrar na Vera">
     <div class="login-photo" aria-hidden="true">
@@ -1428,6 +1430,8 @@ function render() {
   let sel = null; try { sel = a.selectionStart; } catch (e) {}
   renderNav();
   document.getElementById('view').innerHTML = gate(state.screen) || (screens[state.screen] || screens.visao)();
+  const head = document.querySelector('#view .head');
+  if (head && state.user) head.insertAdjacentHTML('beforeend', userMenu());
   document.querySelectorAll('[data-autoscroll]').forEach(el => { el.scrollTop = el.scrollHeight; });
   const navKey = state.screen === 'classe' ? 'visao' : state.screen;
   document.querySelectorAll('.nav').forEach(n => n.setAttribute('aria-current', n.dataset.go === navKey ? 'page' : 'false'));
@@ -1440,6 +1444,7 @@ function render() {
 
 document.addEventListener('click', e => {
   if (e.target.closest('#modal-root')) return;
+  if (state.umenu && !e.target.closest('.usermenu > button')) { state.umenu = false; if (!e.target.closest('[data-act],[data-go],[data-logout]')) return render(); }
   const el = e.target.closest('[data-act],[data-login],[data-logout],[data-export],[data-onb],[data-add-type],[data-go],[data-set],[data-open-class],[data-step],[data-tol],[data-add],[data-del],[data-aporte-quick],[data-flex],[data-fix],[data-pluggy-demo],[data-pluggy-reset]');
   if (!el) return;
   const d = el.dataset;
@@ -1474,6 +1479,7 @@ document.addEventListener('click', e => {
 });
 
 document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && state.umenu) { state.umenu = false; render(); document.querySelector('.usermenu > button')?.focus(); return; }
   if (e.key === 'Escape' && document.getElementById('modal-root').innerHTML) { document.getElementById('modal-root').innerHTML = ''; document.getElementById('modal-root').onclick = null; return; }
   const row = e.target.closest && e.target.closest('[data-open-class]');
   if (row && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); state.cls = row.dataset.openClass; go('classe'); }
@@ -1806,8 +1812,9 @@ const CFG = {
     <section class="card"><div class="cardhead"><div><h2>Idioma</h2><p>Textos da interface e das respostas.</p></div></div>
       <div class="field" style="max-width:300px"><label for="lang">Idioma da interface</label><select class="input" id="lang">${[['pt-BR', 'Português (Brasil)'], ['en', 'English'], ['es', 'Español']].map(([v, l]) => `<option value="${v}" ${state.lang === v ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
     </section>
-    <section class="card proto-card"><div class="cardhead"><div><h2>Protótipo: versão</h2><p>Veja como a Vera fica para quem hospeda a própria instalação.</p></div></div>
-      <div class="seg" role="group" aria-label="Versão do protótipo"><button data-act="mode" data-arg="hosted" aria-pressed="${!state.selfhost}">Hospedada</button><button data-act="mode" data-arg="self" aria-pressed="${state.selfhost}">Auto-hospedada</button></div>
+    <section class="card proto-card"><div class="cardhead"><div><h2>Protótipo</h2><p>Navegável, com dados de exemplo; nada é salvo.</p></div></div>
+      ${setrow('server', 'Versão', 'Veja como a Vera fica para quem hospeda a própria instalação.', `<div class="seg" role="group" aria-label="Versão do protótipo"><button data-act="mode" data-arg="hosted" aria-pressed="${!state.selfhost}">Hospedada</button><button data-act="mode" data-arg="self" aria-pressed="${state.selfhost}">Auto-hospedada</button></div>`)}
+      ${setrow('repeat', 'Onboarding', 'Começa de novo, com a carteira e os bancos vazios.', `<button class="btn sm" data-onb="restart">Rever onboarding</button>`)}
     </section>`,
   dados:() => {
     const f = feat('ia');
@@ -1842,6 +1849,19 @@ function onbOffer() {
 }
 
 /* ---------- navegação ---------- */
+function userMenu() {
+  const u = state.user, open = !!state.umenu;
+  const plan = state.selfhost ? 'Auto-hospedada' : state.plan === 'premium' ? 'Premium' : 'Free';
+  return `<div class="usermenu"><button data-act="umenu" aria-haspopup="menu" aria-expanded="${open}" aria-label="Abrir menu da conta"><span class="avatar">${esc(u.name[0])}</span></button>
+    ${open ? `<div class="umenu" role="menu" aria-label="Conta">
+      <div class="who"><span class="avatar">${esc(u.name[0])}</span><span><b>${esc(u.name)}</b><span>via ${esc(u.provider)}</span></span></div>
+      <hr>
+      ${state.selfhost ? '' : `<button class="mi" role="menuitem" data-act="cfg" data-arg="plano">${ic('crown')}Plano e uso<span class="chip ${state.plan === 'premium' ? 'ok' : 'plain'}">${plan}</span></button>`}
+      <button class="mi" role="menuitem" data-go="config">${ic('gear')}Configurações</button>
+      <hr>
+      <button class="mi out" role="menuitem" data-logout>${ic('logout')}Sair</button>
+    </div>` : ''}</div>`;
+}
 function renderNav() {
   const groups = [
     ['nav-pat', 'Patrimônio', [['visao', 'Visão geral', 'pie'], ['meta', 'Carteira-alvo', 'target'], ['aporte', 'Aporte inteligente', 'zap'], ['ativos', 'Meus ativos', 'wallet']]],
@@ -1851,7 +1871,6 @@ function renderNav() {
   groups.forEach(([id, t, items]) => {
     document.getElementById(id).innerHTML = (t ? `<h6>${t}</h6>` : '') + items.map(([k, l, i]) => `<button class="nav" data-go="${k}">${ic(i)}<span>${l}</span>${k === 'transacoes' ? '<span class="count" id="unc-count"></span>' : ''}</button>`).join('');
   });
-  document.getElementById('proto').innerHTML = `${ic('info')}<span>Protótipo com <b>dados de exemplo</b>; nada é salvo.<br><button class="side-onb" data-onb="restart">Rever onboarding</button><span class="seg" role="group" aria-label="Versão do protótipo"><button data-act="mode" data-arg="hosted" aria-pressed="${!state.selfhost}">Hospedada</button><button data-act="mode" data-arg="self" aria-pressed="${state.selfhost}">Auto-hospedada</button></span></span>`;
 }
 
 /* ---------- modais ---------- */
@@ -1974,6 +1993,7 @@ function openKey(k) {
 function act(a, arg) {
   const w = state.wa;
   switch (a) {
+    case 'umenu': state.umenu = !state.umenu; render(); if (state.umenu) document.querySelector('.umenu .mi')?.focus(); return;
     case 'checkout': return openCheckout();
     case 'cfg': state.cfg = arg; return go('config');
     case 'mode':
