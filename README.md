@@ -27,10 +27,9 @@ Abra `prototipo/index.html` no navegador. Não precisa de build nem de servidor.
 - Visão geral da carteira, carteira-alvo em duas camadas e aporte inteligente
 - Cadastro de ativos por tipo, com renda fixa calculada automaticamente
 - Resumo de gastos, transações com regras de categoria, sugestão de corte e conexões
-- Planos Free e Premium, assinatura simulada (Pix ou cartão via Asaas), gerenciamento da assinatura e medidor da cota de uso
-- Análises com IA (Premium, com opt-in): resumo do mês, onde cortar, leitura da carteira e Pergunte à Vera
-- Vera no WhatsApp (Premium): vínculo por código, conversa simulada com reuniões no Google Agenda e lembretes
-- Configurações centrais (plano, IA, WhatsApp, Google Agenda, bancos, idioma, exportar e excluir conta) e um modo "auto-hospedado", em que cada função aparece só com a chave da pessoa
+- Resumos em texto do mês, dos cortes e da carteira dentro das próprias telas (Premium, com permissão explícita para enviar só totais agregados)
+- Configurações com plano e uso (assinatura simulada via Asaas, Pix ou cartão, e cota mensal), Vera no WhatsApp (vínculo por código e conversa simulada), Google Agenda, bancos, preferências e dados e privacidade
+- Um modo "auto-hospedado", em que não há planos e cada função aparece só com a chave da pessoa
 
 Todos os valores são de exemplo; nada é salvo.
 

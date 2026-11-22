@@ -6,74 +6,74 @@
 <title>Protótipo Vera</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=Nunito:wght@400;500;600;700;800&display=swap">
 <style>
-/* Layout: app de duas colunas, navegação com ícones à esquerda e área de trabalho à direita; tema claro com base rosa; no celular a navegação vira faixa rolável no topo */
+/* Layout: app de duas colunas, navegação à esquerda e área de trabalho à direita, com cabeçalho fixo no topo; tema claro com base rosa; no celular a navegação vira faixa rolável no topo.
+   Base de componentes (tipografia, densidade, cards, botões, campos, segmentado, estados vazios, configurações) alinhada ao design do nexu-fe. */
 :root{
   color-scheme:light;
-  --bg:#fbf5f8; --surface:#ffffff; --surface-2:#f7ecf1; --ink:#2a1822; --ink-2:#7b6270; --line:#f0dce6;
-  --accent:#e0407b; --accent-strong:#bf2a62; --accent-ink:#ffffff; --accent-soft:#fde3ee; --accent-tint:#fff0f6;
+  --bg:#fbf6f8; --surface:#ffffff; --surface-2:#f8eff3; --hover:#f6ebf0; --ink:#2a1822; --ink-2:#64505b; --ink-3:#8c7783; --line:#f0e1e8;
+  --accent:#e0407b; --accent-strong:#bf2a62; --accent-ink:#ffffff; --accent-soft:#fde6ef; --accent-tint:#fff3f8;
   --good:#1b8f63; --good-soft:#dbf2e7; --warn:#c2620d; --warn-soft:#fdead6; --bad:#c32d3a; --bad-soft:#fbdfe2;
   --c-rf_pos:#5868d6; --c-rf_pre:#8b78e3; --c-rf_ipca:#b45bd0; --c-acoes_br:#e0407b; --c-fii:#ef8657; --c-acoes_eua:#22968a; --c-reits:#e6a92c; --c-cripto:#6d3a5f;
-  --f-display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
-  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
-  --r:14px;
-  --shadow:0 1px 2px rgba(120,30,70,.06),0 6px 20px rgba(120,30,70,.06);
+  --f-display:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif; --f-wordmark:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --r:20px; --rc:12px; --px:clamp(16px,2.4vw,28px);
+  --shadow:0 1px 2px rgba(40,18,30,.04),0 6px 20px -6px rgba(40,18,30,.08); --shadow-hover:0 2px 4px rgba(40,18,30,.04),0 16px 40px -12px rgba(120,30,70,.16); --shadow-top:0 1px 2px rgba(40,18,30,.03),0 6px 16px -10px rgba(40,18,30,.14); --shadow-brand:0 6px 16px -6px rgba(224,64,123,.55);
 }
 *{box-sizing:border-box}
 html,body{height:100%}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14.5px;line-height:1.5}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{text-wrap:balance}p{text-wrap:pretty}
+::selection{background:var(--accent-soft);color:var(--accent-strong)}
 button,input,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 svg.i{width:1.1em;height:1.1em;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.18em}
-.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.num{font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .muted{color:var(--ink-2)}
 a{color:var(--accent-strong);font-weight:600}
-.app{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100%}
-.side{background:var(--surface);border-right:1px solid var(--line);padding:22px 14px;display:flex;flex-direction:column;gap:22px;position:sticky;top:env(safe-area-inset-top,0px);height:100vh;overflow:auto}
-.brand{display:flex;align-items:center;gap:10px;padding:0 8px}
-.logo{width:36px;height:36px;border-radius:11px;background:var(--accent);display:grid;place-items:center;flex:none;box-shadow:0 4px 12px rgba(224,64,123,.35)}
-.brand b{font-family:var(--f-display);font-size:25px;font-weight:700;letter-spacing:-.045em;line-height:.9}
+.app{display:grid;grid-template-columns:236px minmax(0,1fr);min-height:100%}
+.side{background:var(--surface);border-right:1px solid var(--line);padding:18px 12px;display:flex;flex-direction:column;gap:6px;position:sticky;top:env(safe-area-inset-top,0px);height:100vh;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:0 6px 10px}
+.logo{width:34px;height:34px;border-radius:10px;background:var(--accent);display:grid;place-items:center;flex:none}
+.brand b{font-family:var(--f-wordmark);font-size:24px;font-weight:700;letter-spacing:-.045em;line-height:.9}
 .brand b::after{content:".";color:var(--accent)}
-.brand small{display:block;font-size:11px;color:var(--ink-2);letter-spacing:.04em;text-transform:uppercase;margin-top:3px}
-.navgroup{display:flex;flex-direction:column;gap:3px}
-.navgroup h6{margin:0 0 6px;padding:0 10px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);font-weight:700}
-.nav{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:10px;color:var(--ink);font-weight:500;border:0;background:none;cursor:pointer;text-align:left;width:100%}
-.nav .ico{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);color:var(--ink-2);flex:none}
-.nav:hover{background:var(--accent-tint)}
-.nav[aria-current="page"]{background:var(--accent-soft);font-weight:600}
-.nav[aria-current="page"] .ico{background:var(--accent);color:#fff}
+.brand small{display:block;font-size:11px;color:var(--ink-3);margin-top:3px}
+.navgroup{display:flex;flex-direction:column;gap:2px}
+.navgroup.sep{border-top:1px solid var(--line);padding-top:8px;margin-top:6px}
+.navgroup h6{margin:0;padding:12px 14px 4px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:800}
+.nav{display:flex;align-items:center;gap:10px;min-height:40px;padding:8px 14px;border-radius:var(--rc);color:var(--ink-2);font-weight:600;font-size:14px;border:0;background:none;cursor:pointer;text-align:left;width:100%;transition:background .15s,color .15s}
+.nav svg{width:17px;height:17px}
+.nav:hover{background:var(--hover);color:var(--ink)}
+.nav[aria-current="page"]{background:var(--accent-soft);color:var(--accent-strong);font-weight:700}
 .nav .count{margin-left:auto;font-size:11px;background:var(--warn);color:#fff;border-radius:99px;padding:0 7px;font-weight:700}
-.proto{margin-top:auto;font-size:12px;color:var(--ink-2);padding:12px;border-radius:12px;background:var(--accent-tint);display:flex;gap:8px}
-.proto svg{color:var(--accent);margin-top:2px}
-.main{min-width:0;padding-block:26px 60px;padding-inline:clamp(16px,3.5vw,44px)}
-.head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px 24px;margin-bottom:22px}
-.head h1{font-family:var(--f-display);font-size:clamp(26px,3.2vw,34px);letter-spacing:-.025em;line-height:1.05;margin:0;text-wrap:balance;display:flex;align-items:center;gap:12px}
-.head h1 .hico{width:42px;height:42px;border-radius:13px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
-.head h1 .hico svg{width:22px;height:22px}
-.head p{margin:8px 0 0;color:var(--ink-2);max-width:64ch}
+.proto{margin-top:auto;font-size:12px;color:var(--ink-2);padding:12px;border-radius:var(--rc);background:var(--surface-2);display:flex;gap:8px}
+.proto svg{color:var(--ink-3);margin-top:2px}
+.main{min-width:0;padding-inline:var(--px);padding-block:0 60px}
+.main > :not(.head){max-width:1180px}
+.head{position:sticky;top:0;z-index:6;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 20px;min-height:68px;margin:0 calc(-1 * var(--px)) 22px;padding:12px var(--px);background:var(--surface);box-shadow:var(--shadow-top)}
+.head h1{font-family:var(--f-body);font-size:19px;font-weight:800;letter-spacing:-.02em;line-height:1.2;margin:0}
+.head p{margin:2px 0 0;color:var(--ink-3);font-size:12.5px;max-width:90ch;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.seg{display:inline-flex;background:var(--surface-2);border-radius:10px;padding:3px;gap:2px}
-.seg button{border:0;background:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px;color:var(--ink-2);display:inline-flex;align-items:center;gap:6px}
-.seg button[aria-pressed="true"]{background:var(--surface);color:var(--accent-strong);box-shadow:0 1px 3px rgba(120,30,70,.15)}
+.seg{display:inline-flex;max-width:100%;overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:3px;gap:2px}
+.seg button{border:0;background:none;min-height:30px;padding:4px 12px;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px;color:var(--ink-2);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff;font-weight:700}
 .grid{display:grid;gap:16px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;min-width:0;box-shadow:var(--shadow)}
-.card h2{font-family:var(--f-display);font-size:18px;margin:0 0 4px;letter-spacing:-.01em;display:flex;align-items:center;gap:8px}
-.card h2 svg{color:var(--accent)}
-.card h2 + p{margin:0 0 16px;color:var(--ink-2);font-size:13.5px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;min-width:0;box-shadow:var(--shadow)}
+.card h2{font-family:var(--f-body);font-size:17px;font-weight:700;margin:0 0 4px;letter-spacing:-.02em;line-height:1.3}
+.card h2 + p{margin:0 0 16px;color:var(--ink-2);font-size:13px}
 .hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px}
-.herocard{background:linear-gradient(140deg,var(--accent-soft) 0%,var(--surface) 62%);position:relative;overflow:hidden}
-.herocard .deco{position:absolute;right:-24px;top:-24px;width:150px;height:150px;color:var(--accent);opacity:.12}
-.herocard .deco svg{width:100%;height:100%;stroke-width:1.4}
-.big{font-family:var(--f-display);font-size:clamp(32px,4.6vw,46px);letter-spacing:-.03em;line-height:1;margin:8px 0 14px;font-variant-numeric:tabular-nums}
-.label{font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-2);font-weight:700;display:flex;align-items:center;gap:6px}
+.herocard{position:relative}
+.big{font-family:var(--f-body);font-weight:800;font-size:clamp(30px,4vw,38px);letter-spacing:-.03em;line-height:1;margin:10px 0 14px;font-variant-numeric:tabular-nums}
+.label{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:800;display:flex;align-items:center;gap:6px}
 .pills{display:flex;flex-wrap:wrap;gap:8px}
-.pill{display:inline-flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:5px 12px;font-size:13px}
-.pill svg{color:var(--accent)}
+.pill{display:inline-flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:4px 11px;font-size:12.5px}
+.pill svg{color:var(--ink-3)}
 .pill b{font-weight:700}
-.callout{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:16px;padding:12px 14px;border-radius:12px;background:var(--surface);border:1px dashed var(--accent)}
-.callout svg{color:var(--accent)}
+.callout{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:16px;padding:12px 14px;border-radius:var(--rc);background:var(--surface-2)}
+.callout svg{color:var(--ink-3)}
 .stackwrap{display:grid;gap:12px}
 .stackrow{display:grid;grid-template-columns:52px minmax(0,1fr);align-items:center;gap:10px;font-size:12.5px;color:var(--ink-2);font-weight:600}
 .stack{display:flex;height:30px;border-radius:9px;overflow:hidden;background:var(--surface-2)}
@@ -86,12 +86,12 @@ a{color:var(--accent-strong);font-weight:600}
 .hint{font-size:12px;color:var(--ink-2);margin-top:10px;display:flex;align-items:center;gap:6px}
 .tablewrap{overflow-x:auto;margin:0 -4px}
 table{width:100%;border-collapse:collapse;min-width:560px}
-th{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);font-weight:700;text-align:left;padding:8px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:800;text-align:left;padding:8px;border-bottom:1px solid var(--line);white-space:nowrap}
 td{padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
 tr:last-child td{border-bottom:0}
 th.r,td.r{text-align:right}
 tr.click{cursor:pointer}
-tr.click:hover td{background:var(--accent-tint)}
+tr.click:hover td{background:var(--hover)}
 .tile{width:32px;height:32px;border-radius:10px;display:inline-grid;place-items:center;flex:none}
 .tile svg{width:17px;height:17px}
 .who{display:flex;align-items:center;gap:11px;min-width:0}
@@ -101,27 +101,31 @@ tr.click:hover td{background:var(--accent-tint)}
 .gauge{position:relative;height:10px;background:var(--surface-2);border-radius:5px;min-width:120px;cursor:pointer}
 .gauge .fill{position:absolute;left:0;top:0;bottom:0;border-radius:5px}
 .gauge .tgt{position:absolute;top:-4px;bottom:-4px;width:3px;background:var(--ink);border-radius:2px}
-.chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;border-radius:99px;padding:3px 10px;white-space:nowrap}
+.chip{display:inline-flex;align-items:center;gap:4px;min-height:22px;font-size:12px;line-height:1;font-weight:700;border-radius:99px;padding:0 9px;white-space:nowrap}
+.chip svg{width:12px;height:12px}
 .chip.ok{background:var(--good-soft);color:var(--good)}
 .chip.up{background:var(--warn-soft);color:var(--warn)}
 .chip.down{background:var(--accent-soft);color:var(--accent-strong)}
 .chip.bad{background:var(--bad-soft);color:var(--bad)}
-.chip.plain{background:var(--surface-2);color:var(--ink-2);font-weight:600}
-.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);padding:8px 14px;border-radius:10px;cursor:pointer;font-weight:600;font-size:13.5px}
-.btn:hover{background:var(--accent-tint);border-color:var(--accent-soft)}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);box-shadow:0 4px 12px rgba(224,64,123,.28)}
-.btn.primary:hover{background:var(--accent-strong)}
+.chip.plain{background:var(--hover);color:var(--ink-2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 16px;border-radius:var(--rc);cursor:pointer;font-weight:600;font-size:14px;transition:background .15s,border-color .15s,filter .15s}
+.btn svg{width:16px;height:16px}
+.btn:hover{background:var(--hover)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);box-shadow:var(--shadow-brand)}
+.btn.primary:hover{background:var(--accent);filter:brightness(1.07)}
 .btn.ghost{border-color:transparent;background:none}
-.btn.sm{padding:5px 11px;font-size:12.5px}
-.btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn.sm{min-height:34px;padding:6px 12px;font-size:13px;border-radius:10px}
+.btn[disabled]{opacity:.55;cursor:not-allowed;box-shadow:none;filter:none}
 .iconbtn{border:0;background:none;cursor:pointer;color:var(--ink-2);padding:6px;border-radius:8px;display:inline-grid;place-items:center}
 .iconbtn:hover{background:var(--bad-soft);color:var(--bad)}
 .field{display:grid;gap:6px}
-.field label{font-size:12.5px;font-weight:700;color:var(--ink-2)}
-.input,select.input{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 11px;min-width:0;width:100%}
-.input:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+.field label{font-size:14px;font-weight:600;color:var(--ink)}
+.input,select.input{border:1px solid var(--line);background:var(--surface);border-radius:11px;padding:10px 14px;min-width:0;width:100%;font-size:15px;transition:border-color .15s}
+.input::placeholder{color:var(--ink-3)}
+.input[readonly]{background:var(--surface-2)}
+.input:focus{border-color:color-mix(in srgb,var(--accent) 45%,transparent);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 10%,transparent)}
 .input.num{text-align:right}
-.input.tiny{width:76px;padding:5px 8px}
+.input.tiny{width:76px;padding:5px 8px;font-size:14px;border-radius:9px}
 .searchbox{position:relative}
 .searchbox svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--ink-2)}
 .searchbox .input{padding-left:38px;font-size:15px;padding-block:11px}
@@ -130,15 +134,16 @@ tr.click:hover td{background:var(--accent-tint)}
 .stepper button:hover{background:var(--accent-tint)}
 .row{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
 .between{justify-content:space-between}
-.note{font-size:13px;color:var(--ink-2);background:var(--surface-2);border-radius:10px;padding:10px 12px;display:flex;gap:9px;align-items:flex-start}
-.note > svg{color:var(--accent);margin-top:2px}
+.note{font-size:13px;color:var(--ink-2);background:var(--surface-2);border-radius:var(--rc);padding:12px 14px;display:flex;gap:10px;align-items:flex-start}
+.note > svg{color:var(--ink-3);margin-top:2px}
 .note b{color:var(--ink)}
 .back{border:0;background:none;color:var(--accent-strong);font-weight:700;cursor:pointer;padding:0;margin-bottom:12px;display:inline-flex;align-items:center;gap:4px}
-.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow);display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;align-items:center}
-.kpi .tile{grid-row:span 2}
-.kpi .v{font-family:var(--f-display);font-size:22px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.1}
-.kpi.focus{background:linear-gradient(140deg,var(--accent-soft),var(--surface) 75%);border-color:var(--accent)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}
+.kpi .label{text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--ink-2)}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.025em;font-variant-numeric:tabular-nums;line-height:1.1}
+.kpi.focus{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
+.kpi.focus .v{color:var(--accent-strong)}
 .hbar{display:grid;grid-template-columns:minmax(150px,230px) minmax(0,1fr) 110px;align-items:center;gap:14px;padding:9px 0;border-bottom:1px solid var(--line)}
 .hbar:last-child{border-bottom:0}
 .hbar .track{height:12px;background:var(--surface-2);border-radius:6px;position:relative;cursor:pointer}
@@ -164,39 +169,40 @@ tr.click:hover td{background:var(--accent-tint)}
 .howto .url{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:12.5px;background:var(--accent-tint);border:1px solid var(--accent-soft);border-radius:8px;padding:3px 9px;text-decoration:none;color:var(--accent-strong);font-weight:500}
 .howto .url:hover{background:var(--accent-soft)}
 .kbd{font-family:var(--f-mono);font-size:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:0 6px;color:var(--ink)}
-.warnbox{background:var(--warn-soft);color:var(--warn);border-radius:10px;padding:8px 12px;font-size:13px;display:flex;gap:8px;align-items:flex-start;margin-top:8px}
+.warnbox{background:var(--warn-soft);color:var(--ink-2);border-radius:var(--rc);padding:10px 14px;font-size:13px;display:flex;gap:8px;align-items:flex-start;margin-top:8px}
+.warnbox svg{color:var(--warn);margin-top:2px}
 .warnbox b{color:var(--ink)}
 .conn{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
 .conn:last-child{border-bottom:0}
 .bank{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-weight:700;font-size:12px;color:#fff;flex:none}
 .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
 .split{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px;align-items:start}
-.modal{position:fixed;inset:0;background:rgba(60,15,38,.42);backdrop-filter:blur(3px);display:grid;place-items:center;padding:16px;z-index:20}
-.sheet{background:var(--surface);border-radius:20px;width:min(980px,100%);height:min(720px,calc(100% - 32px));display:grid;grid-template-rows:auto minmax(0,1fr) auto;box-shadow:0 30px 80px rgba(60,15,38,.3);overflow:hidden}
-.sheet-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:18px 22px;border-bottom:1px solid var(--line)}
-.sheet-head h3{font-family:var(--f-display);margin:0;font-size:22px;display:flex;align-items:center;gap:10px}
+.modal{position:fixed;inset:0;background:rgba(30,12,22,.45);display:grid;place-items:center;padding:16px;z-index:20}
+.sheet{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);width:min(980px,100%);height:min(720px,calc(100% - 32px));display:grid;grid-template-rows:auto minmax(0,1fr) auto;box-shadow:0 1px 3px rgba(40,18,30,.07),0 24px 60px -20px rgba(40,18,30,.4);overflow:hidden}
+.sheet-head{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:12px;padding:20px 22px 12px}
+.sheet-head h3{font-family:var(--f-body);font-weight:800;margin:0;font-size:19px;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
 .sheet-body{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);min-height:0}
 .sheet-left{padding:18px 22px;overflow:auto;display:flex;flex-direction:column;gap:12px;min-height:0}
-.sheet-right{padding:18px 22px;overflow:auto;background:var(--accent-tint);border-left:1px solid var(--line)}
+.sheet-right{padding:18px 22px;overflow:auto;background:var(--surface-2);border-left:1px solid var(--line)}
 .sheet-foot{display:flex;justify-content:flex-end;gap:10px;padding:14px 22px;border-top:1px solid var(--line)}
 .filters{display:flex;flex-wrap:wrap;gap:6px}
 .fchip{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:4px 11px;font-size:12.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;color:var(--ink-2)}
-.fchip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.fchip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
 .results{display:grid;gap:6px}
 .result{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 12px;cursor:pointer}
-.result:hover{border-color:var(--accent-soft);background:var(--accent-tint)}
+.result:hover{border-color:var(--line);background:var(--hover)}
 .result[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
 .preview{display:grid;gap:14px}
 .preview .ptitle{display:flex;align-items:center;gap:12px}
 .preview .ptitle .tile{width:46px;height:46px;border-radius:14px}
 .preview .ptitle .tile svg{width:22px;height:22px}
-.preview .ptitle b{font-family:var(--f-display);font-size:22px;display:block;line-height:1.1}
+.preview .ptitle b{font-size:20px;font-weight:800;display:block;line-height:1.15}
 .pvalue{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px}
 .pvalue .big{font-size:30px;margin:4px 0 2px}
 .empty{display:grid;place-items:center;text-align:center;height:100%;color:var(--ink-2);gap:10px;padding:30px}
 .empty svg{width:44px;height:44px;color:var(--accent);opacity:.5;stroke-width:1.5}
 .formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;font-size:13.5px;z-index:30;box-shadow:0 10px 24px rgba(60,15,38,.3);display:flex;gap:8px;align-items:center}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:var(--rc);font-weight:600;font-size:13.5px;z-index:30;box-shadow:var(--shadow-hover);display:flex;gap:8px;align-items:center}
 .toast svg{color:#ff9cc2}
 .tip{position:fixed;z-index:40;pointer-events:none;background:var(--ink);color:#fff;border-radius:12px;padding:10px 12px;font-size:12.5px;min-width:190px;box-shadow:0 12px 28px rgba(60,15,38,.3)}
 .tip .t{font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:7px;margin-bottom:6px}
@@ -209,7 +215,7 @@ tr.click:hover td{background:var(--accent-tint)}
 .allocclass header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:12px 14px}
 .allocclass header .amt{margin-left:auto;font-family:var(--f-display);font-size:20px;color:var(--accent-strong)}
 .allocasset{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:14px;padding:9px 14px 9px 60px;border-top:1px solid var(--line);font-size:13.5px}
-.onb{position:fixed;inset:0;z-index:15;background:radial-gradient(ellipse 80% 60% at 0% 0%,var(--accent-soft),transparent 70%),radial-gradient(ellipse 60% 50% at 100% 100%,#fff0e8,transparent 70%),var(--bg);overflow:auto;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+.onb{position:fixed;inset:0;z-index:15;background:var(--bg);overflow:auto;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
 .onb-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 20px;padding:16px clamp(16px,4vw,40px)}
 .onb-prog{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .onb-prog span{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--ink-2)}
@@ -221,20 +227,20 @@ tr.click:hover td{background:var(--accent-tint)}
 .onb-prog i{width:22px;height:2px;background:var(--line);border-radius:1px}
 .onb-body{flex:1;padding-block:8px 48px;padding-inline:clamp(16px,4vw,40px);display:grid;justify-items:center;align-content:start}
 .onb-grid{width:min(1100px,100%);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:32px;align-items:start;margin-top:12px}
-.eyebrow{display:inline-flex;gap:6px;align-items:center;font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--accent-strong);background:var(--surface);border:1px solid var(--accent-soft);border-radius:99px;padding:4px 11px}
-.onb h2.display{font-family:var(--f-display);font-size:clamp(30px,4.2vw,46px);letter-spacing:-.035em;line-height:1.03;margin:14px 0 14px;text-wrap:balance}
+.eyebrow{display:inline-flex;gap:6px;align-items:center;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-strong);background:var(--accent-soft);border-radius:99px;padding:4px 11px}
+.onb h2.display{font-family:var(--f-body);font-weight:800;font-size:clamp(28px,3.6vw,40px);letter-spacing:-.03em;line-height:1.08;margin:14px 0 14px;text-wrap:balance}
 .onb h2.display em{font-style:normal;color:var(--accent)}
 .lead{font-size:16px;color:var(--ink-2);max-width:54ch;margin:0 0 22px;line-height:1.55}
-.whyh{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-2);margin:0 0 12px}
+.whyh{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin:0 0 12px}
 .why{display:grid;gap:14px;margin:0 0 20px;padding:0;list-style:none}
 .why li{display:grid;grid-template-columns:42px minmax(0,1fr);gap:13px;align-items:start}
-.why li .tile{width:42px;height:42px;border-radius:13px;background:var(--surface);color:var(--accent);border:1px solid var(--accent-soft);box-shadow:var(--shadow)}
+.why li .tile{width:40px;height:40px;border-radius:12px;background:var(--surface-2);color:var(--ink-2)}
 .why b{display:block;font-size:15px;margin-top:1px}
 .why .d{color:var(--ink-2);font-size:13.5px}
 .onb-foot{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
 .trust{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
 .pathcards{display:grid;gap:12px}
-.pathcard{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
+.pathcard{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)}
 .pathcard .tile{width:52px;height:52px;border-radius:16px}
 .pathcard .tile svg{width:24px;height:24px}
 .pathcard b{display:block;font-size:16px}
@@ -249,13 +255,13 @@ tr.click:hover td{background:var(--accent-tint)}
 .summary .srow{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow)}
 .summary .srow .tile{width:44px;height:44px;border-radius:13px}
 .done-hero{width:min(720px,100%);text-align:center;margin-top:20px}
-.done-hero .burst{width:84px;height:84px;border-radius:26px;background:var(--accent);color:#fff;display:grid;place-items:center;margin:0 auto 6px;box-shadow:0 14px 34px rgba(224,64,123,.35)}
-.done-hero .burst svg{width:40px;height:40px}
+.done-hero .burst{width:64px;height:64px;border-radius:20px;background:var(--good-soft);color:var(--good);display:grid;place-items:center;margin:0 auto 6px}
+.done-hero .burst svg{width:30px;height:30px}
 .side-onb{border:0;background:none;color:var(--accent-strong);font-weight:700;cursor:pointer;padding:0;margin-top:6px;font-size:12px;display:inline-flex;gap:5px;align-items:center}
 @media (max-width:900px){.onb-grid{grid-template-columns:minmax(0,1fr)}.onb-prog span:not(.cur) em{display:none}}
 .typegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
 .typecard{position:relative;display:grid;gap:10px;align-content:start;text-align:left;border:1px solid var(--line);border-radius:16px;padding:16px;background:var(--surface);cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s}
-.typecard:hover{border-color:var(--accent);box-shadow:0 8px 22px rgba(224,64,123,.14);transform:translateY(-2px)}
+.typecard:hover{border-color:color-mix(in srgb,var(--accent) 40%,var(--line));box-shadow:var(--shadow-hover);transform:translateY(-1px)}
 .typecard .tile{width:46px;height:46px;border-radius:14px}
 .typecard .tile svg{width:22px;height:22px}
 .typecard b{display:block;font-size:15px;line-height:1.25}
@@ -315,7 +321,6 @@ tr.click:hover td{background:var(--accent-tint)}
   .brand small,.proto,.navgroup h6{display:none}
   .navgroup{flex-direction:row;gap:2px}
   .nav{white-space:nowrap;width:auto;padding:6px 8px}
-  .nav .ico{width:26px;height:26px}
   .sheet{height:calc(100% - 32px)}
   .sheet-body{grid-template-columns:minmax(0,1fr);overflow:auto}
   .sheet-left,.sheet-right{overflow:visible}
@@ -329,103 +334,121 @@ tr.click:hover td{background:var(--accent-tint)}
   .allocasset{padding-left:14px}
 }
 @media (prefers-reduced-motion:no-preference){.gauge .fill,.stack span,.hbar .track span{transition:width .35s ease,filter .15s}}
-/* Premium, IA, WhatsApp, Google Agenda e Configurações */
-.tag{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:99px;padding:1px 8px;background:linear-gradient(120deg,var(--accent),#f08a5d);color:#fff;white-space:nowrap;vertical-align:middle}
-.tag svg{width:11px;height:11px}
-.nav .tag{margin-left:auto;padding:3px 6px}
-.linkbtn{border:0;background:none;padding:0;color:var(--accent-strong);font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
-.btn.danger{color:var(--bad);border-color:var(--bad-soft)}
-.btn.danger:hover{background:var(--bad-soft);border-color:var(--bad-soft)}
+/* Premium, WhatsApp, Google Agenda, Configurações: componentes no padrão do nexu-fe */
+.linkbtn{border:0;background:none;padding:0;color:var(--accent-strong);font-weight:700;cursor:pointer;font-size:inherit;text-underline-offset:3px}
+.linkbtn:hover{text-decoration:underline}
+.hint{font-size:12.5px;color:var(--ink-3);display:inline-flex;align-items:center;gap:6px}
+.hint svg{width:14px;height:14px}
+.btn.ghost{border-color:transparent;background:none}
+.btn.ghost:hover{background:var(--hover)}
+.btn.danger{color:var(--bad);border-color:var(--line)}
+.btn.danger:hover{background:var(--bad-soft)}
 .btn.danger.solid{background:var(--bad);border-color:var(--bad);color:#fff}
-.btn.danger.solid:hover{background:#a3222e}
-.plans{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:stretch}
-.plan{display:flex;flex-direction:column;gap:14px}
-.plan.pro{border-color:var(--accent);background:linear-gradient(160deg,var(--accent-soft),var(--surface) 55%);position:relative;overflow:hidden}
-.plan .price{font-family:var(--f-display);font-size:42px;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
-.plan .price small{font-family:var(--f-body);font-size:14px;color:var(--ink-2);font-weight:500;letter-spacing:0;margin-left:4px}
-.plan .feats{list-style:none;margin:0;padding:0;display:grid;gap:11px;flex:1}
-.plan .feats li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:11px;align-items:start}
-.plan .feats .tile{width:30px;height:30px;border-radius:9px;background:var(--surface-2);color:var(--ink-2)}
-.plan.pro .feats .tile{background:var(--surface);color:var(--accent)}
-.plan .feats b{display:block;font-size:14px}
-.plan .feats .d{display:block;font-size:12.5px;color:var(--ink-2)}
-.yes{color:var(--good)}
-.meterbox{display:grid;gap:8px}
-.meter{position:relative;height:12px;background:var(--surface-2);border-radius:6px}
-.meter span{position:absolute;left:0;top:0;bottom:0;border-radius:6px}
-.meter i{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink-2);border-radius:1px;opacity:.6}
-.switch{appearance:none;-webkit-appearance:none;width:42px;height:24px;border-radius:99px;background:#e3cfd9;position:relative;cursor:pointer;flex:none;margin:0;transition:background .15s}
-.switch::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(60,15,38,.25);transition:transform .15s}
-.switch:checked{background:var(--accent)}
-.switch:checked::after{transform:translateX(18px)}
-.switch:disabled{opacity:.5;cursor:not-allowed}
-.setrow{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
-.setrow:last-child{border-bottom:0;padding-bottom:0}
-.setrow:first-of-type{padding-top:4px}
-.setrow .tile{width:40px;height:40px;border-radius:12px;background:var(--accent-soft);color:var(--accent-strong)}
-.setrow b{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.setrow .actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
-.cfg{display:grid;gap:16px;max-width:880px}
-.cfg .card{scroll-margin-top:16px}
-.lockcard{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px;align-items:center}
-.fgrid{display:grid;gap:12px;margin:16px 0 20px;padding:0;list-style:none}
-.fgrid li{display:grid;grid-template-columns:38px minmax(0,1fr);gap:12px;align-items:start}
-.fgrid .tile{width:38px;height:38px;border-radius:12px;background:var(--surface);color:var(--accent);border:1px solid var(--accent-soft)}
-.fgrid b{display:block}
-.fgrid .d{font-size:13px;color:var(--ink-2)}
-.sample{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow);position:relative}
-.sample .label{margin-bottom:8px}
-.prose p{margin:0 0 12px;font-size:15px;line-height:1.6;max-width:70ch}
+.btn.danger.solid:hover{filter:brightness(1.07);background:var(--bad)}
+.cardhead{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px}
+.cardhead > div{min-width:0;flex:1}
+.cardhead:last-child{margin-bottom:0}
+.cardhead h2{margin:0 0 4px}
+.cardhead p,.card .cardhead h2 + p{margin:0;color:var(--ink-2);font-size:13px;max-width:72ch}
+.tipbox{font-size:13px;color:var(--ink-2);background:var(--surface-2);border-radius:var(--rc);padding:12px 14px;margin:0 0 14px}
+.tipbox b{color:var(--ink)}
+.banner{display:grid;gap:2px;border-radius:var(--rc);padding:10px 14px;font-size:13px;color:var(--ink-2);border-left:3px solid;margin-top:12px}
+.banner b{font-weight:700}
+.banner.warn{background:var(--warn-soft);border-color:var(--warn)}
+.banner.warn b{color:var(--warn)}
+.banner.crit{background:var(--bad-soft);border-color:var(--bad)}
+.banner.crit b{color:var(--bad)}
+.emptybox{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;border:1px dashed #e6cdd8;border-radius:16px;padding:48px 24px;background:var(--surface)}
+.emptybox h3{margin:0;font-size:16px;font-weight:700}
+.emptybox p{margin:0 0 6px;max-width:52ch;color:var(--ink-2)}
+.empty-plain{display:grid;place-items:center;gap:12px;padding:56px 20px;color:var(--ink-2);text-align:center}
+.empty-plain p{margin:0}
+.explain{margin-top:16px}
+.prose p{margin:0 0 10px;font-size:14.5px;line-height:1.65;max-width:76ch}
 .prose p:last-child{margin-bottom:0}
-.prose b{color:var(--accent-strong)}
-.chat{display:flex;flex-direction:column;gap:10px;min-height:260px;max-height:440px;overflow:auto;padding:4px 2px}
-.bubble{max-width:82%;padding:10px 13px;border-radius:16px;font-size:14px;line-height:1.5;overflow-wrap:anywhere}
-.bubble.me{align-self:flex-end;background:var(--accent);color:#fff;border-bottom-right-radius:5px}
-.bubble.vera{align-self:flex-start;background:var(--surface-2);border-bottom-left-radius:5px}
-.bubble .btn{margin-top:8px}
-.suggest{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
-.askbar{display:flex;gap:8px}
-.askbar .input{flex:1}
-.payload{font-family:var(--f-mono);font-size:12px;line-height:1.55;background:var(--ink);color:#f5dbe7;border-radius:12px;padding:14px;margin:0;overflow:auto;max-height:300px;white-space:pre}
-.phone{width:min(390px,100%);height:620px;border-radius:34px;border:9px solid #2a1822;background:#efe7de;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 50px rgba(60,15,38,.22);justify-self:center}
-.wa-top{background:#0b6b5c;color:#fff;display:flex;align-items:center;gap:10px;padding:12px 14px}
-.wa-top .logo{width:34px;height:34px;border-radius:50%;box-shadow:none}
-.wa-top b{display:block;font-size:14.5px}
-.wa-top span{font-size:11.5px;opacity:.8}
+.prose b{font-weight:700}
+.lockline{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;font-size:13.5px;color:var(--ink-2)}
+.lockline > svg{color:var(--ink-3)}
+.lockline > span{flex:1;min-width:220px}
+.lockline b{color:var(--ink)}
+.plans{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.plan{display:flex;flex-direction:column;gap:10px}
+.plan.pro{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+.plan .price{font-size:32px;font-weight:800;letter-spacing:-.03em;line-height:1.1;font-variant-numeric:tabular-nums}
+.plan .price small{font-size:14px;color:var(--ink-3);font-weight:600;letter-spacing:0;margin-left:2px}
+.plan .btn{margin-top:auto}
+.yes{color:var(--good)}
+.plainlist{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:13.5px}
+.plainlist li{display:flex;gap:8px;align-items:flex-start}
+.plainlist svg{color:var(--good);margin-top:2px}
+.meterbox{display:grid;gap:8px}
+.meter{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.meter span{display:block;height:100%;border-radius:99px;background:var(--accent);transition:width .15s}
+.meter.warn span{background:var(--warn)}
+.meter.crit span{background:var(--bad)}
+.switch{appearance:none;-webkit-appearance:none;width:40px;height:24px;border-radius:99px;background:#e4d3db;position:relative;cursor:pointer;flex:none;margin:0;transition:background .15s}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(40,18,30,.25);transition:transform .15s}
+.switch:checked{background:var(--accent)}
+.switch:checked::after{transform:translateX(16px)}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--ink-2)}
+.check input{accent-color:var(--accent);margin-top:3px;flex:none}
+.setrow{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px 0;border-top:1px solid var(--line)}
+.cardhead + .setrow,.sheet-single > .setrow:first-child,.sheet-single > p + .setrow{border-top:0;padding-top:0}
+.setrow .sico{width:36px;height:36px;border-radius:11px;background:var(--surface-2);color:var(--ink-2);display:grid;place-items:center}
+.setrow .sico svg{width:17px;height:17px}
+.setrow b{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-weight:700}
+.setrow .actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+.prefix{display:inline-flex;align-items:center;padding:0 12px;min-height:44px;border:1px solid var(--line);border-radius:11px;background:var(--surface-2);font-weight:600;color:var(--ink-2)}
+.cfg-layout{display:grid;grid-template-columns:13rem minmax(0,1fr);gap:24px;align-items:start}
+.cfg-nav{position:sticky;top:90px;display:flex;flex-direction:column;gap:2px}
+.cfg-nav button{border:0;background:none;text-align:left;min-height:38px;padding:8px 12px;border-radius:10px;font-weight:600;font-size:14px;color:var(--ink-2);cursor:pointer}
+.cfg-nav button:hover{background:var(--hover);color:var(--ink)}
+.cfg-nav button[aria-current="page"]{background:var(--accent-soft);color:var(--accent-strong);font-weight:700}
+.cfg-body{display:grid;gap:16px;min-width:0}
+.cfg-body > .card .field + .row,.cfg-body > .card .field + .check,.cfg-body > .card .check + .row,.cfg-body > .card .tipbox + .field{margin-top:14px}
+.proto-card{background:var(--surface-2);box-shadow:none}
+.wa-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,380px);gap:16px;align-items:start}
+.evt{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.evt:last-child{border-bottom:0}
+.evt .when{font-size:12px;font-variant-numeric:tabular-nums;color:var(--ink-2);background:var(--surface-2);border-radius:8px;padding:2px 8px;white-space:nowrap}
+.bubble{max-width:86%;padding:8px 12px;border-radius:10px;font-size:13.5px;line-height:1.45;overflow-wrap:anywhere;box-shadow:0 1px 1px rgba(0,0,0,.07)}
+.phone{width:100%;max-width:380px;height:600px;border-radius:24px;border:1px solid var(--line);background:#efe9e4;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.wa-top{background:#17936a;color:#fff;display:flex;align-items:center;gap:10px;padding:12px 14px}
+.wa-top .logo{width:32px;height:32px;border-radius:50%}
+.wa-top b{display:block;font-size:14px}
+.wa-top span{font-size:11.5px;opacity:.85}
 .wa-body{flex:1;overflow:auto;padding:14px 12px;display:flex;flex-direction:column;gap:8px}
-.wa-body .bubble{font-size:13.5px;box-shadow:0 1px 1px rgba(0,0,0,.08);border-radius:10px;max-width:86%}
-.wa-body .bubble.me{background:#d9fdd3;color:#14261c;border-bottom-right-radius:3px}
-.wa-body .bubble.vera{background:#fff;border-bottom-left-radius:3px}
-.wa-body .sys{align-self:center;background:#fff6d6;color:#6b5412;font-size:12px;border-radius:8px;padding:5px 10px;text-align:center;max-width:90%}
-.wa-chips{display:flex;gap:6px;overflow-x:auto;padding:8px 10px 0;background:#efe7de}
+.wa-body .bubble.me{align-self:flex-end;background:#d9fbe9;color:#14261c;border-bottom-right-radius:3px}
+.wa-body .bubble.vera{align-self:flex-start;background:#fff;border-bottom-left-radius:3px}
+.wa-body .sys{align-self:center;background:#fff6dc;color:#6b5412;font-size:12px;border-radius:8px;padding:5px 10px;text-align:center;max-width:92%}
+.wa-chips{display:flex;gap:6px;overflow-x:auto;padding:8px 10px 0}
 .wa-chips .fchip{white-space:nowrap;background:#fff}
 .fchip[disabled]{opacity:.5;cursor:not-allowed}
-.wa-bar{display:flex;gap:8px;padding:8px 10px 12px;background:#efe7de}
-.wa-bar .input{border-radius:99px;border-color:#fff}
-.wa-bar button{width:40px;height:40px;border-radius:50%;border:0;background:#0b6b5c;color:#fff;display:grid;place-items:center;cursor:pointer;flex:none}
+.wa-bar{display:flex;gap:8px;padding:8px 10px 12px}
+.wa-bar .input{border-radius:99px;border-color:#fff;padding:9px 14px}
+.wa-bar button{width:40px;height:40px;border-radius:50%;border:0;background:#17936a;color:#fff;display:grid;place-items:center;cursor:pointer;flex:none}
 .wa-bar button[disabled]{opacity:.45;cursor:not-allowed}
-.codein{font-family:var(--f-mono);font-size:22px;letter-spacing:.4em;text-align:center}
-.evt{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px}
-.evt:last-child{border-bottom:0}
-.evt .when{font-family:var(--f-mono);font-size:12px;color:var(--ink-2);background:var(--surface-2);border-radius:8px;padding:2px 8px;white-space:nowrap}
-.gconsent{border:1px solid #dadce0;border-radius:12px;padding:18px;background:#fff;display:grid;gap:12px;font-family:Roboto,Arial,sans-serif}
-.gconsent .perm{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:8px;background:#f1f3f4;font-size:13.5px}
-.sheet.narrow{width:min(600px,100%);height:auto;max-height:calc(100% - 32px)}
-.sheet.mid{width:min(880px,100%);height:auto;max-height:calc(100% - 32px)}
+.codein{font-family:var(--f-mono);font-size:20px;letter-spacing:.35em;text-align:center}
+.payload{font-family:var(--f-mono);font-size:12px;line-height:1.55;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:var(--rc);padding:14px;margin:0;overflow:auto;max-height:340px;white-space:pre}
+.sheet.narrow{width:min(560px,100%);height:auto;max-height:calc(100% - 32px)}
+.sheet.mid{width:min(860px,100%);height:auto;max-height:calc(100% - 32px)}
 .sheet.narrow .sheet-single,.sheet.mid .sheet-body{overflow:auto}
-.qr{width:168px;height:168px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px;flex:none}
+.sheet-left > .seg{align-self:flex-start}
+.qr{width:160px;height:160px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px;flex:none}
 .pixbox{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
-.spin{width:38px;height:38px;border-radius:50%;border:3px solid var(--accent-soft);border-top-color:var(--accent);animation:spin 1s linear infinite}
+.spin{width:32px;height:32px;border-radius:50%;border:3px solid var(--accent-soft);border-top-color:var(--accent);animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-@media (prefers-reduced-motion:reduce){.spin{animation-duration:3s}.switch,.switch::after{transition:none}}
-.offer{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:14px;align-items:center;text-align:left;margin-top:18px;padding:16px;border-radius:16px;border:1px dashed var(--accent);background:linear-gradient(140deg,var(--accent-tint),var(--surface) 70%)}
-.offer .tile{width:44px;height:44px;border-radius:13px;background:linear-gradient(140deg,var(--accent),#f08a5d);color:#fff}
-.offer b{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){.spin{animation-duration:2.5s}.switch,.switch::after,.meter span{transition:none}}
+.offer{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;text-align:left;margin-top:12px;padding:16px 18px;border-radius:16px;border:1px solid var(--line);background:var(--surface-2)}
+.offer b{display:block}
 .offer .d{display:block;color:var(--ink-2);font-size:13.5px}
 .proto .seg{display:flex;flex-wrap:wrap;margin-top:10px}
-.proto .seg button{font-size:11.5px;padding:4px 8px}
-@media (max-width:1040px){.plans,.lockcard{grid-template-columns:minmax(0,1fr)}}
-@media (max-width:540px){.setrow{grid-template-columns:40px minmax(0,1fr)}.setrow .actions{grid-column:1 / -1;justify-content:flex-start}.offer{grid-template-columns:44px minmax(0,1fr)}.offer .btn{grid-column:1 / -1}.phone{height:560px}}
+.proto .seg button{flex:1 1 auto;justify-content:center;font-size:11.5px;padding:3px 8px;min-height:26px}
+@media (max-width:1100px){.wa-grid{grid-template-columns:minmax(0,1fr)}.phone{justify-self:center}}
+@media (max-width:900px){.cfg-layout{grid-template-columns:minmax(0,1fr)}.cfg-nav{position:static;flex-direction:row;overflow-x:auto;gap:6px}.cfg-nav button{white-space:nowrap;border:1px solid var(--line);border-radius:99px;min-height:32px;padding:4px 12px;font-size:13px;background:var(--surface)}}
+@media (max-width:820px){.head{position:static}.navgroup.sep{border-top:0;padding-top:0;margin-top:0}}
+@media (max-width:720px){.plans{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:540px){.setrow{grid-template-columns:36px minmax(0,1fr)}.setrow .actions{grid-column:1 / -1;justify-content:flex-start}.offer{grid-template-columns:minmax(0,1fr)}.phone{height:540px}}
 </style>
 <style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
 </head>
@@ -439,8 +462,7 @@ tr.click:hover td{background:var(--accent-tint)}
     </div>
     <nav class="navgroup" aria-label="Patrimônio" id="nav-pat"></nav>
     <nav class="navgroup" aria-label="Gastos" id="nav-gas"></nav>
-    <nav class="navgroup" aria-label="Assistente" id="nav-pro"></nav>
-    <nav class="navgroup" aria-label="Conta" id="nav-conta"></nav>
+    <nav class="navgroup sep" aria-label="Conta" id="nav-conta"></nav>
     <div class="userbox" id="userbox"></div>
     <div class="proto" id="proto"></div>
   </aside>
@@ -501,7 +523,6 @@ const P = {
   help:'<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/>',
   calendar:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
   piggy:'<path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2V5z"/><path d="M2 9v1c0 1.1.9 2 2 2h1M16 11h.01"/>',
-  sparkle:'<path d="M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z"/>',
   msg:'<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
   gear:'<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>',
   crown:'<path d="M11.56 3.27a.5.5 0 0 1 .88 0l2.95 5.6a1 1 0 0 0 1.52.29L21.18 5.5a.5.5 0 0 1 .8.52l-2.83 10.25a1 1 0 0 1-.96.73H5.81a1 1 0 0 1-.96-.73L2.02 6.02a.5.5 0 0 1 .8-.52l4.27 3.66a1 1 0 0 0 1.52-.29z"/><path d="M5 21h14"/>',
@@ -692,7 +713,7 @@ function allocate(amount, items) {
 }
 
 const baseSeg = () => `<div class="seg" role="group" aria-label="Moeda"><button data-set="base" data-val="BRL" aria-pressed="${state.base === 'BRL'}">R$</button><button data-set="base" data-val="USD" aria-pressed="${state.base === 'USD'}">${ic('dollar')}US$</button></div>`;
-const title = (icon, text) => `<h1><span class="hico">${ic(icon)}</span>${text}</h1>`;
+const title = (icon, text) => `<h1>${text}</h1>`;
 
 const screens = {};
 
@@ -702,11 +723,10 @@ screens.visao = () => {
   const worst = [...rows].sort((a, b) => Math.abs(b.dev) - Math.abs(a.dev))[0];
   const outside = rows.filter(r => Math.abs(r.dev) > state.tol).length;
   return `
-  <div class="head"><div>${title('pie', 'Seu patrimônio')}<p>Como a carteira está distribuída hoje, comparada com a distribuição que você definiu.</p></div><div class="controls">${iaBtn('carteira', 'Ler com IA')}${baseSeg()}</div></div>
+  <div class="head"><div>${title('pie', 'Seu patrimônio')}<p>Como a carteira está distribuída hoje, comparada com a distribuição que você definiu.</p></div><div class="controls">${baseSeg()}</div></div>
   <div class="hero">
     <section class="card herocard">
-      <div class="deco">${ic('coins')}</div>
-      <div class="label">${ic('wallet')}Patrimônio total</div>
+      <div class="label">Patrimônio total</div>
       <div class="big num">${money(total)}</div>
       <div class="pills">
         <span class="pill">${ic('globe')}Exposição ao dólar <b class="num">${pct(total ? usdExp / total * 100 : 0)}</b></span>
@@ -716,7 +736,7 @@ screens.visao = () => {
       <div class="callout">${ic('target')}<span>Maior desvio: <b>${CLS[worst.cls].name}</b>, ${pp(worst.dev).replace('+', '')} ${worst.dev > 0 ? 'acima' : 'abaixo'} da meta.</span><button class="btn sm primary" data-go="aporte" style="margin-left:auto">${ic('zap')}Onde aportar</button></div>
     </section>
     <section class="card">
-      <h2>${ic('sliders')}Atual × meta</h2><p>Passe o mouse sobre as barras para ver os valores.</p>
+      <h2>Atual × meta</h2><p>Passe o mouse sobre as barras para ver os valores.</p>
       <div class="stackwrap">
         <div class="stackrow"><span>Atual</span><div class="stack">${rows.map(r => `<span style="width:${r.share}%;background:var(--c-${r.cls})" data-tip="${r.cls}" data-tip-kind="atual"></span>`).join('')}</div></div>
         <div class="stackrow"><span>Meta</span><div class="stack meta">${rows.map(r => `<span style="width:${r.target}%;background:var(--c-${r.cls})" data-tip="${r.cls}" data-tip-kind="meta"></span>`).join('')}</div></div>
@@ -724,8 +744,9 @@ screens.visao = () => {
       <div class="legend">${rows.map(r => `<span><i style="background:var(--c-${r.cls})"></i>${CLS[r.cls].name}</span>`).join('')}</div>
     </section>
   </div>
+  ${explainCard('carteira')}
   <section class="card" style="margin-top:16px">
-    <h2>${ic('bars')}Distribuição por classe</h2><p>Clique numa classe para calibrar os ativos dentro dela. Faixa de tolerância: ±${state.tol} pp.</p>
+    <h2>Distribuição por classe</h2><p>Clique numa classe para calibrar os ativos dentro dela. Faixa de tolerância: ±${state.tol} pp.</p>
     <div class="tablewrap"><table>
       <thead><tr><th>Classe</th><th class="r">Valor</th><th class="r">Atual</th><th class="r">Meta</th><th>Atual vs meta</th><th>Situação</th></tr></thead>
       <tbody>${rows.map(r => `<tr class="click" data-open-class="${r.cls}" tabindex="0">
@@ -744,7 +765,7 @@ screens.classe = () => {
   const tsum = groups.reduce((s, g) => s + g.target, 0);
   return `
   <button class="back" data-go="visao">${ic('left')}Visão geral</button>
-  <div class="head"><div><h1><span class="hico" style="${tint(c.id)}">${ic(c.icon)}</span>${c.name}</h1><p>${money(total)} · ${pct(r.share)} do patrimônio, meta de ${pct(r.target, 0)}. Defina quanto cada ativo deve pesar dentro da classe.</p></div><div class="controls">${baseSeg()}</div></div>
+  <div class="head"><div><h1>${c.name}</h1><p>${money(total)} · ${pct(r.share)} do patrimônio, meta de ${pct(r.target, 0)}. Defina quanto cada ativo deve pesar dentro da classe.</p></div><div class="controls">${baseSeg()}</div></div>
   <section class="card">
     ${groups.length ? `<div class="tablewrap"><table>
       <thead><tr><th>Ativo</th><th class="r">Valor</th><th class="r">Na classe</th><th>Atual vs meta</th><th class="r">Meta na classe</th><th>Situação</th></tr></thead>
@@ -770,7 +791,7 @@ screens.meta = () => {
   <div class="head"><div>${title('target', 'Carteira-alvo')}<p>Quanto do patrimônio você quer em cada classe.</p></div></div>
   <div class="split">
     <section class="card">
-      <h2>${ic('sliders')}Metas por classe</h2><p>Ajuste os percentuais; a visão geral recalcula na hora.</p>
+      <h2>Metas por classe</h2><p>Ajuste os percentuais; a visão geral recalcula na hora.</p>
       <div class="tablewrap"><table style="min-width:420px">
         <thead><tr><th>Classe</th><th class="r">Hoje</th><th class="r">Meta</th></tr></thead>
         <tbody>${CLASSES.map(c => { const r = rows.find(x => x.cls === c.id); return `<tr>
@@ -783,12 +804,12 @@ screens.meta = () => {
     </section>
     <div class="grid">
       <section class="card">
-        <h2>${ic('target')}Faixa de tolerância</h2><p>Abaixo desse desvio, a classe aparece como "na faixa" e não gera alerta.</p>
+        <h2>Faixa de tolerância</h2><p>Abaixo desse desvio, a classe aparece como "na faixa" e não gera alerta.</p>
         <div class="row"><span class="stepper"><button data-tol="-1" aria-label="Diminuir tolerância">−</button><input class="input num tiny" type="number" min="0" max="20" id="tol" data-tol-input value="${state.tol}" aria-label="Tolerância em pontos percentuais"><button data-tol="1" aria-label="Aumentar tolerância">+</button></span><span class="muted">pontos percentuais</span></div>
         <p class="note" style="margin:16px 0 0">${ic('info')}<span>Com meta de 20% e tolerância de ${state.tol} pp, a classe fica na faixa entre ${20 - state.tol}% e ${20 + state.tol}%.</span></p>
       </section>
       <section class="card">
-        <h2>${ic('sparkle')}Classes editáveis</h2><p style="margin:0">No produto, dá pra juntar FIIs e REITs em "Imóveis", criar "Previdência" ou renomear qualquer classe.</p>
+        <h2>Classes editáveis</h2><p style="margin:0">No produto, dá pra juntar FIIs e REITs em "Imóveis", criar "Previdência" ou renomear qualquer classe.</p>
       </section>
     </div>
   </div>`;
@@ -803,7 +824,6 @@ screens.aporte = () => {
   return `
   <div class="head"><div>${title('zap', 'Aporte inteligente')}<p>Diga quanto vai investir e veja onde colocar para aproximar a carteira da meta, sem vender nada (vender gera imposto).</p></div><div class="controls">${baseSeg()}</div></div>
   <section class="card herocard">
-    <div class="deco">${ic('zap')}</div>
     <div class="row" style="align-items:flex-end;gap:16px">
       <div class="field" style="max-width:260px"><label for="aporte">Quanto você vai aportar (R$)</label><input class="input num" style="font-size:20px;font-family:var(--f-display)" id="aporte" type="number" min="0" step="500" value="${amount}" data-aporte></div>
       <div class="row">${[5000, 10000, 25000, 50000].map(v => `<button class="btn sm" data-aporte-quick="${v}">${brl.format(v)}</button>`).join('')}</div>
@@ -868,15 +888,16 @@ screens.gastos = () => {
   const max = Math.max(...rows.map(r => Math.max(r.v, r.c.avg || 0)));
   const fixed = CATS.filter(c => !c.flex).reduce((s, c) => s + (t[c.id] || 0), 0);
   return `
-  <div class="head"><div>${title('receipt', 'Setembro de 2026')}<p>Você guardou ${pct(rate, 0)} da renda. Sua meta é ${state.goal}%.</p></div><div class="controls">${iaBtn('resumo', 'Explicar o mês')}<button class="btn primary" data-go="cortes">${ic('scissors')}Ver onde cortar</button></div></div>
+  <div class="head"><div>${title('receipt', 'Setembro de 2026')}<p>Você guardou ${pct(rate, 0)} da renda. Sua meta é ${state.goal}%.</p></div><div class="controls"><button class="btn primary" data-go="cortes">${ic('scissors')}Ver onde cortar</button></div></div>
   <div class="kpis">
-    <div class="kpi"><span class="tile" style="background:var(--good-soft);color:var(--good)">${ic('up')}</span><div class="label">Renda</div><div class="v">${brl.format(INCOME)}</div></div>
-    <div class="kpi"><span class="tile" style="background:var(--surface-2);color:var(--ink-2)">${ic('receipt')}</span><div class="label">Gastos</div><div class="v">${brl.format(spent)}</div></div>
-    <div class="kpi focus"><span class="tile" style="background:var(--accent);color:#fff">${ic('piggy')}</span><div class="label">Guardado</div><div class="v">${brl.format(saved)} <span class="muted" style="font-size:15px">${pct(rate, 0)}</span></div></div>
-    <div class="kpi"><span class="tile" style="background:var(--accent-soft);color:var(--accent-strong)">${ic('target')}</span><div class="label">Meta</div><div class="v">${brl.format(INCOME * state.goal / 100)} <span class="muted" style="font-size:15px">${state.goal}%</span></div></div>
+    <div class="kpi"><div class="label">Renda</div><div class="v">${brl.format(INCOME)}</div></div>
+    <div class="kpi"><div class="label">Gastos</div><div class="v">${brl.format(spent)}</div></div>
+    <div class="kpi focus"><div class="label">Guardado</div><div class="v">${brl.format(saved)} <span class="muted" style="font-size:15px">${pct(rate, 0)}</span></div></div>
+    <div class="kpi"><div class="label">Meta</div><div class="v">${brl.format(INCOME * state.goal / 100)} <span class="muted" style="font-size:15px">${state.goal}%</span></div></div>
   </div>
+  ${explainCard('mes')}
   <section class="card" style="margin-top:16px">
-    <div class="row between" style="align-items:flex-start"><div><h2>${ic('bars')}Para onde foi o dinheiro</h2><p style="margin:0 0 10px" class="muted">A marca escura é a sua média dos últimos 3 meses. Clique em "fixo" ou "flexível" para mudar o tipo; só os flexíveis entram na sugestão de corte.</p></div>
+    <div class="row between" style="align-items:flex-start"><div><h2>Para onde foi o dinheiro</h2><p style="margin:0 0 10px" class="muted">A marca escura é a sua média dos últimos 3 meses. Clique em "fixo" ou "flexível" para mudar o tipo; só os flexíveis entram na sugestão de corte.</p></div>
     <div class="legend" style="margin-top:4px"><span><i style="background:var(--accent)"></i>flexível</span><span><i style="background:#b9a3af"></i>fixo</span><span><i style="background:var(--warn)"></i>sem categoria</span></div></div>
     ${rows.map(({c, v}) => `<div class="hbar">
       <div class="who">${catTile(c, c.unc)}<span><span class="cname">${c.name}</span><span class="sub">${c.unc ? `<button class="tog" data-go="transacoes">categorizar</button>` : `<button class="tog ${c.flex ? 'on' : ''}" data-flex="${c.id}">${c.flex ? 'flexível' : 'fixo'}</button>`}</span></span></div>
@@ -928,19 +949,19 @@ screens.cortes = () => {
   <div class="head"><div>${title('scissors', 'Onde cortar')}<p>A partir da sua meta de economia, o sistema calcula quanto falta e distribui o corte entre os gastos flexíveis que mais passaram da sua própria média.</p></div></div>
   <div class="two">
     <section class="card">
-      <h2>${ic('target')}Sua meta</h2><p>Quanto da renda você quer guardar todo mês.</p>
+      <h2>Sua meta</h2><p>Quanto da renda você quer guardar todo mês.</p>
       <div class="row"><input type="range" min="5" max="40" step="1" id="goal" data-goal value="${state.goal}" style="flex:1;accent-color:var(--accent)" aria-label="Meta de economia"><b class="num" style="font-size:22px;min-width:56px;text-align:right;color:var(--accent-strong)">${state.goal}%</b></div>
       <div class="pills" style="margin-top:14px"><span class="pill">${ic('target')}Meta <b class="num">${brl.format(goalAmt)}</b></span><span class="pill">${ic('piggy')}Guardado <b class="num">${brl.format(saved)}</b> (${pct(rate, 0)})</span></div>
     </section>
     <section class="card" style="background:${gap > 0 ? 'linear-gradient(140deg,var(--warn-soft),var(--surface) 70%)' : 'linear-gradient(140deg,var(--good-soft),var(--surface) 70%)'};border-color:${gap > 0 ? 'var(--warn)' : 'var(--good)'}">
-      <div class="label">${ic(gap > 0 ? 'alert' : 'check')}${gap > 0 ? 'Falta por mês' : 'Meta atingida'}</div>
+      <div class="label">${gap > 0 ? 'Falta por mês' : 'Meta atingida'}</div>
       <div class="big num" style="color:${gap > 0 ? 'var(--warn)' : 'var(--good)'}">${brl.format(gap > 0 ? gap : saved - goalAmt)}</div>
       <p class="muted" style="margin:0">${gap > 0 ? (impossible ? 'Mais do que todos os gastos flexíveis somados. Para essa meta, seria preciso rever algum gasto fixo ou a renda.' : `Dá pra chegar lá cortando ${brl.format(totalCut)} em ${flex.filter(f => f.cut >= 1).length} categorias flexíveis.`) : 'Você guardou mais do que a meta. Esse valor pode ir direto para o aporte inteligente.'}</p>
       ${gap <= 0 ? `<button class="btn sm primary" data-go="aporte" style="margin-top:12px">${ic('zap')}Ir para o aporte</button>` : ''}
     </section>
   </div>
   ${gap > 0 ? `<section class="card" style="margin-top:16px">
-    <h2>${ic('scissors')}Sugestão de limites para outubro</h2><p>Começa pelo que subiu acima da sua média; só passa disso se ainda faltar.</p>
+    <h2>Sugestão de limites para outubro</h2><p>Começa pelo que subiu acima da sua média; só passa disso se ainda faltar.</p>
     <div class="tablewrap"><table>
       <thead><tr><th>Categoria</th><th class="r">Setembro</th><th class="r">Sua média</th><th class="r">Cortar</th><th class="r">Limite sugerido</th></tr></thead>
       <tbody>${flex.sort((a, b) => b.cut - a.cut).map(f => `<tr>
@@ -950,7 +971,7 @@ screens.cortes = () => {
     </table></div>
   </section>` : ''}
   ${unc > 0 ? `<p class="note" style="margin-top:14px">${ic('help')}<span><b>${brl.format(unc)} sem categoria</b> ficaram de fora da conta. <button class="btn sm" data-go="transacoes" style="margin-left:6px">Categorizar</button></span></p>` : ''}
-  ${feat('ia') !== 'hidden' ? `<p class="note" style="margin-top:14px">${ic('sparkle')}<span>Quer essa conta explicada em linguagem natural, com o caminho mais leve até a meta? <button class="linkbtn" data-act="open-ia" data-arg="cortes">Onde cortar, com IA</button> ${premiumTag('ia')}</span></p>` : ''}`;
+  ${explainCard('cortes')}`;
 };
 
 const STEPS = [
@@ -981,13 +1002,12 @@ const STEPS = [
   ]}
 ];
 
-screens.conexoes = () => {
+function bancosBody() {
   const st = state.pluggy;
   return `
-  <div class="head"><div>${title('plug', 'Conexões')}<p>Seus extratos chegam pelo Open Finance usando a sua própria conta gratuita no Meu Pluggy, ou por arquivo exportado do banco.</p></div></div>
   <div class="split">
     <section class="card">
-      <h2>${ic('key')}Passo a passo do Meu Pluggy</h2><p>Uns 10 a 15 minutos, uma vez só. Marque cada passo conforme for fazendo.</p>
+      <h2>Passo a passo do Meu Pluggy</h2><p>Uns 10 a 15 minutos, uma vez só. Marque cada passo conforme for fazendo.</p>
       <ol class="howto">${STEPS.map(s => `<li class="${state.done[s.k] ? 'done' : ''}">
         <div>
           <h4>${s.t}${s.url ? `<a class="url" href="${s.url}" target="_blank" rel="noopener">${s.url.replace('https://', '')}${ic('external')}</a>` : ''}</h4>
@@ -999,7 +1019,7 @@ screens.conexoes = () => {
     </section>
     <div class="grid">
       <section class="card">
-        <h2>${ic('landmark')}Suas credenciais</h2>
+        <h2>Suas credenciais</h2>
         ${st === 'ok' ? `<p>Bancos conectados pelo Meu Pluggy.</p>
           <div class="conn"><span class="bank" style="background:#8a05be">Nu</span><span><b>Nubank</b><span class="sub">Cartão e conta · atualizado hoje, 06:10</span></span><span class="chip ok" style="margin-left:auto">${ic('check')}ativo</span></div>
           <div class="conn"><span class="bank" style="background:#ec7000">It</span><span><b>Itaú</b><span class="sub">Conta corrente · atualizado hoje, 06:10</span></span><span class="chip ok" style="margin-left:auto">${ic('check')}ativo</span></div>
@@ -1013,7 +1033,7 @@ screens.conexoes = () => {
         <p class="note" style="margin:14px 0 0">${ic('shield')}<span>O código é aberto: dá pra conferir o que é feito com as credenciais, ou rodar tudo no seu servidor.</span></p>
       </section>
       <section class="card">
-        <h2>${ic('upload')}Importar arquivo</h2><p>Funciona com qualquer banco: OFX, CSV ou fatura do cartão.</p>
+        <h2>Importar arquivo</h2><p>Funciona com qualquer banco: OFX, CSV ou fatura do cartão.</p>
         <div class="field"><label for="ofx">Arquivo do banco</label><input class="input" id="ofx" type="file" accept=".ofx,.csv,.txt,.pdf"></div>
         ${state.imported ? `<p class="note" style="margin-top:12px">${ic('check')}<span><b>${esc(state.imported)}</b> lido (protótipo: o arquivo não é processado de verdade).</span></p>` : ''}
       </section>
@@ -1151,8 +1171,8 @@ function openAdd(cls, opts = {}) {
 }
 
 const hasSpend = () => state.sample || state.pluggy === 'ok' || !!state.imported;
-const emptyState = (icon, h, p, actions) => `<section class="card"><div class="empty" style="padding:56px 20px">${ic(icon)}<h3 style="margin:0;font-family:var(--f-display);font-size:22px;color:var(--ink)">${h}</h3><p style="margin:0;max-width:48ch">${p}</p><div class="row" style="justify-content:center;margin-top:6px">${actions}</div></div></section>`;
-const sampleBtn = `<button class="btn" data-onb="sample">${ic('sparkle')}Explorar com dados de exemplo</button>`;
+const emptyState = (icon, h, p, actions) => `<div class="emptybox"><h3>${h}</h3><p>${p}</p><div class="row" style="justify-content:center">${actions}</div></div>`;
+const sampleBtn = `<button class="btn" data-onb="sample">Explorar com dados de exemplo</button>`;
 
 function gate(screen) {
   const pat = {visao:['pie', 'Seu patrimônio'], ativos:['wallet', 'Meus ativos'], aporte:['zap', 'Aporte inteligente'], classe:['pie', 'Seu patrimônio']};
@@ -1180,16 +1200,16 @@ function onbHTML() {
   let body = '';
   if (s === 0) body = `<div class="onb-grid">
     <div>
-      <span class="eyebrow">${ic('sparkle')}Bem-vinda à Vera</span>
+      <span class="eyebrow">Bem-vinda à Vera</span>
       <h2 class="display">Seu patrimônio e seus gastos, <em>de verdade</em>.</h2>
       <p class="lead">A Vera responde duas perguntas: o dinheiro que você investiu está distribuído do jeito que você quer? E para onde vai o dinheiro que você gasta todo mês?</p>
       <p class="lead" style="margin-bottom:0">A configuração tem duas etapas. <b style="color:var(--ink)">As duas são opcionais</b>: dá pra pular qualquer uma e fazer depois.</p>
-      ${state.selfhost ? '' : `<div class="trust"><span class="pill">${ic('heart')}Grátis, sem cartão</span><span class="pill">${ic('crown')}Premium opcional, quando quiser</span></div>`}
+      ${state.selfhost ? '' : `<div class="trust"><span class="pill">${ic('check')}Grátis, sem cartão</span><span class="pill">${ic('check')}Premium opcional, quando quiser</span></div>`}
     </div>
     <div class="pathcards">
       <div class="pathcard"><span class="tile" style="background:var(--accent-soft);color:var(--accent-strong)">${ic('wallet')}</span><span><b>1. Cadastrar seus ativos</b><span class="d">Para ver a distribuição da carteira, comparar com a sua meta e saber onde aportar.</span></span><span class="chip plain">~5 min</span></div>
       <div class="pathcard"><span class="tile" style="background:#fff0e8;color:var(--c-fii)">${ic('plug')}</span><span><b>2. Conectar seus bancos</b><span class="d">Para os gastos chegarem sozinhos, categorizados, com sugestões de onde cortar.</span></span><span class="chip plain">~15 min</span></div>
-      <div class="onb-foot" style="border:0;padding-top:4px"><button class="btn ghost" data-onb="sample">${ic('sparkle')}Só explorar com dados de exemplo</button><button class="btn primary" data-onb="next" style="padding:11px 20px;font-size:15px">Começar ${ic('left').replace('class="i"', 'class="i" style="transform:rotate(180deg)"')}</button></div>
+      <div class="onb-foot" style="border:0;padding-top:4px"><button class="btn ghost" data-onb="sample">Só explorar com dados de exemplo</button><button class="btn primary" data-onb="next" style="padding:11px 20px;font-size:15px">Começar ${ic('left').replace('class="i"', 'class="i" style="transform:rotate(180deg)"')}</button></div>
     </div>
   </div>`;
   if (s === 1) {
@@ -1207,7 +1227,7 @@ function onbHTML() {
       <p class="note">${ic('info')}<span><b>Por que o cadastro é manual?</b> Não existe forma gratuita e confiável de puxar posições de todas as corretoras, bancos de fora e exchanges. Você informa só a quantidade; os valores se atualizam sozinhos todo dia pela cotação ou pelo indexador.</span></p>
     </div>
     <section class="card">
-      <h2>${ic('plus')}Adicione seus ativos</h2><p>Escolha um tipo de investimento. Comece pelos maiores; dá pra completar depois em "Meus ativos".</p>
+      <h2>Adicione seus ativos</h2><p>Escolha um tipo de investimento. Comece pelos maiores; dá pra completar depois em "Meus ativos".</p>
       <div class="addsplit"><div>${typeCards('data-add-type')}</div>
       <aside class="wallet">
         <div class="row between"><p class="whyh" style="margin:0">Sua carteira (${positions.length})</p>${positions.length ? `<b class="num">${brl.format(total)}</b>` : ''}</div>
@@ -1233,10 +1253,10 @@ function onbHTML() {
       <p class="note">${ic('shield')}<span><b>Por que pelo Meu Pluggy?</b> O Open Finance só entrega dados a instituições autorizadas pelo Banco Central. O Meu Pluggy é a ponte gratuita: você conecta seus bancos lá e autoriza a leitura. Sua senha do banco nunca passa pela Vera, e o acesso é só de leitura.</span></p>
     </div>
     <section class="card">
-      ${ok ? `<h2>${ic('check')}Bancos conectados</h2><p>Seus gastos dos últimos meses já estão chegando.</p>
+      ${ok ? `<h2>Bancos conectados</h2><p>Seus gastos dos últimos meses já estão chegando.</p>
         <div class="conn"><span class="bank" style="background:#8a05be">Nu</span><span><b>Nubank</b><span class="sub">Cartão e conta</span></span><span class="chip ok" style="margin-left:auto">${ic('check')}ativo</span></div>
         <div class="conn"><span class="bank" style="background:#ec7000">It</span><span><b>Itaú</b><span class="sub">Conta corrente</span></span><span class="chip ok" style="margin-left:auto">${ic('check')}ativo</span></div>`
-      : `<h2>${ic('key')}Em 4 passos</h2><p>Uns 15 minutos, uma vez só. O passo a passo detalhado fica sempre em "Conexões".</p>
+      : `<h2>Em 4 passos</h2><p>Uns 15 minutos, uma vez só. O passo a passo detalhado fica em Configurações › Bancos.</p>
         <ol class="ministeps">
           <li>Crie sua conta e conecte seus bancos em <a href="https://meu.pluggy.ai" target="_blank" rel="noopener">meu.pluggy.ai</a>.</li>
           <li>Crie a conta de desenvolvedor em <a href="https://dashboard.pluggy.ai" target="_blank" rel="noopener">dashboard.pluggy.ai</a> e uma aplicação com o conector MeuPluggy.</li>
@@ -1268,7 +1288,7 @@ function onbHTML() {
       <p class="lead" style="margin-inline:auto">${positions.length || spend ? 'Veja o que já está configurado. O que ficou para depois pode ser feito a qualquer momento.' : 'Você pulou as duas etapas, sem problema. A Vera mostra onde começar quando você quiser.'}</p>
       <div class="summary" style="text-align:left">
         ${row(positions.length > 0, 'wallet', positions.length ? `${positions.length} ${positions.length > 1 ? 'ativos cadastrados' : 'ativo cadastrado'} · ${brl.format(total)}` : 'Ativos: para depois', positions.length ? 'A distribuição e a comparação com a meta já estão na Visão geral.' : 'Cadastre quando quiser em "Meus ativos".', positions.length ? '' : `<button class="btn sm" data-onb="goto-1">Cadastrar agora</button>`)}
-        ${row(!!spend, 'plug', spend || 'Bancos: para depois', spend ? 'Seus gastos aparecem em "Resumo do mês".' : 'Conecte quando quiser em "Conexões" ou importe um extrato.', spend ? '' : `<button class="btn sm" data-onb="goto-2">Conectar agora</button>`)}
+        ${row(!!spend, 'plug', spend || 'Bancos: para depois', spend ? 'Seus gastos aparecem em "Resumo do mês".' : 'Conecte quando quiser em Configurações › Bancos ou importe um extrato.', spend ? '' : `<button class="btn sm" data-onb="goto-2">Conectar agora</button>`)}
         ${row(true, 'target', 'Carteira-alvo moderada como ponto de partida', 'Uma distribuição inicial para comparar. Ajuste para a sua visão em "Carteira-alvo".', `<button class="btn sm" data-onb="finish-meta">Ajustar</button>`)}
       </div>
       ${onbOffer()}
@@ -1292,7 +1312,7 @@ function renderLogin() {
   if (state.auth) { root.innerHTML = ''; return; }
   root.innerHTML = `<div class="login" role="dialog" aria-modal="true" aria-label="Entrar na Vera">
     <div class="login-photo" aria-hidden="true">
-      <div class="photo-slot" id="login-photo">${LOGIN_PHOTO ? `<img src="${LOGIN_PHOTO}" alt="">` : `<div class="photo-ph">${ic('sparkle')}<span>Imagem gerada por IA: mulher usando o celular</span></div>`}</div>
+      <div class="photo-slot" id="login-photo">${LOGIN_PHOTO ? `<img src="${LOGIN_PHOTO}" alt="">` : `<div class="photo-ph"><span>Imagem gerada por IA: mulher usando o celular</span></div>`}</div>
       <div class="photo-overlay"></div>
       <div class="photo-mark"><svg width="30" height="30" viewBox="0 0 24 24"><path d="M4.8 6 L12 19.2 L19.2 6" fill="none" stroke="#fff" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="8.6" r="2.2" fill="#fff"/></svg></div>
     </div>
@@ -1335,7 +1355,7 @@ function onbAction(a) {
   if (a === 'goto-2') return step(2);
   if (a === 'close' || a === 'finish') { o.open = false; return go(positions.length || !hasSpend() ? 'visao' : 'gastos'); }
   if (a === 'finish-meta') { o.open = false; return go('meta'); }
-  if (a === 'finish-premium') { o.open = false; return go(state.selfhost ? 'config' : 'planos'); }
+  if (a === 'finish-premium') { o.open = false; return act('cfg', 'plano'); }
   if (a === 'restart') { positions = []; state.sample = false; state.pluggy = 'idle'; state.imported = null; o.open = true; o.skipped = {}; return step(0); }
   if (a === 'sample') { positions = SAMPLE.map(p => ({...p})); state.sample = true; o.open = false; toast('Dados de exemplo carregados'); return go('visao'); }
   if (a === 'fill') { document.getElementById('ocid').value = '3f9a1c2e-7b4d-4e21-9a0c-5d2b8e6f1a37'; document.getElementById('ocsec').value = 'exemplo-secreto'; document.getElementById('oitems').value = '8b2c4f10-…, 41de9a77-…'; }
@@ -1395,7 +1415,9 @@ document.addEventListener('pointermove', e => { const el = e.target.closest && e
 document.addEventListener('pointerleave', hideTip);
 document.addEventListener('scroll', hideTip, true);
 
+const ALIAS = {conexoes:['config', 'bancos'], planos:['config', 'plano'], whatsapp:['config', 'whatsapp'], agenda:['config', 'agenda']};
 function go(screen) {
+  if (ALIAS[screen]) { state.cfg = ALIAS[screen][1]; screen = ALIAS[screen][0]; }
   state.screen = screen;
   try { history.replaceState(null, '', '#' + screen); } catch (e) {}
   hideTip(); render(); window.scrollTo(0, 0);
@@ -1481,26 +1503,21 @@ document.addEventListener('change', e => {
   if (el.dataset.reclass) { const p = positions.find(x => x.id === Number(el.dataset.reclass)); p.cls = el.value; toast(`${p.ticker} agora em ${CLS[p.cls].name}`); return render(); }
   if (el.dataset.qty) { const p = positions.find(x => x.id === Number(el.dataset.qty)); p.qty = Math.max(0, Number(el.value) || 0); return render(); }
   if (el.dataset.done) { state.done[el.dataset.done] = el.checked; return render(); }
-  if (el.id === 'ai-consent') { state.ai.consent = el.checked; return render(); }
   if (el.id === 'wa-consent') { state.wa.consent = el.checked; return render(); }
-  if (el.id === 'ai-switch') return act(el.checked ? 'open-ia' : 'ai-off', 'resumo');
+  if (el.id === 'ai-switch') return act(el.checked ? 'ai-on' : 'ai-off');
   if (el.id === 'lang') { state.lang = el.value; toast(el.value === 'pt-BR' ? 'Idioma: português' : 'No produto a interface troca na hora; o protótipo fica em português'); return render(); }
   if ((el.id === 'ofx' || el.id === 'onb-ofx') && el.files[0]) { state.imported = el.files[0].name; return render(); }
 });
 
 document.addEventListener('submit', e => {
-  if (e.target.id === 'ask-form' || e.target.id === 'wa-form') {
-    e.preventDefault();
-    const inp = e.target.querySelector('input');
-    return ask(inp.value, e.target.id === 'ask-form' ? 'ai' : 'wa');
-  }
+  if (e.target.id === 'wa-form') { e.preventDefault(); return waSend(e.target.querySelector('input').value); }
   if (!['pluggy-form', 'onb-pluggy-form'].includes(e.target.id)) return;
   e.preventDefault();
   state.pluggy = 'testing'; render();
   setTimeout(() => { state.pluggy = 'ok'; render(); toast('2 bancos conectados pelo Meu Pluggy'); }, 900);
 });
 
-/* ===== Planos, cota de uso, IA, WhatsApp, Google Agenda, Configurações e modo auto-hospedado ===== */
+/* ===== Premium: explicações nas telas, WhatsApp, Google Agenda, Configurações e modo auto-hospedado ===== */
 const PRICE = 'R$ 14,90';
 const TODAY = '09/10/2026';
 const NEXT_BILL = '09/11/2026';
@@ -1508,8 +1525,8 @@ const RESET = '1º de novembro';
 const WARN_AT = 80;
 const VERA_WA = '+55 11 4000-0000';
 Object.assign(state, {
-  plan:'free', sub:null, useBy:{analises:0, perguntas:0, whatsapp:0},
-  ai:{optin:false, consent:false, tab:'resumo', chat:[], gen:'08:12'},
+  plan:'free', sub:null, useBy:{explicacoes:0, whatsapp:0}, cfg:'plano',
+  ai:{optin:false, gen:'08:12'},
   wa:{status:'idle', phone:'', code:'', consent:false, since:null, msgs:[]},
   gcal:{on:false, email:'lucas.exemplo@gmail.com'},
   events:[{d:'ter 13/10', h:'10:00', t:'Revisão da carteira com a Ana'}, {d:'qua 14/10', h:'19:30', t:'Jantar de aniversário da Bia'}],
@@ -1517,111 +1534,73 @@ Object.assign(state, {
   selfhost:false, keys:{ia:false, wa:false, gcal:false}, lang:'pt-BR'
 });
 
-/* acesso: 'on' liberado, 'locked' (hospedada no Free) ou 'hidden' (auto-hospedada sem chave) */
+/* acesso: 'on' liberado, 'locked' (hospedada, no Free) ou 'hidden' (auto-hospedada, sem a chave) */
 function feat(k) {
-  if (state.selfhost) return state.keys[k] ? 'on' : 'hidden';
-  if (k === 'gcal') return state.plan === 'premium' ? 'on' : 'locked';
+  if (state.selfhost) return k === 'wa' ? (state.keys.wa && state.keys.ia ? 'on' : 'hidden') : state.keys[k] ? 'on' : 'hidden';
   return state.plan === 'premium' ? 'on' : 'locked';
 }
-const premiumTag = k => feat(k) === 'locked' ? `<span class="tag">${ic('crown')}Premium</span>` : '';
-const iaBtn = (tab, label) => feat('ia') === 'hidden' ? '' : `<button class="btn" data-act="open-ia" data-arg="${tab}">${ic('sparkle')}${label}${premiumTag('ia')}</button>`;
 const gcalOn = () => state.gcal.on && feat('gcal') === 'on';
 const list = a => a.length <= 1 ? (a[0] || '') : a.slice(0, -1).join(', ') + ' e ' + a[a.length - 1];
 const lower = s => s.charAt(0).toLowerCase() + s.slice(1);
+const lockLine = text => `<div class="lockline">${ic('lock')}<span>${text}</span><button class="btn sm" data-act="cfg" data-arg="plano">Ver o Premium</button></div>`;
 
-/* cota de uso: o teto em reais fica no servidor; a pessoa vê só a porcentagem */
+/* cota do mês: o teto em reais fica no servidor; a pessoa vê só a porcentagem */
 const usage = () => Math.min(100, Math.round(Object.values(state.useBy).reduce((a, b) => a + b, 0)));
 const paused = () => !state.selfhost && usage() >= 100;
 function consume(kind, n) {
   if (state.selfhost) return true;
-  if (paused()) { toast(`Cota do mês esgotada. IA e WhatsApp voltam em ${RESET}`); return false; }
+  if (paused()) { toast(`Cota do mês esgotada. Volta em ${RESET}`); return false; }
   const before = usage();
   state.useBy[kind] += n;
   const after = usage();
-  if (after >= 100) toast(`Cota esgotada: IA e WhatsApp pausados até ${RESET}`);
+  if (after >= 100) toast(`Cota esgotada: explicações e WhatsApp pausados até ${RESET}`);
   else if (before < WARN_AT && after >= WARN_AT) toast(`Você já usou ${after}% da cota do mês`);
   return true;
 }
-function simUsage(p) {
-  if (!p) { state.useBy = {analises:0, perguntas:0, whatsapp:0}; return; }
-  const mix = {analises:.5, perguntas:.3, whatsapp:.2};
-  state.useBy = Object.fromEntries(Object.entries(mix).map(([k, v]) => [k, p * v]));
-}
+function simUsage(p) { state.useBy = {explicacoes:p * .6, whatsapp:p * .4}; }
 function quotaBanner() {
   const u = usage();
   if (state.selfhost || state.plan !== 'premium' || u < WARN_AT) return '';
-  if (u >= 100) return `<div class="warnbox" style="background:var(--bad-soft);color:var(--bad)">${ic('pause')}<span><b>IA e WhatsApp pausados até ${RESET}.</b> A cota do mês acabou e não existe cobrança extra. Carteira, gastos e todo o resto seguem normais. <button class="linkbtn" data-act="sim" data-arg="0">Simular a virada do mês</button></span></div>`;
-  return `<div class="warnbox">${ic('alert')}<span><b>Você já usou ${u}% da cota de outubro.</b> Ao chegar em 100%, IA e WhatsApp pausam até ${RESET}, sem cobrança extra. O resto do app segue normal.</span></div>`;
+  if (u >= 100) return `<div class="banner crit"><b>Pausado até ${RESET}</b><span>A cota do mês acabou. Explicações e WhatsApp voltam na virada do mês, sem cobrança extra; o resto da Vera segue normal. <button class="linkbtn" data-act="sim" data-arg="0">Simular a virada</button></span></div>`;
+  return `<div class="banner warn"><b>${u}% da cota de outubro usada</b><span>Em 100%, explicações e WhatsApp pausam até ${RESET}, sem cobrança extra.</span></div>`;
 }
 function meter(full) {
-  const u = usage(), lvl = u >= 100 ? 'bad' : u >= WARN_AT ? 'warn' : 'ok';
-  const color = lvl === 'bad' ? 'var(--bad)' : lvl === 'warn' ? 'var(--warn)' : 'var(--accent)';
-  const by = [['analises', 'Análises'], ['perguntas', 'Pergunte à Vera'], ['whatsapp', 'WhatsApp']];
+  const u = usage(), tone = u >= 100 ? 'crit' : u >= WARN_AT ? 'warn' : 'brand';
   return `<div class="meterbox">
-    <div class="row between"><span class="label">${ic('gauge')}Cota de uso de outubro</span><span><b class="num" style="color:${color}">${u}%</b> <span class="muted">usada</span></span></div>
-    <div class="meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${u}" aria-label="Cota de uso do mês"><span style="width:${u}%;background:${color}"></span><i style="left:${WARN_AT}%" title="Aviso em ${WARN_AT}%"></i></div>
-    <div class="row between muted" style="font-size:12.5px"><span>Renova em ${RESET}</span><span>${lvl === 'ok' ? `Sobram ${100 - u}% para o mês` : lvl === 'warn' ? 'Perto do limite' : 'Pausado até a renovação'}</span></div>
-    ${full ? `<div class="pills">${by.map(([k, l]) => `<span class="pill">${l} <b class="num">${Math.round(state.useBy[k])}%</b></span>`).join('')}</div>
-    <p class="note" style="margin:0">${ic('info')}<span>Cada análise gerada, pergunta ou mensagem no WhatsApp usa um pouco da cota. Ela cobre o uso normal de um mês; se acabar, IA e WhatsApp pausam até o mês virar e você não paga nada a mais.</span></p>
+    <div class="row between"><span class="label">Cota de outubro</span><span class="num"><b>${u}%</b> <span class="muted">usada</span></span></div>
+    <div class="meter ${tone}" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${u}" aria-label="Cota de uso do mês"><span style="width:${u}%"></span></div>
+    <div class="row between muted" style="font-size:12.5px"><span>Renova em ${RESET}</span><span>${tone === 'brand' ? `Sobram ${100 - u}%` : tone === 'warn' ? 'Perto do limite' : 'Pausado até a renovação'}</span></div>
+    ${full ? `<p class="hint" style="margin:0">Explicações ${Math.round(state.useBy.explicacoes)}% · WhatsApp ${Math.round(state.useBy.whatsapp)}%. Cada explicação gerada e cada mensagem no WhatsApp usam um pouco; a cota cobre o uso normal de um mês.</p>
     <div class="row" style="font-size:12.5px"><span class="chip plain">protótipo</span><span class="muted">Simular uso:</span><div class="seg" role="group" aria-label="Simular uso da cota">${[0, 34, 85, 100].map(v => `<button data-act="sim" data-arg="${v}" aria-pressed="${u === v}">${v}%</button>`).join('')}</div></div>` : ''}
     ${quotaBanner()}
   </div>`;
 }
 
-/* telas genéricas de bloqueio e de função escondida */
-const LOCK = {
-  ia:{icon:'sparkle', title:'Análises com IA', feats:[
-    ['receipt', 'Resumo do mês explicado', 'O que puxou os gastos para cima, em português claro.'],
-    ['scissors', 'Onde cortar, em linguagem natural', 'O caminho mais leve até a sua meta de economia.'],
-    ['target', 'Leitura da carteira', 'Atual contra a carteira-alvo e o que fazer com o próximo aporte.'],
-    ['msg', 'Pergunte à Vera', 'Um chat sobre a sua carteira e os seus gastos.']],
-    sample:'Em setembro você guardou 19% da renda, um ponto abaixo da meta. O que puxou para cima foram delivery (+40% sobre a sua média) e compras (+47%).'},
-  wa:{icon:'msg', title:'Vera no WhatsApp', feats:[
-    ['msg', 'Pergunte sem abrir o app', '"Quanto gastei com delivery?" "Como está minha carteira?"'],
-    ['calendar', 'Reuniões no Google Agenda', 'Crie e liste compromissos por mensagem.'],
-    ['bell', 'Lembretes', '"Me lembra de aportar todo dia 5."']],
-    sample:'Pronto, criei no seu Google Agenda: Reunião com o contador, sex 16/10 às 15:00.'}
-};
-function lockedState(k) {
-  const L = LOCK[k];
-  return `<section class="card herocard"><div class="deco">${ic(L.icon)}</div><div class="lockcard">
-    <div>
-      <span class="eyebrow">${ic('crown')}Parte do Vera Premium</span>
-      <ul class="fgrid">${L.feats.map(([i, b, d]) => `<li><span class="tile">${ic(i)}</span><span><b>${b}</b><span class="d">${d}</span></span></li>`).join('')}</ul>
-      <div class="row"><button class="btn primary" data-act="checkout">${ic('crown')}Assinar por ${PRICE}/mês</button><button class="btn" data-go="planos">Comparar planos</button></div>
-      <p class="muted" style="font-size:13px;margin:14px 0 0">Tudo que você já usa continua grátis. ${k === 'ia' ? '"Onde cortar" segue funcionando sem IA.' : 'Cancele quando quiser.'}</p>
-    </div>
-    <div class="sample"><div class="label">${ic('eye')}Exemplo</div><div class="bubble vera" style="max-width:100%">${L.sample}</div></div>
-  </div></section>`;
-}
-const hiddenState = () => emptyState('key', 'Função desligada nesta instalação', 'Na versão auto-hospedada, cada pessoa cadastra as próprias chaves. Esta função aparece no menu quando a chave dela estiver configurada.', `<button class="btn primary" data-act="jump" data-arg="cfg-chaves">${ic('key')}Cadastrar chave</button>`);
-
-/* textos da IA, montados a partir dos mesmos números do app (no produto, gerados pelo modelo) */
-function iaResumo() {
+/* explicações em texto, montadas a partir dos mesmos números do app (no produto, escritas por um modelo de linguagem) */
+function textMes() {
   const {t, unc, spent, saved, rate} = spendSummary();
   const ups = CATS.filter(c => c.avg && t[c.id] > c.avg * 1.1).map(c => ({c, p:Math.round((t[c.id] / c.avg - 1) * 100)})).sort((a, b) => b.p - a.p);
   const fixedCats = CATS.filter(c => !c.flex && t[c.id] > 0);
   const fixed = fixedCats.reduce((s, c) => s + t[c.id], 0);
   const diff = Math.round(rate - state.goal);
   return [
-    `Em setembro entraram <b>${brl.format(INCOME)}</b> e saíram <b>${brl.format(spent)}</b>. Você guardou ${brl.format(saved)}, ou ${pct(rate, 0)} da renda: ${diff >= 0 ? `${diff ? diff + ' pontos acima' : 'exatamente'} da sua meta de ${state.goal}%.` : `${-diff} ${-diff > 1 ? 'pontos' : 'ponto'} abaixo da sua meta de ${state.goal}%.`}`,
-    ups.length ? `O que puxou para cima foram gastos flexíveis: ${list(ups.slice(0, 3).map(u => `${lower(u.c.name)} (<b>+${u.p}%</b> sobre a sua média)`))}. São eles que explicam a diferença para a meta.` : 'Os gastos flexíveis ficaram perto da sua média: nada saiu do padrão.',
-    fixedCats.length ? `Os fixos (${list(fixedCats.map(c => lower(c.name)))}) somam ${brl.format(fixed)}, ${pct(fixed / INCOME * 100, 0)} da renda, e ficaram como sempre.` : '',
-    unc > 0 ? `Ficaram ${brl.format(unc)} sem categoria, quase tudo Pix para pessoa física. Se forem transferências entre contas suas, o mês foi melhor do que parece; vale categorizar em Transações.` : ''
+    `Entraram ${brl.format(INCOME)} e saíram ${brl.format(spent)}. Você guardou <b>${brl.format(saved)}</b>, ${pct(rate, 0)} da renda: ${diff >= 0 ? `${diff ? diff + ' pontos acima' : 'exatamente'} da meta de ${state.goal}%.` : `${-diff} ${-diff > 1 ? 'pontos' : 'ponto'} abaixo da meta de ${state.goal}%.`}`,
+    ups.length ? `A diferença veio dos gastos flexíveis: ${list(ups.slice(0, 3).map(u => `${lower(u.c.name)} (+${u.p}% sobre a sua média)`))}.` : 'Os gastos flexíveis ficaram perto da sua média.',
+    fixedCats.length ? `Os fixos (${list(fixedCats.map(c => lower(c.name)))}) somam ${brl.format(fixed)}, ${pct(fixed / INCOME * 100, 0)} da renda, sem mudança.` : '',
+    unc > 0 ? `${brl.format(unc)} ficaram sem categoria, quase tudo Pix para pessoa física. Se forem transferências entre contas suas, o mês foi melhor do que parece.` : ''
   ].filter(Boolean);
 }
-function iaCortes() {
+function textCortes() {
   const c = cutPlan();
-  if (c.gap <= 0) return [`Você já guarda mais que a meta de ${state.goal}%: sobram <b>${brl.format(c.saved - c.goalAmt)}</b> acima dela. Não precisa cortar nada, e esse dinheiro pode ir direto para o aporte.`];
+  if (c.gap <= 0) return [`Você já guarda mais que a meta de ${state.goal}%: sobram <b>${brl.format(c.saved - c.goalAmt)}</b> acima dela. Não precisa cortar nada; esse dinheiro pode ir para o aporte.`];
   const top = c.flex.filter(f => f.cut >= 1).sort((a, b) => b.cut - a.cut);
   return [
     `Para guardar ${state.goal}% da renda, faltam <b>${brl.format(c.gap)}</b> por mês.`,
-    c.impossible ? 'É mais do que todos os gastos flexíveis somados, então só cortar não resolve: seria preciso rever um gasto fixo, a renda ou a meta.' : `O caminho mais leve é voltar à sua própria média onde o gasto subiu: ${list(top.map(f => `${lower(f.c.name)} de ${brl.format(f.cur)} para <b>${brl.format(f.cur - f.cut)}</b>`))}.`,
-    !c.impossible && top[0] ? `Se for escolher uma só, comece por ${lower(top[0].c.name)}: sozinha, ela cobre ${Math.round(top[0].cut / c.gap * 100)}% do que falta.` : '',
-    'Gastos fixos ficaram de fora de propósito. Se algum deles der para mexer, marque como "flexível" no Resumo do mês e a conta muda.'
+    c.impossible ? 'É mais do que todos os gastos flexíveis somados: só cortar não resolve. Seria preciso rever um gasto fixo, a renda ou a meta.' : `O caminho mais leve é voltar à sua própria média onde o gasto subiu: ${list(top.map(f => `${lower(f.c.name)} de ${brl.format(f.cur)} para ${brl.format(f.cur - f.cut)}`))}.`,
+    !c.impossible && top[0] ? `Se for escolher uma só, comece por ${lower(top[0].c.name)}: ela cobre ${Math.round(top[0].cut / c.gap * 100)}% do que falta.` : ''
   ].filter(Boolean);
 }
-function iaCarteira(amount = state.aporte || 10000) {
+function textCarteira(amount = state.aporte || 10000) {
   const {total, rows} = classRows();
   const usdE = positions.filter(p => p.cur === 'USD' || p.usdExp).reduce((s, p) => s + valueBRL(p), 0);
   const below = rows.filter(r => r.dev < -state.tol).sort((a, b) => a.dev - b.dev);
@@ -1630,32 +1609,41 @@ function iaCarteira(amount = state.aporte || 10000) {
   const top = rows.map((r, i) => ({r, a:alloc[i]})).filter(x => x.a >= 1).sort((a, b) => b.a - a.a).slice(0, 3);
   const out = below.length + above.length;
   return [
-    `Seu patrimônio soma <b>${money(total)}</b>, com ${pct(total ? usdE / total * 100 : 0)} exposto ao dólar. ${out ? `${out} de ${rows.length} classes estão fora da faixa de ±${state.tol} pp.` : `Todas as classes estão dentro da faixa de ±${state.tol} pp: a carteira está do jeito que você quer.`}`,
+    `O patrimônio soma <b>${money(total)}</b>, com ${pct(total ? usdE / total * 100 : 0)} exposto ao dólar. ${out ? `${out} de ${rows.length} classes estão fora da faixa de ±${state.tol} pp.` : `Todas as classes estão dentro da faixa de ±${state.tol} pp.`}`,
     below.length ? `Abaixo da meta: ${list(below.map(r => `${lower(CLS[r.cls].name)} (${pct(r.share)} contra ${pct(r.target, 0)})`))}.` : '',
-    above.length ? `Acima: ${list(above.map(r => `${lower(CLS[r.cls].name)} (${pct(r.share)} contra ${pct(r.target, 0)})`))}. Não precisa vender: é só deixar de aportar nelas por um tempo.` : '',
-    top.length ? `Com <b>${brl.format(amount)}</b> de aporte, a sugestão é ${list(top.map(x => `${brl.format(x.a)} em ${lower(CLS[x.r.cls].name)}`))}. É a mesma conta do Aporte inteligente, explicada.` : ''
+    above.length ? `Acima: ${list(above.map(r => `${lower(CLS[r.cls].name)} (${pct(r.share)} contra ${pct(r.target, 0)})`))}. Não precisa vender; basta não aportar nelas por um tempo.` : '',
+    top.length ? `Com ${brl.format(amount)} de aporte, a sugestão é ${list(top.map(x => `${brl.format(x.a)} em ${lower(CLS[x.r.cls].name)}`))}.` : ''
   ].filter(Boolean);
 }
-const strip = html => html.replace(/<[^>]+>/g, '');
-const NO_SPEND = 'Ainda não vejo gastos seus. Conecte os bancos em Conexões ou importe um extrato e eu passo a responder sobre eles.';
-const NO_POS = 'Sua carteira ainda está vazia. Cadastre seus ativos em Meus ativos e eu passo a responder sobre ela.';
-function answer(q) {
-  const s = q.toLowerCase();
-  const amt = (() => { const m = s.match(/(\d+(?:[.,]\d+)?)\s*(mil|k)?/); return m ? Number(m[1].replace('.', '').replace(',', '.')) * (m[2] ? 1000 : 1) : 0; })();
-  if (/deliv|ifood|restaur|comida/.test(s)) {
-    if (!hasSpend()) return NO_SPEND;
-    const v = spendSummary().t.delivery, c = CATMAP.delivery;
-    return `Em setembro foram ${brl.format(v)} em delivery e restaurantes, ${v > c.avg ? `${Math.round((v / c.avg - 1) * 100)}% acima` : 'abaixo'} da sua média de ${brl.format(c.avg)}. Voltar à média já libera ${brl.format(Math.max(0, v - c.avg))} por mês.`;
-  }
-  if (/cort|econom|guard|sobra/.test(s)) return hasSpend() ? strip(iaCortes().slice(0, 3).join(' ')) : NO_SPEND;
-  if (/aport|invest|onde coloc/.test(s)) return positions.length ? strip(iaCarteira(amt >= 100 ? amt : undefined).slice(-1)[0]) : NO_POS;
-  if (/d[oó]lar|eua|exterior/.test(s)) return positions.length ? strip(iaCarteira()[0]) : NO_POS;
-  if (/carteira|patrim|distribu|meta/.test(s)) return positions.length ? strip(iaCarteira().slice(0, 3).join(' ')) : NO_POS;
-  if (/gast|m[eê]s|setembro/.test(s)) return hasSpend() ? strip(iaResumo().slice(0, 2).join(' ')) : NO_SPEND;
-  return 'No protótipo eu respondo só algumas perguntas prontas. Tente: "quanto gastei com delivery?", "onde dá pra cortar?", "como está minha carteira?" ou "onde aporto R$ 10 mil?".';
+const EXPLAIN = {
+  mes:{t:'Setembro em poucas palavras', d:'O que mudou no mês e por quê.', text:textMes, ok:() => hasSpend()},
+  cortes:{t:'O caminho mais leve até a meta', d:'A mesma conta da sugestão, explicada.', text:textCortes, ok:() => hasSpend()},
+  carteira:{t:'Sua carteira em poucas palavras', d:'O que está fora da meta e para onde vai o próximo aporte.', text:textCarteira, ok:() => positions.length > 0}
+};
+function explainCard(k) {
+  const E = EXPLAIN[k], f = feat('ia');
+  if (f === 'hidden' || !E.ok()) return '';
+  if (f === 'locked') return `<section class="card explain">${lockLine(`<b>${E.t}.</b> No Premium, a Vera escreve aqui um resumo curto destes números.`)}</section>`;
+  if (!state.ai.optin) return `<section class="card explain">
+      <div class="cardhead"><div><h2>${E.t}</h2><p>${E.d}</p></div></div>
+      <p class="tipbox">Para escrever este resumo, a Vera envia totais agregados (sem nomes de pessoas nem de estabelecimentos) a um modelo de linguagem. <button class="linkbtn" data-act="payload">Ver o que é enviado</button></p>
+      <div class="row"><button class="btn primary sm" data-act="ai-on">Permitir e mostrar</button><span class="hint">Dá para desligar em Configurações › Dados e privacidade.</span></div>
+    </section>`;
+  const p = paused();
+  return `<section class="card explain">
+    <div class="cardhead"><div><h2>${E.t}</h2><p>Escrito hoje às ${state.ai.gen} a partir dos totais. <button class="linkbtn" data-act="payload">O que é enviado</button></p></div><button class="btn sm" data-act="regen" ${p ? 'disabled' : ''}>${ic('repeat')}Escrever de novo</button></div>
+    <div class="prose">${E.text().map(x => `<p>${x}</p>`).join('')}</div>
+    ${quotaBanner()}
+  </section>`;
 }
+
+/* respostas no WhatsApp */
+const strip = html => html.replace(/<[^>]+>/g, '');
+const NO_SPEND = 'Ainda não vejo gastos seus. Conecte os bancos em Configurações › Bancos ou importe um extrato.';
+const NO_POS = 'Sua carteira ainda está vazia. Cadastre os ativos em Meus ativos.';
 function waReply(q) {
   const s = q.toLowerCase();
+  const amt = (() => { const m = s.match(/(\d+(?:[.,]\d+)?)\s*(mil|k)?/); return m ? Number(m[1].replace('.', '').replace(',', '.')) * (m[2] ? 1000 : 1) : 0; })();
   if (/\bpix\b|transfer|pagar|pague|boleto/.test(s)) return 'Isso eu não faço: a Vera só lê seus dados, não movimenta dinheiro nem faz Pix. Para pagar ou transferir, use o app do seu banco.';
   if (/(meus|quais|listar?)\s+lembretes/.test(s)) return state.reminders.length ? 'Seus lembretes:\n' + state.reminders.map(r => `• ${r.t}, ${r.when}`).join('\n') : 'Você não tem lembretes. É só pedir: "me lembra de aportar todo dia 5".';
   if (/lembr/.test(s)) {
@@ -1663,325 +1651,207 @@ function waReply(q) {
     const what = /aport/.test(s) ? 'Fazer o aporte do mês' : /fatura/.test(s) ? 'Pagar a fatura do cartão' : (q.replace(/.*?lembr\w*\s*(de\s+|que\s+)?/i, '').replace(/\s*(todo\s+)?dia\s*\d+.*/i, '').trim() || 'Lembrete');
     const r = {t:what.charAt(0).toUpperCase() + what.slice(1), when:day ? `todo dia ${day}, 09:00` : 'amanhã, 09:00'};
     state.reminders.push(r);
-    return `Combinado! Vou te lembrar aqui: "${r.t}", ${r.when}. Para ver ou apagar, peça "meus lembretes".`;
+    return `Combinado. Vou te lembrar aqui: "${r.t}", ${r.when}. Para ver ou apagar, peça "meus lembretes".`;
   }
   if (/reuni|agenda|compromisso|marc[ae]/.test(s)) {
-    if (!gcalOn()) return {text:'Para criar e listar reuniões eu preciso do seu Google Agenda. A permissão é pedida só para isso, e você pode desconectar quando quiser.', act:'gcal-connect', label:'Conectar Google Agenda'};
+    if (!gcalOn()) return 'Para criar e listar reuniões, conecte o Google Agenda em Configurações › Google Agenda. A permissão é pedida só para isso.';
     if (/marc|cri|agend|nova/.test(s) && !/quais|minhas|pr[oó]xim|lista/.test(s)) {
       const h = (s.match(/(\d{1,2})\s*(h|:)/) || [])[1];
       const ev = {d:/amanh/.test(s) ? 'sáb 10/10' : 'sex 16/10', h:h ? h.padStart(2, '0') + ':00' : '15:00', t:/contador/.test(s) ? 'Reunião com o contador' : /gerente|banco/.test(s) ? 'Reunião com o gerente do banco' : 'Reunião', mine:true};
       state.events.push(ev);
-      return `Pronto, criei no seu Google Agenda: ${ev.t}, ${ev.d} às ${ev.h}. Quer que eu te lembre 30 minutos antes?`;
+      return `Criei no seu Google Agenda: ${ev.t}, ${ev.d} às ${ev.h}.`;
     }
     return 'Seus próximos compromissos:\n' + state.events.map(e => `• ${e.d}, ${e.h}: ${e.t}`).join('\n');
   }
-  if (/^(oi|ol[aá]|bom dia|boa tarde|boa noite)\b/.test(s)) return 'Oi, Lucas! Pergunte sobre sua carteira ou seus gastos, peça para marcar uma reunião ou para criar um lembrete.';
-  return answer(q);
+  if (/deliv|ifood|restaur|comida/.test(s)) {
+    if (!hasSpend()) return NO_SPEND;
+    const v = spendSummary().t.delivery, c = CATMAP.delivery;
+    return `Em setembro foram ${brl.format(v)} em delivery e restaurantes, ${v > c.avg ? `${Math.round((v / c.avg - 1) * 100)}% acima` : 'abaixo'} da sua média de ${brl.format(c.avg)}.`;
+  }
+  if (/cort|econom|guard|sobra/.test(s)) return hasSpend() ? strip(textCortes().join(' ')) : NO_SPEND;
+  if (/aport|invest|onde coloc/.test(s)) return positions.length ? strip(textCarteira(amt >= 100 ? amt : undefined).slice(-1)[0]) : NO_POS;
+  if (/carteira|patrim|distribu|d[oó]lar/.test(s)) return positions.length ? strip(textCarteira().slice(0, 3).join(' ')) : NO_POS;
+  if (/gast|m[eê]s|setembro/.test(s)) return hasSpend() ? strip(textMes().slice(0, 2).join(' ')) : NO_SPEND;
+  if (/^(oi|ol[aá]|bom dia|boa tarde|boa noite)\b/.test(s)) return 'Oi, Lucas. Pergunte sobre a carteira ou os gastos, peça para marcar uma reunião ou criar um lembrete.';
+  return 'No protótipo eu respondo só a algumas mensagens prontas. Tente: "quanto gastei com delivery?", "como está minha carteira?" ou "me lembra de aportar todo dia 5".';
 }
-function ask(text, where) {
+function waSend(text) {
   text = (text || '').trim();
-  if (!text) return;
-  const box = where === 'ai' ? state.ai.chat : state.wa.msgs;
-  if (!consume(where === 'ai' ? 'perguntas' : 'whatsapp', where === 'ai' ? 1.5 : 1)) return render();
-  box.push({who:'me', text});
+  if (!text || !consume('whatsapp', 1)) return render();
+  state.wa.msgs.push({who:'me', text});
   render();
-  setTimeout(() => { const r = where === 'ai' ? answer(text) : waReply(text); box.push(typeof r === 'string' ? {who:'vera', text:r} : {who:'vera', ...r}); render(); }, 650);
+  setTimeout(() => { state.wa.msgs.push({who:'vera', text:waReply(text)}); render(); }, 650);
 }
-const bubble = m => `<div class="bubble ${m.who}">${esc(m.text).replace(/\n/g, '<br>')}${m.act ? `<br><button class="btn sm primary" data-act="${m.act}">${ic('calendar')}${m.label}</button>` : ''}</div>`;
+const bubble = m => `<div class="bubble ${m.who}">${esc(m.text).replace(/\n/g, '<br>')}</div>`;
 
 function payload() {
   const {t, unc} = spendSummary();
   const {rows} = classRows();
-  const data = {
+  return JSON.stringify({
     mes:'2026-09', renda:INCOME, meta_economia_pct:state.goal,
     gastos_por_categoria: hasSpend() ? Object.fromEntries(CATS.filter(c => t[c.id] > 0).map(c => [c.id, {total:Math.round(t[c.id]), media_3m:c.avg, tipo:c.flex ? 'flexivel' : 'fixo'}])) : 'sem dados',
     sem_categoria: hasSpend() ? Math.round(unc) : undefined,
     carteira_pct: positions.length ? Object.fromEntries(rows.map(r => [r.cls, {atual:Math.round(r.share * 10) / 10, meta:r.target}])) : 'sem dados',
     aporte_planejado: state.aporte
-  };
-  return JSON.stringify(data, null, 2);
+  }, null, 2);
 }
 
-/* ---------- telas ---------- */
-const FREE_FEATS = [
-  ['pie', 'Carteira com cotações automáticas', 'Brasil, EUA e cripto numa moeda só'],
-  ['target', 'Carteira-alvo e aporte inteligente', 'Onde colocar cada aporte, sem vender nada'],
-  ['receipt', 'Gastos pelo Open Finance ou extrato', 'Categorias automáticas e regras suas'],
-  ['scissors', 'Onde cortar', 'A conta da meta de economia, sem IA'],
-  ['download', 'Exportar tudo em planilha', 'Os dados são seus']
-];
-const PRO_FEATS = [
-  ['check', 'Tudo do Free', 'Nada do que é grátis vira pago'],
-  ['sparkle', 'Análises com IA', 'O mês explicado, onde cortar e a leitura da carteira'],
-  ['msg', 'Pergunte à Vera', 'Um chat sobre a sua carteira e os seus gastos'],
-  ['phone', 'Vera no WhatsApp', 'Perguntas, reuniões no Google Agenda e lembretes'],
-  ['gauge', 'Cota de uso mensal inclusa', 'Sem cobrança extra: se acabar, pausa até o mês virar']
-];
+/* ---------- Configurações ---------- */
 const COMPARE = [
   ['Carteira, carteira-alvo e aporte inteligente', true, true],
   ['Gastos pelo Open Finance, categorias e regras', true, true],
-  ['Onde cortar (cálculo, sem IA)', true, true],
+  ['Onde cortar', true, true],
   ['Exportar carteira e transações', true, true],
-  ['Resumo do mês e onde cortar explicados pela IA', false, true],
-  ['Leitura da carteira e do aporte pela IA', false, true],
-  ['Pergunte à Vera (chat)', false, true],
-  ['Vera no WhatsApp', false, true],
-  ['Reuniões no Google Agenda e lembretes pelo WhatsApp', false, true],
-  ['Cota de uso de IA e WhatsApp', '—', 'mensal, inclusa']
+  ['Resumos em texto do mês, dos cortes e da carteira', false, true],
+  ['Vera no WhatsApp: perguntas sobre carteira e gastos', false, true],
+  ['Reuniões no Google Agenda e lembretes pelo WhatsApp', false, true]
 ];
-screens.planos = () => {
-  if (state.selfhost) return `<div class="head"><div>${title('crown', 'Planos')}</div></div>` + emptyState('server', 'Sem planos na versão auto-hospedada', 'Aqui tudo é liberado. IA, WhatsApp e Google Agenda aparecem quando você cadastra as suas próprias chaves.', `<button class="btn primary" data-act="jump" data-arg="cfg-chaves">${ic('key')}Ver integrações</button>`);
-  const pro = state.plan === 'premium';
-  const feats = f => `<ul class="feats">${f.map(([i, b, d]) => `<li><span class="tile">${ic(i)}</span><span><b>${b}</b><span class="d">${d}</span></span></li>`).join('')}</ul>`;
-  const cell = v => v === true ? `<span class="yes">${ic('check')}</span>` : v === false ? '<span class="muted">—</span>' : `<span class="muted">${v}</span>`;
-  return `
-  <div class="head"><div>${title('crown', 'Planos')}<p>A Vera continua grátis. O Premium soma IA e WhatsApp para quem quiser, e paga o custo desses serviços.</p></div></div>
-  <div class="plans">
-    <section class="card plan">
-      <div class="row between"><h2 style="margin:0">Free</h2>${pro ? '' : '<span class="chip ok">seu plano</span>'}</div>
-      <div class="price">R$ 0<small>para sempre</small></div>
-      ${feats(FREE_FEATS)}
-      <button class="btn" disabled>${pro ? 'Incluído no Premium' : 'Plano atual'}</button>
-    </section>
-    <section class="card plan pro">
-      <div class="row between"><h2 style="margin:0">${ic('crown')}Premium</h2>${pro ? `<span class="chip ok">${state.sub.status === 'canceling' ? 'vale até ' + NEXT_BILL : 'seu plano'}</span>` : ''}</div>
-      <div class="price">${PRICE}<small>por mês</small></div>
-      ${feats(PRO_FEATS)}
-      ${pro ? `<button class="btn" data-act="jump" data-arg="cfg-plano">${ic('gear')}Gerenciar assinatura</button>` : `<button class="btn primary" data-act="checkout" style="justify-content:center;padding:11px 16px">${ic('crown')}Assinar o Premium</button><span class="muted" style="font-size:12.5px;text-align:center;margin-top:-6px">Pix ou cartão · cancele quando quiser, sem multa</span>`}
-    </section>
-  </div>
-  <section class="card" style="margin-top:16px">
-    <h2>${ic('list')}Comparação</h2><p>O que muda de um plano para o outro.</p>
-    <div class="tablewrap"><table style="min-width:480px"><thead><tr><th>Recurso</th><th class="r">Free</th><th class="r">Premium</th></tr></thead>
-    <tbody>${COMPARE.map(([l, a, b]) => `<tr><td>${l}</td><td class="r">${cell(a)}</td><td class="r">${cell(b)}</td></tr>`).join('')}</tbody></table></div>
-  </section>
-  <div class="two" style="margin-top:16px">
-    <section class="card"><h2>${ic('gauge')}O que é a cota de uso?</h2><p style="margin:0">Cada análise gerada, pergunta à Vera ou mensagem no WhatsApp usa um pouco da cota do mês, que cobre o uso normal de uma pessoa. Você vê quanto já usou em Configurações. Se acabar, IA e WhatsApp pausam até o mês virar: não existe cobrança extra.</p></section>
-    <section class="card"><h2>${ic('server')}E quem hospeda a própria Vera?</h2><p style="margin:0">O código continua aberto. Na versão auto-hospedada não há planos: cada pessoa cadastra as próprias chaves de IA, WhatsApp e Google e paga direto a esses serviços.</p></section>
-  </div>`;
-};
+const setrow = (icon, t, d, actions = '') => `<div class="setrow"><span class="sico">${ic(icon)}</span><span><b>${t}</b><span class="sub">${d}</span></span><span class="actions">${actions}</span></div>`;
 
-screens.ia = () => {
-  const f = feat('ia');
-  const on = f === 'on' && state.ai.optin;
-  const head = `<div class="head"><div>${title('sparkle', 'Análises com IA')}<p>A Vera explica os seus números em linguagem natural: o mês, onde cortar, a carteira contra a meta. E responde às suas perguntas.</p></div>${on && !state.selfhost ? `<div class="controls"><button class="btn sm" data-act="jump" data-arg="cfg-plano">${ic('gauge')}${usage()}% da cota usada</button></div>` : ''}</div>`;
-  if (f === 'hidden') return head + hiddenState();
-  if (f === 'locked') return head + lockedState('ia');
-  if (!state.ai.optin) return head + optinCard();
-  if (!positions.length && !hasSpend()) return head + emptyState('sparkle', 'A IA precisa de dados para analisar', 'Cadastre seus ativos ou conecte seus bancos. Também dá para explorar com os dados de exemplo.', `<button class="btn primary" data-add="">${ic('plus')}Adicionar ativos</button><button class="btn" data-go="conexoes">${ic('plug')}Conectar bancos</button>${sampleBtn}`);
-  const tabs = [['resumo', 'Resumo do mês', 'receipt'], ['cortes', 'Onde cortar', 'scissors'], ['carteira', 'Carteira', 'target'], ['chat', 'Pergunte à Vera', 'msg']];
-  const tab = state.ai.tab;
-  const p = paused();
-  let body = '';
-  if (tab === 'chat') {
-    const msgs = [{who:'vera', text:'Oi! Pergunte sobre os seus gastos ou a sua carteira. Eu vejo os mesmos números agregados das análises, sem nomes.'}, ...state.ai.chat];
-    const sug = ['Quanto gastei com delivery?', 'Onde dá pra cortar?', 'Como está minha carteira?', 'Onde aporto R$ 10 mil?'];
-    body = `<section class="card">
-      <div class="chat" data-autoscroll aria-live="polite">${msgs.map(bubble).join('')}</div>
-      <div class="suggest">${sug.map(q => `<button class="fchip" data-act="ask" data-arg="${q}" ${p ? 'disabled' : ''}>${q}</button>`).join('')}</div>
-      <form id="ask-form" class="askbar"><input class="input" id="ask-q" placeholder="${p ? `Pausado até ${RESET}` : 'Escreva sua pergunta'}" autocomplete="off" aria-label="Pergunta para a Vera" ${p ? 'disabled' : ''}><button class="btn primary" type="submit" ${p ? 'disabled' : ''}>${ic('send')}Perguntar</button></form>
-      ${quotaBanner()}
-    </section>`;
-  } else {
-    const needSpend = tab !== 'carteira', ok = needSpend ? hasSpend() : positions.length > 0;
-    const paras = ok ? (tab === 'resumo' ? iaResumo() : tab === 'cortes' ? iaCortes() : iaCarteira()) : [];
-    const lbl = {resumo:'Setembro de 2026, explicado', cortes:'O caminho mais leve até a meta', carteira:'Sua carteira, lida contra a meta'}[tab];
-    body = `<section class="card">
-      <div class="row between" style="align-items:flex-start"><div><h2>${ic(tabs.find(x => x[0] === tab)[2])}${lbl}</h2><p class="muted" style="margin:0 0 14px;font-size:12.5px">Gerada hoje às ${state.ai.gen} a partir de dados agregados${state.selfhost ? '' : ' · gerar de novo usa cerca de 3% da cota'}</p></div>
-      <button class="btn sm" data-act="regen" ${p || !ok ? 'disabled' : ''}>${ic('repeat')}Gerar de novo</button></div>
-      ${ok ? `<div class="prose">${paras.map(x => `<p>${x}</p>`).join('')}</div>` : `<p class="note">${ic('info')}<span>${needSpend ? NO_SPEND : NO_POS}</span></p>`}
-      ${quotaBanner()}
-      <div class="row" style="margin-top:16px">${tab === 'carteira' ? `<button class="btn sm" data-go="aporte">${ic('zap')}Abrir o aporte inteligente</button>` : `<button class="btn sm" data-go="${tab === 'resumo' ? 'gastos' : 'cortes'}">${ic('bars')}Ver os números</button>`}<button class="btn sm ghost" data-act="aitab" data-arg="chat">${ic('msg')}Perguntar algo sobre isso</button></div>
-    </section>`;
-  }
-  return head + `<div class="row" style="margin-bottom:14px"><div class="seg" role="tablist" aria-label="Análises">${tabs.map(([k, l, i]) => `<button role="tab" data-act="aitab" data-arg="${k}" aria-pressed="${tab === k}" aria-selected="${tab === k}">${ic(i)}${l}</button>`).join('')}</div></div>` + body +
-    `<p class="note" style="margin-top:14px">${ic('shield')}<span>A IA recebe só dados agregados, sem nomes de pessoas nem de estabelecimentos. <button class="linkbtn" data-act="payload">Ver o que é enviado</button> · <button class="linkbtn" data-act="jump" data-arg="cfg-ia">Desligar</button></span></p>`;
-};
-function optinCard() {
-  return `<div class="split">
-    <section class="card">
-      <h2>${ic('shield')}Antes de ligar</h2><p>As análises usam um modelo de IA externo. Ele só recebe o necessário para responder.</p>
-      <ul class="why" style="margin-top:6px">
-        <li><span class="tile">${ic('check')}</span><span><b>O que a IA recebe</b><span class="d">Renda, totais por categoria e a sua média, percentuais da carteira por classe, metas e o valor do aporte.</span></span></li>
-        <li><span class="tile">${ic('x')}</span><span><b>O que nunca recebe</b><span class="d">Nomes de pessoas e de estabelecimentos, descrição das transações, número de conta e credenciais dos bancos.</span></span></li>
-        <li><span class="tile">${ic('sliders')}</span><span><b>Você controla</b><span class="d">Desligue quando quiser em Configurações. Desligada, nada mais é enviado.</span></span></li>
-      </ul>
-      <label class="row" style="gap:8px;font-size:14px;margin:4px 0 14px;align-items:flex-start;flex-wrap:nowrap"><input type="checkbox" id="ai-consent" ${state.ai.consent ? 'checked' : ''} style="accent-color:var(--accent);margin-top:4px"><span>Entendi: a IA recebe dados agregados, sem nomes, só para gerar as análises e as respostas.</span></label>
-      <button class="btn primary" data-act="ai-on" ${state.ai.consent ? '' : 'disabled'}>${ic('sparkle')}Ativar análises com IA</button>
-    </section>
-    <section class="card">
-      <h2>${ic('eye')}Exemplo do que é enviado</h2><p>Montado com os seus dados de agora.</p>
-      <pre class="payload">${esc(payload())}</pre>
-    </section>
-  </div>`;
-}
-
-screens.whatsapp = () => {
-  const f = feat('wa');
-  const w = state.wa;
-  const head = `<div class="head"><div>${title('msg', 'Vera no WhatsApp')}<p>Pergunte sobre a carteira e os gastos, marque reuniões no Google Agenda e crie lembretes, sem abrir o app.</p></div></div>`;
-  if (f === 'hidden') return head + hiddenState();
-  if (f === 'locked') return head + lockedState('wa');
-  if (w.status !== 'linked') {
-    const needConsent = !state.ai.optin;
-    return head + `<div class="split">
-      <section class="card">
-        <h2>${ic('phone')}Vincular seu número</h2><p>A Vera só responde ao número que você confirmar aqui.</p>
-        ${w.status === 'idle' ? `
-          <div class="field"><label for="wa-phone">Seu WhatsApp, com DDD</label><div class="row" style="flex-wrap:nowrap"><span class="chip plain" style="padding:9px 12px">+55</span><input class="input" id="wa-phone" inputmode="tel" placeholder="(11) 98765-4321" value="${esc(w.phone)}" autocomplete="tel-national"></div></div>
-          <div class="row" style="margin-top:14px"><button class="btn primary" data-act="wa-send">${ic('send')}Enviar código pelo WhatsApp</button><button class="btn ghost" data-act="wa-fill-phone">Preencher exemplo</button></div>`
-        : `
-          <p class="note" style="margin:0 0 14px">${ic('msg')}<span>Mandamos um código de 6 dígitos para <b>+55 ${esc(w.phone)}</b>, vindo do número da Vera (${VERA_WA}). <button class="linkbtn" data-act="wa-change">Trocar número</button></span></p>
-          <div class="field" style="max-width:260px"><label for="wa-code">Código de verificação</label><input class="input codein" id="wa-code" inputmode="numeric" maxlength="6" placeholder="••••••" value="${esc(w.code)}" autocomplete="one-time-code"></div>
-          ${needConsent ? `<label class="row" style="gap:8px;font-size:13.5px;margin-top:14px;align-items:flex-start;flex-wrap:nowrap"><input type="checkbox" id="wa-consent" ${w.consent ? 'checked' : ''} style="accent-color:var(--accent);margin-top:3px"><span>Autorizo a IA a usar dados agregados, sem nomes, para responder no WhatsApp. Isso também liga as <b>Análises com IA</b>. <button class="linkbtn" data-act="payload">Ver o que é enviado</button></span></label>` : ''}
-          <div class="row" style="margin-top:14px"><button class="btn primary" data-act="wa-verify" ${needConsent && !w.consent ? 'disabled' : ''}>${ic('check')}Confirmar e vincular</button><button class="btn ghost" data-act="wa-fill-code">Preencher código</button><button class="btn ghost" data-act="wa-resend">Reenviar</button></div>`}
-      </section>
-      <section class="card">
-        <h2>${ic('sparkle')}O que dá pra pedir</h2><p>Exemplos de mensagens.</p>
-        <div class="chat" style="min-height:0">
-          <div class="bubble me">Quanto gastei com delivery este mês?</div>
-          <div class="bubble me">Marca reunião com o contador sexta às 15h</div>
-          <div class="bubble me">Me lembra de aportar todo dia 5</div>
-        </div>
-        <p class="note" style="margin:14px 0 0">${ic('shield')}<span><b>Pix e pagamentos ficam de fora.</b> A Vera só lê seus dados: não movimenta dinheiro. As mensagens passam pelo WhatsApp, da Meta.</span></p>
-      </section>
-    </div>`;
-  }
-  const p = paused();
-  const chips = ['Quanto gastei com delivery?', 'Como está minha carteira?', 'Marca reunião com o contador sexta às 15h', 'Quais minhas reuniões?', 'Me lembra de aportar todo dia 5', 'Faz um Pix de R$ 50 pra Maria'];
-  return head + `<div class="split" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
-    <div class="phone" aria-label="Simulação da conversa no WhatsApp">
-      <div class="wa-top"><span class="logo"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.8 6 L12 19.2 L19.2 6" fill="none" stroke="#fff" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="8.6" r="2.2" fill="#fff"/></svg></span><span><b>Vera</b><span>conta comercial · ${VERA_WA}</span></span></div>
-      <div class="wa-body" data-autoscroll aria-live="polite">
-        <div class="sys">As mensagens com a Vera são lidas por IA. Ela não faz Pix nem pagamentos.</div>
-        ${w.msgs.map(bubble).join('')}
-        ${p ? `<div class="sys">Cota do mês esgotada. A Vera volta a responder em ${RESET}.</div>` : ''}
+const CFG = {
+  plano:() => {
+    const pro = state.plan === 'premium', sub = state.sub;
+    const cell = v => v ? `<span class="yes">${ic('check')}</span>` : '<span class="muted">—</span>';
+    if (!pro) return `
+      <section class="card"><div class="cardhead"><div><h2>Seu plano</h2><p>Você está no Free: carteira e gastos completos, sem custo e sem prazo.</p></div><span class="chip ok">Free</span></div></section>
+      <div class="plans">
+        <section class="card plan"><span class="label">Free</span><div class="price">R$ 0</div><p class="muted" style="margin:0">Tudo que existe hoje na Vera.</p><button class="btn" disabled>Plano atual</button></section>
+        <section class="card plan pro"><span class="label">Premium</span><div class="price">${PRICE}<small>/mês</small></div><p class="muted" style="margin:0">Resumos em texto e a Vera no WhatsApp, com reuniões e lembretes.</p><button class="btn primary" data-act="checkout">Assinar o Premium</button><span class="hint" style="text-align:center">Pix ou cartão · cancele quando quiser, sem multa</span></section>
       </div>
-      <div class="wa-chips">${chips.map(c => `<button class="fchip" data-act="wa-say" data-arg="${c}" ${p ? 'disabled' : ''}>${c}</button>`).join('')}</div>
-      <form id="wa-form" class="wa-bar"><input class="input" id="wa-msg" placeholder="Mensagem" autocomplete="off" aria-label="Mensagem para a Vera" ${p ? 'disabled' : ''}><button type="submit" aria-label="Enviar" ${p ? 'disabled' : ''}>${ic('send')}</button></form>
-    </div>
-    <div class="grid">
+      <section class="card"><div class="cardhead"><div><h2>O que muda</h2></div></div>
+        <div class="tablewrap"><table style="min-width:0"><thead><tr><th>Recurso</th><th class="r">Free</th><th class="r">Premium</th></tr></thead>
+        <tbody>${COMPARE.map(([l, a, b]) => `<tr><td>${l}</td><td class="r">${cell(a)}</td><td class="r">${cell(b)}</td></tr>`).join('')}</tbody></table></div>
+        <p class="tipbox" style="margin:0">O Premium inclui uma cota mensal de uso para os resumos e o WhatsApp. Se acabar, essas duas funções pausam até o mês virar; não existe cobrança extra.</p>
+      </section>`;
+    return `
       <section class="card">
-        <h2>${ic('phone')}Número vinculado</h2>
-        <div class="conn"><span class="bank" style="background:#0b6b5c">${ic('msg')}</span><span><b>+55 ${esc(w.phone)}</b><span class="sub">vinculado em ${w.since}</span></span><span class="chip ok" style="margin-left:auto">${ic('check')}ativo</span></div>
-        <button class="btn sm danger" data-act="wa-unlink" style="margin-top:10px">${ic('unlink')}Desvincular</button>
+        <div class="cardhead"><div><h2>Assinatura</h2><p>${PRICE}/mês · assinante desde ${TODAY}</p></div><span class="chip ${sub.status === 'canceling' ? 'up' : 'ok'}">${sub.status === 'canceling' ? 'cancelada' : 'Premium ativo'}</span></div>
+        ${setrow('calendar', 'Próxima cobrança', sub.status === 'canceling' ? `Nenhuma. O Premium vale até ${NEXT_BILL}; depois a conta volta ao Free sem perder nada.` : `${NEXT_BILL} · ${PRICE}${sub.method === 'pix' ? ' · a cobrança Pix chega por e-mail 3 dias antes' : ''}`)}
+        ${setrow(sub.method === 'pix' ? 'qr' : 'card', 'Forma de pagamento', sub.method === 'pix' ? 'Pix, uma cobrança por mês' : 'Cartão final 4242, renovação automática', `<button class="btn sm" data-act="sub-method">${sub.method === 'pix' ? 'Usar cartão' : 'Usar Pix'}</button>`)}
+        ${setrow('receipt', 'Histórico', `${TODAY} · ${PRICE} · pago via Asaas`, `<button class="btn sm ghost" data-act="receipt">${ic('download')}Recibo</button>`)}
+        <div class="row" style="margin-top:4px">${sub.status === 'canceling' ? `<button class="btn sm primary" data-act="sub-reactivate">Reativar assinatura</button>` : `<button class="btn sm danger" data-act="sub-cancel">Cancelar assinatura</button>`}</div>
       </section>
-      ${gcalCard()}
-      <section class="card">
-        <h2>${ic('bell')}Lembretes</h2><p>Criados pelo WhatsApp. A Vera manda a mensagem na hora marcada.</p>
-        ${state.reminders.length ? state.reminders.map((r, i) => `<div class="evt"><span class="when">${esc(r.when)}</span><span class="row between" style="flex-wrap:nowrap"><span>${esc(r.t)}</span><button class="iconbtn" data-act="rem-del" data-arg="${i}" aria-label="Apagar lembrete ${esc(r.t)}">${ic('trash')}</button></span></div>`).join('') : `<p class="muted" style="margin:0;font-size:13.5px">Nenhum lembrete. Peça no WhatsApp: "me lembra de aportar todo dia 5".</p>`}
-      </section>
-      ${state.selfhost ? '' : `<section class="card">${meter(false)}</section>`}
-    </div>
-  </div>`;
-};
-function gcalCard() {
-  const f = feat('gcal');
-  if (f === 'hidden') return `<section class="card"><h2>${ic('calendar')}Google Agenda</h2><p class="muted" style="margin:0">Sem chave do Google nesta instalação: reuniões pelo WhatsApp ficam desligadas. <button class="linkbtn" data-act="jump" data-arg="cfg-chaves">Cadastrar</button></p></section>`;
-  return `<section class="card">
-    <h2>${ic('calendar')}Google Agenda</h2>
-    ${state.gcal.on ? `<p>Conectado como <b>${state.gcal.email}</b>. A Vera cria e lista eventos da agenda principal.</p>
-      ${state.events.map(e => `<div class="evt"><span class="when">${e.d} · ${e.h}</span><span>${esc(e.t)}${e.mine ? ' <span class="chip plain" style="font-size:11px;padding:1px 7px">pela Vera</span>' : ''}</span></div>`).join('')}
-      <button class="btn sm ghost" data-act="gcal-off" style="margin-top:10px">${ic('unlink')}Desconectar</button>`
-    : `<p>Para criar e listar reuniões pelo WhatsApp. A permissão da agenda é pedida só aqui, nunca no login.</p><button class="btn sm primary" data-act="gcal-connect">${ic('calendar')}Conectar Google Agenda</button>`}
-  </section>`;
-}
-
-screens.config = () => {
-  const pro = state.plan === 'premium', sub = state.sub;
-  const anchors = state.selfhost
-    ? [['cfg-chaves', 'Integrações'], ['cfg-ia', 'IA'], ['cfg-wa', 'WhatsApp'], ['cfg-gcal', 'Agenda'], ['cfg-bancos', 'Bancos'], ['cfg-idioma', 'Idioma'], ['cfg-dados', 'Seus dados']]
-    : [['cfg-plano', 'Plano e uso'], ['cfg-ia', 'IA'], ['cfg-wa', 'WhatsApp'], ['cfg-gcal', 'Agenda'], ['cfg-bancos', 'Bancos'], ['cfg-idioma', 'Idioma'], ['cfg-dados', 'Seus dados']];
-  const row = (icon, t, d, actions, style = '') => `<div class="setrow"><span class="tile" style="${style}">${ic(icon)}</span><span><b>${t}</b><span class="sub">${d}</span></span><span class="actions">${actions}</span></div>`;
-  const fIa = feat('ia'), fWa = feat('wa'), fG = feat('gcal');
-  const lockAct = `<button class="btn sm" data-go="planos">${ic('crown')}Ver o Premium</button>`;
-  const hidAct = k => `<button class="btn sm" data-act="key" data-arg="${k}">${ic('key')}Cadastrar chave</button>`;
-  const plano = state.selfhost ? '' : `<section class="card" id="cfg-plano">
-      <h2>${ic('crown')}Plano e uso</h2><p>${pro ? 'Sua assinatura, a próxima cobrança e quanto da cota do mês você já usou.' : 'Você está no Free: tudo da carteira e dos gastos, sem custo.'}</p>
-      ${pro ? `
-        ${row('crown', `Premium <span class="chip ${sub.status === 'canceling' ? 'up' : 'ok'}">${sub.status === 'canceling' ? 'cancelada' : 'ativa'}</span>`, `${PRICE}/mês · assinante desde ${TODAY}`, sub.status === 'canceling' ? `<button class="btn sm primary" data-act="sub-reactivate">Reativar</button>` : `<button class="btn sm danger" data-act="sub-cancel">Cancelar assinatura</button>`)}
-        ${row('calendar', 'Próxima cobrança', sub.status === 'canceling' ? `Nenhuma. O Premium vale até ${NEXT_BILL}; depois, sua conta volta ao Free sem perder nada.` : `${NEXT_BILL} · ${PRICE}${sub.method === 'pix' ? ' · a cobrança Pix chega por e-mail 3 dias antes' : ''}`, '', 'background:var(--surface-2);color:var(--ink-2)')}
-        ${row(sub.method === 'pix' ? 'qr' : 'card', 'Forma de pagamento', sub.method === 'pix' ? 'Pix, uma cobrança por mês' : 'Cartão de crédito final 4242, renovação automática', `<button class="btn sm" data-act="sub-method">${sub.method === 'pix' ? 'Usar cartão' : 'Usar Pix'}</button>`, 'background:var(--surface-2);color:var(--ink-2)')}
-        ${row('receipt', 'Histórico', `${TODAY} · ${PRICE} · pago via Asaas`, `<button class="btn sm ghost" data-act="receipt">${ic('download')}Recibo</button>`, 'background:var(--surface-2);color:var(--ink-2)')}
-        <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line)">${meter(true)}</div>`
-      : `${row('heart', 'Free <span class="chip ok">atual</span>', 'R$ 0, para sempre. Carteira, carteira-alvo, aporte inteligente, gastos e onde cortar.', `<button class="btn sm primary" data-go="planos">${ic('crown')}Conhecer o Premium</button>`)}`}
+      <section class="card"><div class="cardhead"><div><h2>Uso do mês</h2><p>Resumos em texto e WhatsApp usam a cota; o resto da Vera não.</p></div></div>${meter(true)}</section>`;
+  },
+  integracoes:() => {
+    const keyRow = (k, icon, t, d) => setrow(icon, `${t} ${state.keys[k] ? `<span class="chip ok">configurada</span>` : '<span class="chip plain">sem chave</span>'}`, d, state.keys[k] ? `<button class="btn sm ghost" data-act="key" data-arg="${k}">Trocar</button><button class="btn sm danger" data-act="key-del" data-arg="${k}">Remover</button>` : `<button class="btn sm" data-act="key" data-arg="${k}">${ic('key')}Cadastrar</button>`);
+    return `<section class="card">
+      <div class="cardhead"><div><h2>Integrações</h2><p>Nesta instalação não há planos nem cota: cada pessoa cadastra as próprias chaves e paga direto a cada serviço. O que não tem chave não aparece no app.</p></div></div>
+      ${keyRow('ia', 'msg', 'Modelo de linguagem', 'Escreve os resumos e as respostas do WhatsApp. Qualquer provedor compatível com a API da OpenAI, inclusive um modelo local.')}
+      ${keyRow('wa', 'phone', 'WhatsApp', 'WhatsApp Business Cloud API, da Meta. Precisa também do modelo de linguagem.')}
+      ${keyRow('gcal', 'calendar', 'Google Agenda', 'Cliente OAuth do Google Cloud.')}
     </section>`;
-  const keyRow = (k, icon, t, d) => row(icon, `${t} ${state.keys[k] ? `<span class="chip ok">${ic('check')}configurada</span>` : '<span class="chip plain">sem chave · função oculta</span>'}`, d, state.keys[k] ? `<button class="btn sm ghost" data-act="key" data-arg="${k}">Trocar</button><button class="btn sm danger" data-act="key-del" data-arg="${k}">Remover</button>` : hidAct(k));
-  const chaves = state.selfhost ? `<section class="card" id="cfg-chaves">
-      <h2>${ic('server')}Integrações (auto-hospedado)</h2><p>Nesta instalação cada pessoa usa as próprias chaves e paga direto a cada serviço. Sem planos e sem cota. Função sem chave some do menu.</p>
-      ${keyRow('ia', 'sparkle', 'IA', 'Qualquer provedor compatível com a API da OpenAI: URL, chave e modelo.')}
-      ${keyRow('wa', 'msg', 'WhatsApp', 'WhatsApp Business Cloud API, da Meta: token e ID do número.')}
-      ${keyRow('gcal', 'calendar', 'Google Agenda', 'Cliente OAuth do Google Cloud: Client ID e Client Secret.')}
-    </section>` : '';
-  const pluggyOk = state.pluggy === 'ok';
+  },
+  whatsapp:() => {
+    const f = feat('wa'), w = state.wa;
+    if (f === 'locked') return `<section class="card"><div class="cardhead"><div><h2>Vera no WhatsApp</h2><p>Pergunte sobre carteira e gastos, marque reuniões e crie lembretes por mensagem.</p></div></div>${lockLine('Disponível no Premium.')}</section>`;
+    if (f === 'hidden') return `<section class="card"><div class="cardhead"><div><h2>Vera no WhatsApp</h2><p>Sem as chaves do WhatsApp e do modelo de linguagem nesta instalação.</p></div></div><button class="btn sm" data-act="cfg" data-arg="integracoes">${ic('key')}Ver integrações</button></section>`;
+    if (w.status !== 'linked') {
+      const needConsent = !state.ai.optin;
+      return `<section class="card">
+        <div class="cardhead"><div><h2>Vincular seu número</h2><p>A Vera só responde ao número confirmado aqui. Pix e pagamentos ficam de fora: ela só lê seus dados.</p></div></div>
+        ${w.status === 'idle' ? `
+          <div class="field" style="max-width:340px"><label for="wa-phone">Seu WhatsApp, com DDD</label><div class="row" style="flex-wrap:nowrap"><span class="prefix">+55</span><input class="input" id="wa-phone" inputmode="tel" placeholder="(11) 98765-4321" value="${esc(w.phone)}" autocomplete="tel-national"></div></div>
+          <div class="row"><button class="btn primary" data-act="wa-send">Enviar código</button><button class="btn ghost" data-act="wa-fill-phone">Preencher exemplo</button></div>`
+        : `
+          <p class="tipbox" style="margin:0">Mandamos um código de 6 dígitos para <b>+55 ${esc(w.phone)}</b>, pelo número da Vera (${VERA_WA}). <button class="linkbtn" data-act="wa-change">Trocar número</button></p>
+          <div class="field" style="max-width:220px"><label for="wa-code">Código</label><input class="input codein" id="wa-code" inputmode="numeric" maxlength="6" placeholder="000000" value="${esc(w.code)}" autocomplete="one-time-code"></div>
+          ${needConsent ? `<label class="check"><input type="checkbox" id="wa-consent" ${w.consent ? 'checked' : ''}><span>Para responder, a Vera envia totais agregados (sem nomes) a um modelo de linguagem. Concordo, e isso também liga os resumos em texto. <button class="linkbtn" data-act="payload">Ver o que é enviado</button></span></label>` : ''}
+          <div class="row"><button class="btn primary" data-act="wa-verify" ${needConsent && !w.consent ? 'disabled' : ''}>Confirmar</button><button class="btn ghost" data-act="wa-fill-code">Preencher código</button><button class="btn ghost" data-act="wa-resend">Reenviar</button></div>`}
+      </section>`;
+    }
+    const p = paused();
+    const chips = ['Quanto gastei com delivery?', 'Como está minha carteira?', 'Marca reunião com o contador sexta às 15h', 'Quais minhas reuniões?', 'Me lembra de aportar todo dia 5', 'Faz um Pix de R$ 50 pra Maria'];
+    return `<div class="wa-grid">
+      <div class="grid">
+        <section class="card">
+          <div class="cardhead"><div><h2>Número vinculado</h2><p>desde ${w.since}</p></div><span class="chip ok">ativo</span></div>
+          ${setrow('phone', '+55 ' + esc(w.phone), `A Vera responde por ${VERA_WA}.`, `<button class="btn sm danger" data-act="wa-unlink">Desvincular</button>`)}
+        </section>
+        <section class="card">
+          <div class="cardhead"><div><h2>Lembretes</h2><p>Criados pelo WhatsApp; a Vera avisa na hora marcada.</p></div></div>
+          ${state.reminders.length ? state.reminders.map((r, i) => `<div class="evt"><span class="when">${esc(r.when)}</span><span class="row between" style="flex-wrap:nowrap"><span>${esc(r.t)}</span><button class="iconbtn" data-act="rem-del" data-arg="${i}" aria-label="Apagar lembrete ${esc(r.t)}">${ic('trash')}</button></span></div>`).join('') : `<p class="muted" style="margin:0">Nenhum lembrete. Peça no WhatsApp: "me lembra de aportar todo dia 5".</p>`}
+        </section>
+        ${state.selfhost ? '' : `<section class="card">${meter(false)}</section>`}
+      </div>
+      <div>
+        <p class="label" style="margin:0 0 10px">Simulação da conversa</p>
+        <div class="phone" aria-label="Simulação da conversa no WhatsApp">
+          <div class="wa-top"><span class="logo"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.8 6 L12 19.2 L19.2 6" fill="none" stroke="#fff" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="8.6" r="2.2" fill="#fff"/></svg></span><span><b>Vera</b><span>conta comercial · ${VERA_WA}</span></span></div>
+          <div class="wa-body" data-autoscroll aria-live="polite">
+            <div class="sys">Respostas escritas automaticamente a partir dos seus totais. A Vera não faz Pix nem pagamentos.</div>
+            ${w.msgs.map(bubble).join('')}
+            ${p ? `<div class="sys">Cota do mês esgotada. A Vera volta a responder em ${RESET}.</div>` : ''}
+          </div>
+          <div class="wa-chips">${chips.map(c => `<button class="fchip" data-act="wa-say" data-arg="${c}" ${p ? 'disabled' : ''}>${c}</button>`).join('')}</div>
+          <form id="wa-form" class="wa-bar"><input class="input" id="wa-msg" placeholder="Mensagem" autocomplete="off" aria-label="Mensagem para a Vera" ${p ? 'disabled' : ''}><button type="submit" aria-label="Enviar" ${p ? 'disabled' : ''}>${ic('send')}</button></form>
+        </div>
+      </div>
+    </div>`;
+  },
+  agenda:() => {
+    const f = feat('gcal');
+    const head = `<div class="cardhead"><div><h2>Google Agenda</h2><p>Para criar e listar reuniões pelo WhatsApp. A permissão da agenda é pedida só aqui, nunca no login.</p></div>${state.gcal.on && f === 'on' ? '<span class="chip ok">conectado</span>' : ''}</div>`;
+    if (f === 'locked') return `<section class="card">${head}${lockLine('Disponível no Premium, junto com a Vera no WhatsApp.')}</section>`;
+    if (f === 'hidden') return `<section class="card">${head}<button class="btn sm" data-act="cfg" data-arg="integracoes">${ic('key')}Ver integrações</button></section>`;
+    if (!state.gcal.on) return `<section class="card">${head}<div class="row"><button class="btn primary" data-act="gcal-connect">${ic('calendar')}Conectar Google Agenda</button></div></section>`;
+    return `<section class="card">${head}
+      ${setrow('calendar', state.gcal.email, 'Permissão: ver e editar eventos da agenda principal.', `<button class="btn sm danger" data-act="gcal-off">Desconectar</button>`)}
+      <p class="label" style="margin:6px 0 0">Próximos compromissos</p>
+      <div>${state.events.map(e => `<div class="evt"><span class="when">${e.d} · ${e.h}</span><span>${esc(e.t)}${e.mine ? ' <span class="chip plain">pela Vera</span>' : ''}</span></div>`).join('')}</div>
+    </section>`;
+  },
+  bancos:() => bancosBody(),
+  preferencias:() => `
+    <section class="card"><div class="cardhead"><div><h2>Idioma</h2><p>Textos da interface e das respostas.</p></div></div>
+      <div class="field" style="max-width:300px"><label for="lang">Idioma da interface</label><select class="input" id="lang">${[['pt-BR', 'Português (Brasil)'], ['en', 'English'], ['es', 'Español']].map(([v, l]) => `<option value="${v}" ${state.lang === v ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+    </section>
+    <section class="card proto-card"><div class="cardhead"><div><h2>Protótipo: versão</h2><p>Veja como a Vera fica para quem hospeda a própria instalação.</p></div></div>
+      <div class="seg" role="group" aria-label="Versão do protótipo"><button data-act="mode" data-arg="hosted" aria-pressed="${!state.selfhost}">Hospedada</button><button data-act="mode" data-arg="self" aria-pressed="${state.selfhost}">Auto-hospedada</button></div>
+    </section>`,
+  dados:() => {
+    const f = feat('ia');
+    return `
+    <section class="card"><div class="cardhead"><div><h2>Resumos em texto</h2><p>Os textos do mês, dos cortes e da carteira são escritos por um modelo de linguagem a partir de totais agregados. Nomes de pessoas e de estabelecimentos, descrições das transações, contas e credenciais nunca são enviados.</p></div></div>
+      ${f === 'on' ? `<div class="setrow"><span class="sico">${ic('shield')}</span><span><b>Permitir o envio de totais agregados</b><span class="sub">Desligado, nada é enviado e os resumos somem das telas. <button class="linkbtn" data-act="payload">Ver o que é enviado</button></span></span><span class="actions"><input type="checkbox" class="switch" id="ai-switch" role="switch" ${state.ai.optin ? 'checked' : ''} aria-label="Permitir o envio de totais agregados"></span></div>`
+        : f === 'locked' ? lockLine('Disponível no Premium.') : `<button class="btn sm" data-act="cfg" data-arg="integracoes">${ic('key')}Cadastrar o modelo de linguagem</button>`}
+    </section>
+    <section class="card"><div class="cardhead"><div><h2>Seus dados</h2><p>Os dados são seus: leve tudo ou apague tudo.</p></div></div>
+      ${setrow('download', 'Exportar tudo', 'Carteira, metas, transações, regras de categoria e lembretes, em planilha.', `<button class="btn sm" data-act="export-all">Exportar</button>`)}
+      ${setrow('trash', 'Excluir conta', 'Apaga a conta e todos os dados e desconecta bancos, WhatsApp e Google' + (state.plan === 'premium' && !state.selfhost ? ', além de cancelar o Premium' : '') + '.', `<button class="btn sm danger" data-act="delete-account">Excluir conta</button>`)}
+    </section>`;
+  }
+};
+function cfgTabs() {
+  return [state.selfhost ? ['integracoes', 'Integrações'] : ['plano', 'Plano e uso'], ['whatsapp', 'WhatsApp'], ['agenda', 'Google Agenda'], ['bancos', 'Bancos'], ['preferencias', 'Preferências'], ['dados', 'Dados e privacidade']];
+}
+screens.config = () => {
+  const tabs = cfgTabs();
+  if (!tabs.some(([k]) => k === state.cfg)) state.cfg = tabs[0][0];
   return `
-  <div class="head"><div>${title('gear', 'Configurações')}<p>Plano, integrações, idioma e os seus dados, num lugar só.</p></div></div>
-  <div class="filters" style="margin-bottom:16px">${anchors.map(([id, l]) => `<button class="fchip" data-act="jump" data-arg="${id}">${l}</button>`).join('')}</div>
-  <div class="cfg">
-    ${plano}${chaves}
-    <section class="card" id="cfg-ia">
-      <h2>${ic('sparkle')}Análises com IA</h2><p>Resumo do mês, onde cortar, leitura da carteira e o Pergunte à Vera.</p>
-      ${fIa === 'on' ? `<div class="setrow"><span class="tile">${ic('shield')}</span><span><b>Permitir que a IA leia dados agregados</b><span class="sub">Totais por categoria e percentuais da carteira, sem nomes. <button class="linkbtn" data-act="payload">Ver o que é enviado</button></span></span><span class="actions"><input type="checkbox" class="switch" id="ai-switch" role="switch" ${state.ai.optin ? 'checked' : ''} aria-label="Análises com IA"></span></div>`
-        : fIa === 'locked' ? row('sparkle', `Desligada ${premiumTag('ia')}`, 'Disponível no Premium. Ao assinar, você decide se liga.', lockAct)
-        : row('sparkle', 'Oculta nesta instalação', 'Cadastre uma chave de IA para ativar.', hidAct('ia'))}
-    </section>
-    <section class="card" id="cfg-wa">
-      <h2>${ic('msg')}Vera no WhatsApp</h2><p>Perguntas, reuniões e lembretes por mensagem. Pix fica de fora.</p>
-      ${fWa === 'on' ? (state.wa.status === 'linked'
-          ? row('phone', `+55 ${esc(state.wa.phone)} <span class="chip ok">${ic('check')}vinculado</span>`, `desde ${state.wa.since}`, `<button class="btn sm" data-go="whatsapp">Abrir</button><button class="btn sm danger" data-act="wa-unlink">${ic('unlink')}Desvincular</button>`)
-          : row('phone', 'Nenhum número vinculado', 'Vincule com um código de verificação enviado pelo WhatsApp.', `<button class="btn sm primary" data-go="whatsapp">${ic('phone')}Vincular número</button>`))
-        : fWa === 'locked' ? row('phone', `Não vinculado ${premiumTag('wa')}`, 'Disponível no Premium.', lockAct)
-        : row('phone', 'Oculto nesta instalação', 'Cadastre a chave da WhatsApp Cloud API para ativar.', hidAct('wa'))}
-    </section>
-    <section class="card" id="cfg-gcal">
-      <h2>${ic('calendar')}Google Agenda</h2><p>A permissão da agenda é pedida só quando você conecta, nunca no login.</p>
-      ${fG === 'on' ? (state.gcal.on
-          ? row('calendar', `${state.gcal.email} <span class="chip ok">${ic('check')}conectado</span>`, 'Permissão: ver e editar eventos. Usada pelo WhatsApp para reuniões.', `<button class="btn sm danger" data-act="gcal-off">${ic('unlink')}Desconectar</button>`)
-          : row('calendar', 'Não conectado', 'Conecte para criar e listar reuniões pelo WhatsApp.', `<button class="btn sm primary" data-act="gcal-connect">${ic('calendar')}Conectar</button>`))
-        : fG === 'locked' ? row('calendar', `Não conectado ${premiumTag('gcal')}`, 'Usado pela Vera no WhatsApp, no Premium.', lockAct)
-        : row('calendar', 'Oculto nesta instalação', 'Cadastre o cliente OAuth do Google para ativar.', hidAct('gcal'))}
-    </section>
-    <section class="card" id="cfg-bancos">
-      <h2>${ic('plug')}Conexões bancárias</h2><p>Open Finance pela sua conta no Meu Pluggy, ou extrato importado.</p>
-      ${row('landmark', pluggyOk ? `Meu Pluggy <span class="chip ok">${ic('check')}2 bancos</span>` : 'Meu Pluggy não configurado', pluggyOk ? 'Nubank e Itaú · atualizado hoje, 06:10' : state.imported ? `Extrato ${esc(state.imported)} importado` : 'Nenhum banco conectado ainda.', `<button class="btn sm" data-go="conexoes">${pluggyOk ? 'Gerenciar' : 'Conectar'}</button>`)}
-    </section>
-    <section class="card" id="cfg-idioma">
-      <h2>${ic('globe')}Idioma</h2><p>Textos da interface e das respostas da IA.</p>
-      <div class="field" style="max-width:280px"><label for="lang">Idioma da interface</label><select class="input" id="lang">${[['pt-BR', 'Português (Brasil)'], ['en', 'English'], ['es', 'Español']].map(([v, l]) => `<option value="${v}" ${state.lang === v ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
-    </section>
-    <section class="card" id="cfg-dados">
-      <h2>${ic('shield')}Seus dados</h2><p>Os dados são seus: leve tudo ou apague tudo.</p>
-      ${row('download', 'Exportar tudo', 'Carteira, metas, transações, regras de categoria e lembretes, em planilha.', `<button class="btn sm" data-act="export-all">${ic('download')}Exportar</button>`, 'background:var(--surface-2);color:var(--ink-2)')}
-      ${row('trash', 'Excluir conta', 'Apaga a conta e todos os dados, desconecta bancos, WhatsApp e Google' + (pro && !state.selfhost ? ' e cancela o Premium' : '') + '.', `<button class="btn sm danger" data-act="delete-account">Excluir conta</button>`, 'background:var(--bad-soft);color:var(--bad)')}
-    </section>
-    <section class="card" style="background:var(--accent-tint)">
-      <h2>${ic('info')}Protótipo: versão</h2><p>Veja como a Vera fica para quem hospeda a própria instalação.</p>
-      <div class="seg" role="group" aria-label="Versão do protótipo"><button data-act="mode" data-arg="hosted" aria-pressed="${!state.selfhost}">${ic('globe')}Hospedada</button><button data-act="mode" data-arg="self" aria-pressed="${state.selfhost}">${ic('server')}Auto-hospedada</button></div>
-    </section>
+  <div class="head"><div>${title('', 'Configurações')}<p>${state.selfhost ? 'Instalação auto-hospedada.' : 'Plano, integrações e os seus dados.'}</p></div></div>
+  <div class="cfg-layout">
+    <nav class="cfg-nav" aria-label="Seções de configurações">${tabs.map(([k, l]) => `<button data-act="cfg" data-arg="${k}" aria-current="${state.cfg === k ? 'page' : 'false'}">${l}</button>`).join('')}</nav>
+    <div class="cfg-body">${CFG[state.cfg]()}</div>
   </div>`;
 };
 
 function onbOffer() {
-  if (state.selfhost) return `<div class="offer"><span class="tile">${ic('server')}</span><span><b>IA, WhatsApp e Google Agenda</b><span class="d">Nesta instalação, cada função aparece quando você cadastra a sua chave em Configurações.</span></span><button class="btn sm" data-onb="finish-premium">Ver integrações</button></div>`;
-  if (state.plan === 'premium') return '';
-  return `<div class="offer"><span class="tile">${ic('crown')}</span><span><b>Quer ir além? <span class="tag">Premium</span></b><span class="d">A IA explica o seu mês e a sua carteira, e a Vera responde no WhatsApp, marca reuniões e cria lembretes. ${PRICE}/mês, opcional: tudo que você configurou aqui continua grátis.</span></span><button class="btn sm" data-onb="finish-premium">Conhecer</button></div>`;
+  if (state.selfhost || state.plan === 'premium') return '';
+  return `<div class="offer"><span><b>Premium, se quiser</b><span class="d">A Vera resume seu mês e sua carteira em poucas linhas e responde no WhatsApp, com reuniões e lembretes. ${PRICE}/mês; tudo que você configurou aqui continua grátis.</span></span><button class="btn sm" data-onb="finish-premium">Ver o Premium</button></div>`;
 }
 
 /* ---------- navegação ---------- */
 function renderNav() {
-  const hide = k => feat(k) === 'hidden';
   const groups = [
     ['nav-pat', 'Patrimônio', [['visao', 'Visão geral', 'pie'], ['meta', 'Carteira-alvo', 'target'], ['aporte', 'Aporte inteligente', 'zap'], ['ativos', 'Meus ativos', 'wallet']]],
-    ['nav-gas', 'Gastos', [['gastos', 'Resumo do mês', 'receipt'], ['transacoes', 'Transações', 'list'], ['cortes', 'Onde cortar', 'scissors'], ['conexoes', 'Conexões', 'plug']]],
-    ['nav-pro', 'Assistente', [['ia', 'Análises com IA', 'sparkle', 'ia'], ['whatsapp', 'Vera no WhatsApp', 'msg', 'wa']].filter(x => !hide(x[3]))],
-    ['nav-conta', 'Conta', [['config', 'Configurações', 'gear'], ...(state.selfhost ? [] : [['planos', 'Planos', 'crown']])]]
+    ['nav-gas', 'Gastos', [['gastos', 'Resumo do mês', 'receipt'], ['transacoes', 'Transações', 'list'], ['cortes', 'Onde cortar', 'scissors']]],
+    ['nav-conta', '', [['config', 'Configurações', 'gear']]]
   ];
   groups.forEach(([id, t, items]) => {
-    const el = document.getElementById(id);
-    el.hidden = !items.length;
-    el.innerHTML = `<h6>${t}</h6>` + items.map(([k, l, i, f]) => `<button class="nav" data-go="${k}"><span class="ico">${ic(i)}</span>${l}${k === 'transacoes' ? '<span class="count" id="unc-count"></span>' : ''}${f && feat(f) === 'locked' ? `<span class="tag" title="Premium" aria-label="Premium">${ic('crown')}</span>` : ''}</button>`).join('');
+    document.getElementById(id).innerHTML = (t ? `<h6>${t}</h6>` : '') + items.map(([k, l, i]) => `<button class="nav" data-go="${k}">${ic(i)}<span>${l}</span>${k === 'transacoes' ? '<span class="count" id="unc-count"></span>' : ''}</button>`).join('');
   });
-  document.getElementById('proto').innerHTML = `${ic('info')}<span>Protótipo navegável com <b>dados de exemplo</b>; nada é salvo.<br><button class="side-onb" data-onb="restart"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Rever onboarding</button><span class="seg" role="group" aria-label="Versão do protótipo"><button data-act="mode" data-arg="hosted" aria-pressed="${!state.selfhost}">Hospedada</button><button data-act="mode" data-arg="self" aria-pressed="${state.selfhost}">Auto-hospedada</button></span></span>`;
+  document.getElementById('proto').innerHTML = `${ic('info')}<span>Protótipo com <b>dados de exemplo</b>; nada é salvo.<br><button class="side-onb" data-onb="restart">Rever onboarding</button><span class="seg" role="group" aria-label="Versão do protótipo"><button data-act="mode" data-arg="hosted" aria-pressed="${!state.selfhost}">Hospedada</button><button data-act="mode" data-arg="self" aria-pressed="${state.selfhost}">Auto-hospedada</button></span></span>`;
 }
 
 /* ---------- modais ---------- */
@@ -2002,44 +1872,43 @@ function sheet(html, onAction, size = 'narrow') {
   const first = root.querySelector('input:not([readonly]),button.primary'); if (first) first.focus();
   return h;
 }
-const mHead = (icon, t) => `<div class="sheet-head"><h3 id="m-title"><span class="tile" style="background:var(--accent);color:#fff">${ic(icon)}</span>${t}</h3><button class="iconbtn" data-close aria-label="Fechar">${ic('x')}</button></div>`;
+const mHead = (t, d = '') => `<div class="sheet-head"><div><h3 id="m-title">${t}</h3>${d ? `<p class="muted" style="margin:4px 0 0;font-size:13px">${d}</p>` : ''}</div><button class="iconbtn" data-close aria-label="Fechar">${ic('x')}</button></div>`;
 function fakeQR() {
   const n = 25, cells = [];
   let x = 7;
   const rnd = () => (x = (x * 9301 + 49297) % 233280) / 233280;
-  const finder = (r, c) => [[0, 0], [0, n - 7], [n - 7, 0]].some(([a, b]) => r >= a && r < a + 7 && c >= b && c < b + 7);
-  const fin = (r, c) => { const [a, b] = [[0, 0], [0, n - 7], [n - 7, 0]].find(([a, b]) => r >= a && r < a + 7 && c >= b && c < b + 7); const i = r - a, j = c - b; return i === 0 || i === 6 || j === 0 || j === 6 || (i >= 2 && i <= 4 && j >= 2 && j <= 4); };
-  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (finder(r, c) ? fin(r, c) : rnd() > .52) cells.push(`<rect x="${c}" y="${r}" width="1" height="1"/>`);
+  const F = [[0, 0], [0, n - 7], [n - 7, 0]];
+  const inF = (r, c) => F.find(([a, b]) => r >= a && r < a + 7 && c >= b && c < b + 7);
+  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) {
+    const f = inF(r, c);
+    const on = f ? (() => { const i = r - f[0], j = c - f[1]; return i === 0 || i === 6 || j === 0 || j === 6 || (i >= 2 && i <= 4 && j >= 2 && j <= 4); })() : rnd() > .52;
+    if (on) cells.push(`<rect x="${c}" y="${r}" width="1" height="1"/>`);
+  }
   return `<svg class="qr" viewBox="0 0 ${n} ${n}" shape-rendering="crispEdges" role="img" aria-label="QR Code Pix de exemplo"><g fill="#2a1822">${cells.join('')}</g></svg>`;
 }
 function openCheckout() {
-  if (state.plan === 'premium') return go('config');
-  const m = {method:'pix', step:'pay', card:{num:'', name:'', exp:'', cvv:''}};
+  if (state.plan === 'premium') return act('cfg', 'plano');
+  const m = {method:'pix', step:'pay'};
   const summary = `<div class="preview">
-      <div class="ptitle"><span class="tile" style="background:linear-gradient(140deg,var(--accent),#f08a5d);color:#fff">${ic('crown')}</span><span><b>Vera Premium</b><span class="muted">${PRICE} por mês</span></span></div>
-      <div class="pvalue"><div class="label">Hoje</div><div class="big num">${PRICE}</div><span class="muted" style="font-size:12.5px">Próxima cobrança em ${NEXT_BILL}</span></div>
-      <ul class="fgrid" style="margin:0">${PRO_FEATS.slice(1).map(([i, b]) => `<li><span class="tile">${ic(i)}</span><span><b style="font-size:13.5px;margin-top:8px">${b}</b></span></li>`).join('')}</ul>
-      <p class="note" style="margin:0">${ic('info')}<span>Cancele quando quiser, sem multa: o Premium vale até o fim do período pago e a conta volta ao Free sem perder nada.</span></p>
+      <div><span class="label">Vera Premium</span><div class="big num" style="margin:6px 0 2px">${PRICE}</div><span class="muted" style="font-size:13px">por mês · próxima cobrança em ${NEXT_BILL}</span></div>
+      <ul class="plainlist">${COMPARE.filter(r => !r[1]).map(r => `<li>${ic('check')}${r[0]}</li>`).join('')}<li>${ic('check')}Cota mensal de uso inclusa</li></ul>
+      <p class="tipbox" style="margin:0">Cancele quando quiser, sem multa: o Premium vale até o fim do período pago e a conta volta ao Free sem perder nada.</p>
     </div>`;
   const html = () => {
-    if (m.step === 'wait') return mHead('crown', 'Assinar o Premium') + `<div class="sheet-single"><div class="empty" style="padding:60px 20px"><div class="spin" aria-hidden="true"></div><p style="margin:0">Confirmando o pagamento com o Asaas…</p></div></div><div class="sheet-foot"></div>`;
-    if (m.step === 'done') return mHead('check', 'Premium ativo') + `<div class="sheet-single"><div class="done-hero" style="margin:0 auto">
-        <div class="burst">${ic('crown')}</div><h2 class="display" style="font-family:var(--f-display);font-size:30px;margin:10px 0 6px">Bem-vinda ao Premium</h2>
-        <p class="lead" style="margin:0 auto 18px">Pagamento confirmado${m.method === 'pix' ? ' via Pix' : ' no cartão final 4242'}. Agora escolha por onde começar; cada função pede a sua permissão antes de ligar.</p>
-        <div class="summary" style="text-align:left">
-          <div class="srow"><span class="tile" style="background:var(--accent-soft);color:var(--accent-strong)">${ic('sparkle')}</span><span><b>Ativar análises com IA</b><span class="sub">Você vê o que é enviado antes de ligar.</span></span><button class="btn sm primary" data-m="goto" data-arg="ia">Ativar</button></div>
-          <div class="srow"><span class="tile" style="background:#dcf5e8;color:#0b6b5c">${ic('msg')}</span><span><b>Vincular o WhatsApp</b><span class="sub">Com um código de verificação.</span></span><button class="btn sm" data-m="goto" data-arg="whatsapp">Vincular</button></div>
-        </div></div></div><div class="sheet-foot"><button class="btn ghost" data-close>Fazer depois</button></div>`;
+    if (m.step === 'wait') return mHead('Assinar o Premium') + `<div class="sheet-single"><div class="empty-plain"><div class="spin" aria-hidden="true"></div><p>Confirmando o pagamento com o Asaas…</p></div></div><div class="sheet-foot"></div>`;
+    if (m.step === 'done') return mHead('Premium ativo', `Pagamento confirmado${m.method === 'pix' ? ' via Pix' : ' no cartão final 4242'}.`) + `<div class="sheet-single" style="display:grid;gap:4px">
+        <p style="margin:0 0 8px">Por onde começar. Cada função pede a sua permissão antes de ligar.</p>
+        ${setrow('receipt', 'Ver o resumo do mês', 'Um texto curto sobre setembro, no Resumo do mês.', `<button class="btn sm" data-m="goto" data-arg="gastos">Abrir</button>`)}
+        ${setrow('phone', 'Vincular o WhatsApp', 'Com um código de verificação.', `<button class="btn sm" data-m="goto" data-arg="cfg:whatsapp">Vincular</button>`)}
+      </div><div class="sheet-foot"><button class="btn ghost" data-close>Fazer depois</button></div>`;
     const pix = m.method === 'pix';
-    return mHead('crown', 'Assinar o Premium') + `<div class="sheet-body">
+    return mHead('Assinar o Premium') + `<div class="sheet-body">
       <div class="sheet-left">
-        <p class="whyh" style="margin:0">Forma de pagamento</p>
-        <div class="results">
-          <button class="result" data-m="method" data-arg="pix" aria-pressed="${pix}"><span class="tile" style="background:var(--accent-soft);color:var(--accent-strong)">${ic('qr')}</span><span><b>Pix</b><span class="sub">Uma cobrança por mês, enviada por e-mail</span></span></button>
-          <button class="result" data-m="method" data-arg="card" aria-pressed="${!pix}"><span class="tile" style="background:var(--accent-soft);color:var(--accent-strong)">${ic('card')}</span><span><b>Cartão de crédito</b><span class="sub">Renovação automática todo mês</span></span></button>
-        </div>
+        <span class="label">Forma de pagamento</span>
+        <div class="seg" role="group" aria-label="Forma de pagamento"><button data-m="method" data-arg="pix" aria-pressed="${pix}">${ic('qr')}Pix</button><button data-m="method" data-arg="card" aria-pressed="${!pix}">${ic('card')}Cartão de crédito</button></div>
+        <p class="hint" style="margin:0">${pix ? 'Uma cobrança por mês, enviada por e-mail.' : 'Renovação automática todo mês.'}</p>
         ${pix ? `<div class="pixbox">${fakeQR()}<div style="flex:1;min-width:200px;display:grid;gap:10px">
-            <p style="margin:0;font-size:13.5px">Abra o app do seu banco, escolha <b>Pix › Ler QR Code</b> ou use o copia e cola. O código vale por 30 minutos.</p>
+            <p style="margin:0;font-size:13.5px">No app do seu banco, escolha <b>Pix › Ler QR Code</b> ou use o copia e cola. O código vale por 30 minutos.</p>
             <div class="field"><label for="pix-code">Pix copia e cola</label><div class="row" style="flex-wrap:nowrap"><input class="input" id="pix-code" readonly value="00020126580014br.gov.bcb.pix0136exemplo-vera-premium-1490" style="font-family:var(--f-mono);font-size:12px"><button class="btn sm" data-m="copy">Copiar</button></div></div>
           </div></div>`
         : `<div class="formgrid">
@@ -2048,60 +1917,50 @@ function openCheckout() {
             <div class="field"><label for="cc-exp">Validade</label><input class="input" id="cc-exp" readonly autocomplete="off" value="12/29"></div>
             <div class="field"><label for="cc-cvv">CVV</label><input class="input" id="cc-cvv" readonly autocomplete="off" value="123"></div>
           </div>
-          <p class="note" style="margin:0">${ic('info')}<span>Protótipo: o cartão é de exemplo e não dá para editar. No produto, os campos são do próprio Asaas.</span></p>`}
-        <p class="note" style="margin:0">${ic('lock')}<span>Pagamento processado pelo <b>Asaas</b>.${pix ? ' A Vera só recebe a confirmação.' : ' A Vera não vê nem guarda os dados do cartão.'}</span></p>
+          <p class="tipbox" style="margin:0">Protótipo: o cartão é de exemplo e não dá para editar. No produto, os campos são do próprio Asaas.</p>`}
+        <p class="hint" style="margin:0">${ic('lock')} Pagamento processado pelo Asaas.${pix ? ' A Vera só recebe a confirmação.' : ' A Vera não vê nem guarda os dados do cartão.'}</p>
       </div>
       <div class="sheet-right">${summary}</div>
     </div>
-    <div class="sheet-foot"><button class="btn ghost" data-close>Cancelar</button><button class="btn primary" data-m="pay">${pix ? `${ic('check')}Já paguei (simular confirmação)` : `${ic('lock')}Assinar por ${PRICE}/mês`}</button></div>`;
+    <div class="sheet-foot"><button class="btn ghost" data-close>Cancelar</button><button class="btn primary" data-m="pay">${pix ? 'Já paguei (simular confirmação)' : `Assinar por ${PRICE}/mês`}</button></div>`;
   };
   sheet(html, (a, el, h) => {
-    if (a === 'input') { if (el.dataset.card) m.card[el.dataset.card] = el.value; return; }
     if (a === 'method') { m.method = el.dataset.arg; return h.redraw(); }
     if (a === 'copy') return toast('Código Pix copiado');
-    if (a === 'fill') { m.card = {num:'4242 4242 4242 4242', name:'LUCAS EXEMPLO', exp:'12/29', cvv:'123'}; return h.redraw(); }
     if (a === 'pay') {
       m.step = 'wait'; h.redraw();
       setTimeout(() => { m.step = 'done'; state.plan = 'premium'; state.sub = {method:m.method, status:'active'}; simUsage(0); render(); h.redraw(); }, 1100);
       return;
     }
-    if (a === 'goto') { h.close(); return go(el.dataset.arg); }
+    if (a === 'goto') { h.close(); const g = el.dataset.arg; return g.startsWith('cfg:') ? act('cfg', g.slice(4)) : go(g); }
   }, 'mid');
 }
-function confirmSheet({icon, t, body, ok, okCls = 'danger solid', onOk}) {
-  sheet(() => mHead(icon, t) + `<div class="sheet-single">${body}</div><div class="sheet-foot"><button class="btn ghost" data-close>Voltar</button><button class="btn ${okCls}" data-m="ok">${ok}</button></div>`, (a, el, h) => { if (a === 'ok') { h.close(); onOk(); } });
+function confirmSheet({t, body, ok, onOk}) {
+  sheet(() => mHead(t) + `<div class="sheet-single">${body}</div><div class="sheet-foot"><button class="btn ghost" data-close>Voltar</button><button class="btn danger solid" data-m="ok">${ok}</button></div>`, (a, el, h) => { if (a === 'ok') { h.close(); onOk(); } });
 }
 function openGcal() {
-  if (feat('gcal') !== 'on') return go(feat('gcal') === 'hidden' ? 'config' : 'planos');
-  sheet(() => mHead('calendar', 'Conectar o Google Agenda') + `<div class="sheet-single" style="display:grid;gap:14px">
-      <p class="muted" style="margin:0">Você vai para o Google autorizar. No login a Vera só recebeu nome e e-mail; a agenda é pedida agora, à parte.</p>
-      <ul class="why" style="margin:0">
-        <li><span class="tile">${ic('calendar')}</span><span><b>Permissão pedida: ver e editar eventos</b><span class="d">Para criar as reuniões que você pedir no WhatsApp e listar seus próximos compromissos.</span></span></li>
-        <li><span class="tile">${ic('x')}</span><span><b>O que a Vera não acessa</b><span class="d">E-mails, contatos e arquivos. Você pode revogar o acesso em Configurações ou na sua Conta do Google.</span></span></li>
-      </ul>
-      <p class="note" style="margin:0">${ic('info')}<span>Protótipo: no produto, aqui você seria levada à tela de autorização do próprio Google. Nenhuma conta é conectada de verdade.</span></p>
+  if (feat('gcal') !== 'on') return act('cfg', feat('gcal') === 'hidden' ? 'integracoes' : 'plano');
+  sheet(() => mHead('Conectar o Google Agenda', 'Você vai para o Google autorizar. No login a Vera só recebeu nome e e-mail; a agenda é pedida agora, à parte.') + `<div class="sheet-single" style="display:grid;gap:4px">
+      ${setrow('calendar', 'Permissão pedida: ver e editar eventos', 'Para criar as reuniões que você pedir no WhatsApp e listar seus próximos compromissos.')}
+      ${setrow('x', 'O que a Vera não acessa', 'E-mails, contatos e arquivos. Você pode revogar o acesso aqui ou na sua Conta do Google.')}
+      <p class="tipbox" style="margin:8px 0 0">Protótipo: no produto, aqui você seria levada à tela de autorização do próprio Google. Nenhuma conta é conectada de verdade.</p>
     </div><div class="sheet-foot"><button class="btn ghost" data-close>Cancelar</button><button class="btn primary" data-m="allow">Simular autorização</button></div>`,
   (a, el, h) => { if (a === 'allow') { h.close(); state.gcal.on = true; toast('Google Agenda conectado'); render(); } });
 }
 function openPayload() {
-  sheet(() => mHead('eye', 'O que a IA recebe') + `<div class="sheet-single" style="display:grid;gap:12px">
-      <p class="muted" style="margin:0">Montado agora com os seus dados. Só números agregados: sem nomes de pessoas, de estabelecimentos nem descrição das transações.</p>
-      <pre class="payload">${esc(payload())}</pre>
-      <p class="note" style="margin:0">${ic('shield')}<span>Na pergunta livre, vai também o texto que você escreveu. Evite colocar nomes ou dados pessoais nele.</span></p>
-    </div><div class="sheet-foot"><button class="btn primary" data-close>Entendi</button></div>`, () => {});
+  sheet(() => mHead('O que é enviado', 'Montado agora com os seus dados. Só números agregados, sem nomes.') + `<div class="sheet-single"><pre class="payload">${esc(payload())}</pre></div><div class="sheet-foot"><button class="btn primary" data-close>Entendi</button></div>`, () => {});
 }
 const KEYS = {
-  ia:{t:'Chave de IA', icon:'sparkle', fields:[['URL da API', 'https://api.openai.com/v1'], ['Chave', 'sk-exemplo-••••••••'], ['Modelo', 'gpt-4o-mini']], note:'Qualquer provedor compatível com a API da OpenAI, inclusive um modelo local.'},
-  wa:{t:'WhatsApp Cloud API', icon:'msg', fields:[['Token de acesso', 'EAAG-exemplo-••••'], ['ID do número', '109876543210'], ['Token de verificação do webhook', 'vera-webhook-exemplo']], note:'Crie um app no Meta for Developers e aponte o webhook para https://sua-vera.exemplo/api/whatsapp.'},
-  gcal:{t:'Google Agenda (OAuth)', icon:'calendar', fields:[['Client ID', '1234-exemplo.apps.googleusercontent.com'], ['Client Secret', 'GOCSPX-exemplo-••••']], note:'No Google Cloud, crie um cliente OAuth com o redirecionamento https://sua-vera.exemplo/api/google/callback.'}
+  ia:{t:'Modelo de linguagem', fields:[['URL da API', 'https://api.openai.com/v1'], ['Chave', 'sk-exemplo-••••••••'], ['Modelo', 'gpt-4o-mini']], note:'Qualquer provedor compatível com a API da OpenAI, inclusive um modelo local.'},
+  wa:{t:'WhatsApp Cloud API', fields:[['Token de acesso', 'EAAG-exemplo-••••'], ['ID do número', '109876543210'], ['Token de verificação do webhook', 'vera-webhook-exemplo']], note:'Crie um app no Meta for Developers e aponte o webhook para https://sua-vera.exemplo/api/whatsapp.'},
+  gcal:{t:'Google Agenda (OAuth)', fields:[['Client ID', '1234-exemplo.apps.googleusercontent.com'], ['Client Secret', 'GOCSPX-exemplo-••••']], note:'No Google Cloud, crie um cliente OAuth com o redirecionamento https://sua-vera.exemplo/api/google/callback.'}
 };
 function openKey(k) {
   const K = KEYS[k];
   let filled = false;
-  sheet(() => mHead(K.icon, K.t) + `<div class="sheet-single" style="display:grid;gap:12px">
+  sheet(() => mHead(K.t, K.note + ' As chaves ficam cifradas no seu servidor.') + `<div class="sheet-single" style="display:grid;gap:12px">
       ${K.fields.map(([l, ex], i) => `<div class="field"><label for="k-${i}">${l}</label><input class="input" id="k-${i}" autocomplete="off" ${/chave|token|secret/i.test(l) ? 'type="password"' : ''} value="${filled ? esc(ex) : ''}"></div>`).join('')}
-      <p class="note" style="margin:0">${ic('info')}<span>${K.note} As chaves ficam cifradas no seu servidor.</span></p>
-    </div><div class="sheet-foot"><button class="btn ghost" data-m="fill">Preencher exemplo</button><button class="btn primary" data-m="save">${ic('check')}Salvar e testar</button></div>`,
+    </div><div class="sheet-foot"><button class="btn ghost" data-m="fill">Preencher exemplo</button><button class="btn primary" data-m="save">Salvar e testar</button></div>`,
   (a, el, h) => {
     if (a === 'fill') { filled = true; return h.redraw(); }
     if (a === 'save') {
@@ -2116,57 +1975,51 @@ function act(a, arg) {
   const w = state.wa;
   switch (a) {
     case 'checkout': return openCheckout();
+    case 'cfg': state.cfg = arg; return go('config');
     case 'mode':
       state.selfhost = arg === 'self';
+      if (state.screen === 'config') state.cfg = state.selfhost ? 'integracoes' : 'plano';
       toast(state.selfhost ? 'Protótipo como auto-hospedado: sem planos, cada função aparece com a sua chave' : 'Protótipo como versão hospedada');
-      if (state.selfhost && state.screen === 'planos') return go('config');
       return render();
-    case 'jump':
-      go(arg.startsWith('cfg-') ? 'config' : arg);
-      { const el = document.getElementById(arg); if (el) el.scrollIntoView({block:'start'}); }
-      return;
     case 'sim': simUsage(Number(arg)); return render();
-    case 'open-ia': state.ai.tab = arg || 'resumo'; return go('ia');
-    case 'aitab': state.ai.tab = arg; return render();
-    case 'ai-on': if (!state.ai.consent) return; state.ai.optin = true; toast('Análises com IA ativadas'); return render();
-    case 'ai-off': state.ai.optin = false; state.ai.consent = false; toast('Análises com IA desligadas. Nada mais é enviado à IA'); return render();
+    case 'ai-on': state.ai.optin = true; toast('Resumos em texto ligados'); return render();
+    case 'ai-off': state.ai.optin = false; toast('Resumos desligados. Nada mais é enviado'); return render();
     case 'payload': return openPayload();
     case 'regen':
-      if (consume('analises', 3)) { const d = new Date(); state.ai.gen = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); toast('Análise gerada de novo'); }
+      if (consume('explicacoes', 3)) { const d = new Date(); state.ai.gen = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); toast('Resumo escrito de novo'); }
       return render();
-    case 'ask': return ask(arg, 'ai');
-    case 'wa-say': return ask(arg, 'wa');
+    case 'wa-say': return waSend(arg);
     case 'wa-fill-phone': w.phone = '(11) 98765-4321'; return render();
     case 'wa-send':
       if (w.phone.replace(/\D/g, '').length < 10) return toast('Informe o número com DDD');
       w.status = 'code'; w.code = ''; toast('Código enviado pelo WhatsApp'); return render();
-    case 'wa-resend': toast('Novo código enviado'); return;
+    case 'wa-resend': return toast('Novo código enviado');
     case 'wa-change': w.status = 'idle'; return render();
     case 'wa-fill-code': w.code = '482913'; return render();
     case 'wa-verify':
       if (w.code.replace(/\D/g, '').length !== 6) return toast('O código tem 6 dígitos');
-      if (!state.ai.optin) { if (!w.consent) return; state.ai.optin = true; state.ai.consent = true; }
+      if (!state.ai.optin) { if (!w.consent) return; state.ai.optin = true; }
       w.status = 'linked'; w.since = TODAY;
-      w.msgs = [{who:'vera', text:'Oi, Lucas! Número confirmado. Pode me perguntar sobre sua carteira e seus gastos, pedir para marcar reuniões no Google Agenda ou criar lembretes. Pix e pagamentos ficam de fora: eu só leio.'}];
+      w.msgs = [{who:'vera', text:'Oi, Lucas. Número confirmado. Pode perguntar sobre a carteira e os gastos, pedir para marcar reuniões no Google Agenda ou criar lembretes. Pix e pagamentos ficam de fora: eu só leio.'}];
       toast('WhatsApp vinculado'); return render();
     case 'wa-unlink':
-      return confirmSheet({icon:'unlink', t:'Desvincular o WhatsApp?', ok:'Desvincular', body:`<p style="margin:0">A Vera para de responder em <b>+55 ${esc(w.phone)}</b>, os lembretes criados por lá são cancelados e o histórico da conversa sai daqui. Dá para vincular de novo quando quiser.</p>`,
+      return confirmSheet({t:'Desvincular o WhatsApp?', ok:'Desvincular', body:`<p style="margin:0">A Vera para de responder em <b>+55 ${esc(w.phone)}</b>, os lembretes criados por lá são cancelados e o histórico da conversa sai daqui. Dá para vincular de novo quando quiser.</p>`,
         onOk:() => { Object.assign(w, {status:'idle', code:'', since:null, msgs:[], consent:false}); state.reminders = []; toast('WhatsApp desvinculado'); render(); }});
     case 'gcal-connect': return openGcal();
     case 'gcal-off': state.gcal.on = false; state.events = state.events.filter(e => !e.mine); toast('Google Agenda desconectado e permissão revogada'); return render();
     case 'rem-del': state.reminders.splice(Number(arg), 1); toast('Lembrete apagado'); return render();
     case 'sub-cancel':
-      return confirmSheet({icon:'crown', t:'Cancelar o Premium?', ok:'Cancelar assinatura', body:`<p style="margin:0 0 12px">Você não será cobrada de novo. O Premium continua ativo até <b>${NEXT_BILL}</b>. Depois disso:</p>
-        <ul class="ministeps"><li>Análises com IA e Vera no WhatsApp param; o número e o Google Agenda são desconectados.</li><li><b>Carteira, metas, gastos e regras ficam como estão</b>, no Free, sem perder nada.</li><li>Dá para assinar de novo quando quiser.</li></ul>`,
+      return confirmSheet({t:'Cancelar o Premium?', ok:'Cancelar assinatura', body:`<p style="margin:0 0 12px">Você não será cobrada de novo. O Premium continua ativo até <b>${NEXT_BILL}</b>. Depois disso:</p>
+        <ul class="ministeps"><li>Os resumos em texto e a Vera no WhatsApp param; o número e o Google Agenda são desconectados.</li><li><b>Carteira, metas, gastos e regras ficam como estão</b>, no Free.</li><li>Dá para assinar de novo quando quiser.</li></ul>`,
         onOk:() => { state.sub.status = 'canceling'; toast(`Assinatura cancelada. Premium vale até ${NEXT_BILL}`); render(); }});
     case 'sub-reactivate': state.sub.status = 'active'; toast('Assinatura reativada'); return render();
     case 'sub-method': state.sub.method = state.sub.method === 'pix' ? 'card' : 'pix'; toast(state.sub.method === 'pix' ? 'Próximas cobranças por Pix' : 'Cartão final 4242 salvo no Asaas'); return render();
     case 'receipt': return toast('Recibo de 09/10/2026 gerado (no protótipo o download fica desativado)');
     case 'export-all': return toast('vera-meus-dados.zip gerado (no protótipo o download fica desativado)');
     case 'delete-account':
-      return sheet(() => mHead('trash', 'Excluir conta') + `<div class="sheet-single" style="display:grid;gap:12px">
-          <p style="margin:0">Isso apaga para sempre a sua carteira, metas, transações, regras e lembretes, desconecta bancos, WhatsApp e Google${state.plan === 'premium' && !state.selfhost ? ' e cancela o Premium, sem novas cobranças' : ''}. Não dá para desfazer.</p>
-          <p class="note" style="margin:0">${ic('download')}<span>Quer guardar uma cópia? <button class="linkbtn" data-m="export">Exporte seus dados</button> antes.</span></p>
+      return sheet(() => mHead('Excluir conta') + `<div class="sheet-single" style="display:grid;gap:12px">
+          <p style="margin:0">Isso apaga para sempre a carteira, metas, transações, regras e lembretes, e desconecta bancos, WhatsApp e Google${state.plan === 'premium' && !state.selfhost ? '. O Premium é cancelado, sem novas cobranças' : ''}. Não dá para desfazer.</p>
+          <p class="tipbox" style="margin:0">Quer guardar uma cópia? <button class="linkbtn" data-m="export">Exporte seus dados</button> antes.</p>
           <div class="field"><label for="del-confirm">Para confirmar, escreva EXCLUIR</label><input class="input" id="del-confirm" autocomplete="off"></div>
         </div><div class="sheet-foot"><button class="btn ghost" data-close>Voltar</button><button class="btn danger solid" data-m="del" id="del-btn" disabled>Excluir minha conta</button></div>`,
       (a2, el, h) => {
@@ -2174,19 +2027,19 @@ function act(a, arg) {
         if (a2 === 'export') return toast('vera-meus-dados.zip gerado (protótipo)');
         if (a2 === 'del') {
           h.close();
-          positions = []; Object.assign(state, {sample:false, pluggy:'idle', imported:null, plan:'free', sub:null, auth:false, screen:'visao'});
-          Object.assign(state.ai, {optin:false, consent:false, chat:[]}); Object.assign(state.wa, {status:'idle', phone:'', code:'', msgs:[]}); state.gcal.on = false; state.reminders = []; simUsage(0);
+          positions = []; Object.assign(state, {sample:false, pluggy:'idle', imported:null, plan:'free', sub:null, auth:false, screen:'visao', cfg:'plano'});
+          state.ai.optin = false; Object.assign(state.wa, {status:'idle', phone:'', code:'', msgs:[]}); state.gcal.on = false; state.reminders = []; simUsage(0);
           state.onb = {open:true, step:0, skipped:{}};
           toast('Conta excluída (protótipo)'); render();
         }
       });
     case 'key': return openKey(arg);
-    case 'key-del': state.keys[arg] = false; toast('Chave removida: a função sai do menu'); return render();
+    case 'key-del': state.keys[arg] = false; toast('Chave removida: a função some do app'); return render();
   }
 }
 
 const start = (location.hash || '').slice(1);
-if (screens[start]) state.screen = start;
+if (ALIAS[start]) { state.cfg = ALIAS[start][1]; state.screen = 'config'; } else if (screens[start]) state.screen = start;
 render();
 </script>
 
