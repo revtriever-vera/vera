@@ -199,7 +199,7 @@ tr.click:hover td{background:var(--hover)}
 .pvalue .big{font-size:30px;margin:4px 0 2px}
 .empty{display:grid;place-items:center;text-align:center;height:100%;color:var(--ink-2);gap:10px;padding:30px}
 .empty svg{width:44px;height:44px;color:var(--accent);opacity:.5;stroke-width:1.5}
-.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:var(--rc);font-weight:600;font-size:13.5px;z-index:30;box-shadow:var(--shadow-hover);display:flex;gap:8px;align-items:center}
 .toast svg{color:#ff9cc2}
 .tip{position:fixed;z-index:40;pointer-events:none;background:var(--ink);color:#fff;border-radius:12px;padding:10px 12px;font-size:12.5px;min-width:190px;box-shadow:0 12px 28px rgba(60,15,38,.3)}
@@ -343,6 +343,22 @@ tr.click:hover td{background:var(--hover)}
 }
 @media (prefers-reduced-motion:no-preference){.gauge .fill,.stack span,.hbar .track span{transition:width .35s ease,filter .15s}}
 /* Premium, WhatsApp, Google Agenda, Configurações: componentes no padrão do nexu-fe */
+.pagetabs{margin-bottom:16px}
+.issuerlist{display:grid;gap:6px;max-height:210px;overflow:auto}
+.issuerbox .input{padding-block:10px;font-size:15px}
+.alerts{display:grid;gap:8px;margin-top:16px}
+.alertline{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;padding:12px 16px;border-radius:var(--rc);background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);font-size:13.5px;color:var(--ink-2)}
+.alertline > svg{color:var(--accent-strong)}
+.alertline > span{flex:1;min-width:220px}
+.alertline b{color:var(--ink)}
+.alertline.warn{border-left-color:var(--warn)}
+.alertline.warn > svg{color:var(--warn)}
+.conc{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(80px,1fr) auto;gap:14px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.conc:last-of-type{border-bottom:0}
+.conc .track{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.conc .track span{display:block;height:100%;background:var(--accent);border-radius:99px}
+.conc .r{text-align:right}
+.conc b{font-weight:700}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .drop{display:grid;justify-items:center;gap:6px;text-align:center;padding:26px 18px;border:1.5px dashed #e3c9d6;border-radius:16px;background:var(--surface);cursor:pointer;transition:border-color .15s,background .15s}
 .drop:hover,.drop.over{border-color:var(--accent);background:var(--accent-tint)}
@@ -584,12 +600,16 @@ const CLASSES = [
 const CLS = Object.fromEntries(CLASSES.map(c => [c.id, c]));
 
 const SAMPLE = [
-  {id:1, ticker:'CDB Inter', name:'CDB 110% do CDI, venc. 2028', cls:'rf_pos', kind:'rf', value:182400, cur:'BRL', src:'Curva do CDI (BC)'},
-  {id:14, ticker:'LCI Itaú', name:'LCI 95% do CDI, venc. 2027', cls:'rf_pos', kind:'rf', value:134900, cur:'BRL', src:'Curva do CDI (BC)'},
-  {id:2, ticker:'Tesouro Selic 2029', name:'Tesouro Direto', cls:'rf_pos', kind:'rv', qty:3.2, price:16200, cur:'BRL', src:'Preço oficial do Tesouro'},
-  {id:3, ticker:'Tesouro Pré 2027', name:'Tesouro Direto', cls:'rf_pre', kind:'rv', qty:120, price:812, cur:'BRL', src:'Preço oficial do Tesouro'},
-  {id:19, ticker:'Treasury 2027', name:'US Treasury Note 4,25%', cls:'rf_pre', kind:'rf', value:20000, cur:'USD', src:'Preço público do Treasury'},
-  {id:4, ticker:'Tesouro IPCA+ 2035', name:'Tesouro Direto', cls:'rf_ipca', kind:'rv', qty:60, price:2150, cur:'BRL', src:'Preço oficial do Tesouro'},
+  {id:1, ticker:'CDB Inter', kind:'rf', cur:'BRL', rf:{type:'cdb', issuer:'inter', idx:'cdi', rate:110, applied:150000, date:'2024-08-15', mat:'2028-08-15'}},
+  {id:14, ticker:'LCI Itaú', kind:'rf', cur:'BRL', rf:{type:'lci', issuer:'itau', idx:'cdi', rate:95, applied:120000, date:'2025-04-10', mat:'2027-04-12'}},
+  {id:20, ticker:'CDB BTG Pactual', kind:'rf', cur:'BRL', rf:{type:'cdb', issuer:'btg', idx:'pre', rate:12.4, applied:140000, date:'2025-06-02', mat:'2029-06-04'}},
+  {id:21, ticker:'LCA Banco Pan', kind:'rf', cur:'BRL', rf:{type:'lca', issuer:'pan', idx:'cdi', rate:93, applied:110000, date:'2025-09-15', mat:'2027-09-15'}},
+  {id:22, ticker:'CDB Sofisa', kind:'rf', cur:'BRL', rf:{type:'cdb', issuer:'sofisa', idx:'cdi', rate:112, applied:10000, date:'2024-11-04', mat:'2026-11-03'}},
+  {id:23, ticker:'Debênture Eletrobras', kind:'rf', cur:'BRL', rf:{type:'deb', issuer:'eletrobras', idx:'ipca', rate:6.1, applied:50000, date:'2024-03-15', mat:'2031-03-15'}},
+  {id:2, ticker:'Tesouro Selic 2029', name:'Tesouro Direto', cls:'rf_pos', kind:'rv', qty:3.2, price:16200, cur:'BRL', src:'Preço oficial do Tesouro', mat:'2029-03-01'},
+  {id:3, ticker:'Tesouro Pré 2027', name:'Tesouro Direto', cls:'rf_pre', kind:'rv', qty:120, price:812, cur:'BRL', src:'Preço oficial do Tesouro', mat:'2027-01-01'},
+  {id:19, ticker:'Treasury 2027', name:'US Treasury Note 4,25%', kind:'rf', cur:'USD', rf:{type:'treasury', idx:'pre', rate:4.25, applied:19200, date:'2025-05-15', mat:'2027-11-15'}},
+  {id:4, ticker:'Tesouro IPCA+ 2035', name:'Tesouro Direto', cls:'rf_ipca', kind:'rv', qty:60, price:2150, cur:'BRL', src:'Preço oficial do Tesouro', mat:'2035-05-15'},
   {id:5, ticker:'ITUB4', name:'Itaú Unibanco PN', cls:'acoes_br', kind:'rv', qty:2000, price:37.80, cur:'BRL', src:'B3 via brapi'},
   {id:6, ticker:'WEGE3', name:'WEG ON', cls:'acoes_br', kind:'rv', qty:1500, price:52.10, cur:'BRL', src:'B3 via brapi'},
   {id:7, ticker:'PETR4', name:'Petrobras PN', cls:'acoes_br', kind:'rv', qty:1800, price:36.90, cur:'BRL', src:'B3 via brapi'},
@@ -604,6 +624,45 @@ const SAMPLE = [
   {id:12, ticker:'BTC', name:'Bitcoin', cls:'cripto', kind:'rv', qty:0.45, price:62000, cur:'USD', src:'CoinGecko'},
   {id:13, ticker:'ETH', name:'Ethereum', cls:'cripto', kind:'rv', qty:4, price:2600, cur:'USD', src:'CoinGecko'}
 ];
+/* renda fixa: tipo do título, emissor (com o conglomerado, para o FGC) e setor/emissor dos ativos do catálogo */
+const IPCA = 0.045;
+const NOW = new Date('2026-10-09T12:00:00');
+const DAY = 864e5;
+const RF_TYPES = {cdb:'CDB', lci:'LCI', lca:'LCA', lc:'LC', deb:'Debênture'};
+const FGC_TYPES = ['cdb', 'lci', 'lca', 'lc'];
+const FGC_LIMIT = 250000, FGC_CAP = 1000000;
+const ISSUERS = [
+  {id:'itau', name:'Itaú Unibanco', cong:'Itaú Unibanco', bank:true},
+  {id:'bradesco', name:'Bradesco', cong:'Bradesco', bank:true},
+  {id:'bb', name:'Banco do Brasil', cong:'Banco do Brasil', bank:true},
+  {id:'santander', name:'Santander', cong:'Santander', bank:true},
+  {id:'btg', name:'BTG Pactual', cong:'BTG Pactual', bank:true},
+  {id:'pan', name:'Banco Pan', cong:'BTG Pactual', bank:true},
+  {id:'xp', name:'Banco XP', cong:'XP', bank:true},
+  {id:'inter', name:'Banco Inter', cong:'Inter&Co', bank:true},
+  {id:'c6', name:'C6 Bank', cong:'C6', bank:true},
+  {id:'sofisa', name:'Banco Sofisa', cong:'Sofisa', bank:true},
+  {id:'daycoval', name:'Banco Daycoval', cong:'Daycoval', bank:true},
+  {id:'bmg', name:'Banco BMG', cong:'BMG', bank:true},
+  {id:'eletrobras', name:'Eletrobras', cong:'Eletrobras', bank:false},
+  {id:'petrobras', name:'Petrobras', cong:'Petrobras', bank:false},
+  {id:'vale', name:'Vale', cong:'Vale', bank:false},
+  {id:'rumo', name:'Rumo', cong:'Rumo', bank:false}
+];
+const ISS = Object.fromEntries(ISSUERS.map(i => [i.id, i]));
+const PROFILE = {
+  ITUB4:['Financeiro', 'Itaú Unibanco'], BBAS3:['Financeiro', 'Banco do Brasil'], WEGE3:['Bens industriais', 'WEG'], PETR4:['Petróleo e gás', 'Petrobras'],
+  TAEE11:['Energia elétrica', 'Taesa'], EGIE3:['Energia elétrica', 'Engie'], BOVA11:['ETF de índice', null], IVVB11:['ETF de índice', null], NASD11:['ETF de índice', null],
+  AAPL34:['Tecnologia', 'Apple'], AAPL:['Tecnologia', 'Apple'], MSFT:['Tecnologia', 'Microsoft'], GOOGL:['Tecnologia', 'Alphabet'], VOO:['ETF de índice', null], SCHD:['ETF de índice', null], VT:['ETF de índice', null],
+  HGLG11:['Logística', null], KNRI11:['Híbrido', null], XPML11:['Shoppings', null], MXRF11:['Recebíveis', null],
+  O:['Varejo', 'Realty Income'], PLD:['Logística', 'Prologis'], VNQ:['ETF de índice', null]
+};
+function rfFields(p) {
+  const r = rfCalc(p.rf);
+  const usd = p.rf.type === 'treasury';
+  return {cls:r.cls, value:r.value, src:usd ? 'Preço público do Treasury' : r.src, name:p.name || `${RF_TYPES[p.rf.type]} ${r.label}, venc. ${p.rf.mat.slice(0, 4)}`};
+}
+SAMPLE.forEach(p => { if (p.rf) Object.assign(p, rfFields(p)); });
 let positions = [];
 let nextId = 100;
 
@@ -611,10 +670,10 @@ const CATALOG = [
   {ticker:'ITUB4', name:'Itaú Unibanco PN', cls:'acoes_br', price:37.80, cur:'BRL', src:'B3 via brapi', type:'Ação'},
   {ticker:'WEGE3', name:'WEG ON', cls:'acoes_br', price:52.10, cur:'BRL', src:'B3 via brapi', type:'Ação'},
   {ticker:'PETR4', name:'Petrobras PN', cls:'acoes_br', price:36.90, cur:'BRL', src:'B3 via brapi', type:'Ação'},
-  {ticker:'Tesouro Selic 2029', name:'Tesouro Direto', cls:'rf_pos', price:16200, cur:'BRL', src:'Preço oficial do Tesouro', type:'Tesouro'},
-  {ticker:'Tesouro IPCA+ 2035', name:'Tesouro Direto', cls:'rf_ipca', price:2150, cur:'BRL', src:'Preço oficial do Tesouro', type:'Tesouro'},
-  {ticker:'Tesouro Prefixado 2027', name:'Tesouro Direto', cls:'rf_pre', price:812, cur:'BRL', src:'Preço oficial do Tesouro', type:'Tesouro'},
-  {ticker:'Tesouro IPCA+ 2045', name:'Tesouro Direto', cls:'rf_ipca', price:1180, cur:'BRL', src:'Preço oficial do Tesouro', type:'Tesouro'},
+  {ticker:'Tesouro Selic 2029', name:'Tesouro Direto', cls:'rf_pos', price:16200, cur:'BRL', src:'Preço oficial do Tesouro', type:'Tesouro', mat:'2029-03-01'},
+  {ticker:'Tesouro IPCA+ 2035', name:'Tesouro Direto', cls:'rf_ipca', price:2150, cur:'BRL', src:'Preço oficial do Tesouro', type:'Tesouro', mat:'2035-05-15'},
+  {ticker:'Tesouro Prefixado 2027', name:'Tesouro Direto', cls:'rf_pre', price:812, cur:'BRL', src:'Preço oficial do Tesouro', type:'Tesouro', mat:'2027-01-01'},
+  {ticker:'Tesouro IPCA+ 2045', name:'Tesouro Direto', cls:'rf_ipca', price:1180, cur:'BRL', src:'Preço oficial do Tesouro', type:'Tesouro', mat:'2045-05-15'},
   {ticker:'O', name:'Realty Income', cls:'reits', price:58, cur:'USD', src:'Finnhub', type:'REIT'},
   {ticker:'KNRI11', name:'Kinea Renda Imobiliária', cls:'fii', price:152.00, cur:'BRL', src:'B3 via brapi', type:'FII'},
   {ticker:'VOO', name:'Vanguard S&P 500 ETF', cls:'acoes_eua', price:545, cur:'USD', src:'Finnhub', type:'ETF'},
@@ -746,6 +805,13 @@ const title = (icon, text) => `<h1>${text}</h1>`;
 
 const screens = {};
 
+function visaoAlerts() {
+  const out = [];
+  const next = maturities().find(x => daysTo(x.mat) <= 90);
+  if (next) out.push(`<div class="alertline">${ic('calendar')}<span><b>${esc(next.p.ticker)}</b> vence ${whenTxt(daysTo(next.mat))}, em ${fmtDate(next.mat)}, com cerca de <b>${brl.format(next.value)}</b> para realocar.</span><button class="btn sm" data-act="realloc" data-arg="${Math.round(next.value)}">${ic('zap')}Realocar</button></div>`);
+  fgc().groups.filter(g => g.over > 0).forEach(g => out.push(`<div class="alertline warn">${ic('shield')}<span><b>${brl.format(g.over)}</b> em ${esc(g.cong)} acima do limite de R$ 250 mil do FGC.</span><button class="btn sm ghost" data-act="atab" data-arg="rf">Ver cobertura</button></div>`));
+  return out.length ? `<div class="alerts">${out.join('')}</div>` : '';
+}
 screens.visao = () => {
   const {total, rows} = classRows();
   const usdExp = positions.filter(p => p.cur === 'USD' || p.usdExp).reduce((s, p) => s + valueBRL(p), 0);
@@ -759,6 +825,7 @@ screens.visao = () => {
     <div class="kpi"><div class="label">Classes fora da meta</div><div class="v num">${outside} de ${rows.length}</div><span class="kpisub">faixa de ±${state.tol} pp</span></div>
     <div class="kpi"><div class="label">Maior desvio</div><div class="v num" style="color:${Math.abs(worst.dev) > state.tol ? 'var(--warn)' : 'var(--ink)'}">${pp(worst.dev)}</div><span class="kpisub">${CLS[worst.cls].name}, ${worst.dev > 0 ? 'acima' : 'abaixo'} da meta · <button class="linkbtn" data-go="aporte">Onde aportar</button></span></div>
   </div>
+  ${visaoAlerts()}
   <div style="margin-top:16px">
     <section class="card">
       <h2>Atual × meta</h2><p>Passe o mouse sobre as barras para ver os valores.</p>
@@ -874,10 +941,115 @@ screens.aporte = () => {
   <p class="note" style="margin-top:14px">${ic('info')}<span>A conta: com o aporte, o patrimônio vai a ${money(newTotal)}. Cada classe abaixo da meta recebe a diferença até a meta; se o dinheiro não cobre tudo, ele é dividido proporcionalmente ao que falta. Dentro da classe, vale a mesma regra entre os ativos.</span></p>`;
 };
 
-screens.ativos = () => {
-  const list = positions.slice().sort((a, b) => CLASSES.findIndex(c => c.id === a.cls) - CLASSES.findIndex(c => c.id === b.cls) || valueBRL(b) - valueBRL(a));
+/* vencimentos, taxa real, FGC e concentração */
+const fmtDate = iso => iso.split('-').reverse().join('/');
+const daysTo = iso => Math.round((new Date(iso + 'T12:00:00') - NOW) / DAY);
+const whenTxt = d => d <= 60 ? `em ${d} dias` : d < 730 ? `em ${Math.round(d / 30.4)} meses` : `em ${(d / 365.25).toFixed(1).replace('.', ',')} anos`;
+function maturities() {
+  const out = [];
+  positions.forEach(p => {
+    if (p.rf) {
+      const c = rfCalc(p.rf), yrs = (new Date(p.rf.mat + 'T12:00:00') - new Date(p.rf.date + 'T12:00:00')) / (365.25 * DAY);
+      out.push({p, mat:p.rf.mat, value:p.rf.applied * Math.pow(1 + c.yr, yrs) * (p.cur === 'USD' ? FX : 1)});
+    } else if (p.mat) {
+      const yrs = Math.max(0, (new Date(p.mat + 'T12:00:00') - NOW) / (365.25 * DAY));
+      const v = /Pré|Prefixado/.test(p.ticker) ? p.qty * 1000 : valueBRL(p) * Math.pow(p.cls === 'rf_pos' ? 1 + CDI : (1 + IPCA) * 1.062, yrs);
+      out.push({p, mat:p.mat, value:v});
+    }
+  });
+  return out.filter(x => daysTo(x.mat) >= 0).sort((a, b) => a.mat.localeCompare(b.mat));
+}
+function realRate(p) {
+  const c = rfCalc(p.rf);
+  const corrected = p.rf.applied * Math.pow(1 + IPCA, c.years);
+  return {nominal:c.yr, real:(1 + c.yr) / (1 + IPCA) - 1, corrected, gain:c.value - corrected, value:c.value, label:c.label};
+}
+function fgc() {
+  const by = new Map();
+  positions.filter(p => p.rf && FGC_TYPES.includes(p.rf.type) && ISS[p.rf.issuer] && ISS[p.rf.issuer].bank).forEach(p => {
+    const cong = ISS[p.rf.issuer].cong;
+    const g = by.get(cong) || {cong, total:0, items:[]};
+    g.total += valueBRL(p); g.items.push(p); by.set(cong, g);
+  });
+  const groups = [...by.values()].map(g => ({...g, covered:Math.min(g.total, FGC_LIMIT), over:Math.max(0, g.total - FGC_LIMIT)})).sort((a, b) => b.total - a.total);
+  const covered = groups.reduce((t, g) => t + g.covered, 0);
+  const outside = positions.filter(p => (p.rf && !FGC_TYPES.includes(p.rf.type)) || /^Tesouro/.test(p.ticker));
+  return {groups, covered, overCap:Math.max(0, covered - FGC_CAP), outside};
+}
+function issuerOf(p) {
+  if (p.rf && p.rf.type === 'treasury') return 'Tesouro dos EUA';
+  if (p.rf && ISS[p.rf.issuer]) return ISS[p.rf.issuer].cong;
+  if (/^Tesouro/.test(p.ticker)) return 'Tesouro Nacional';
+  if (p.cls === 'cripto') return 'Cripto, sem emissor';
+  return (PROFILE[p.ticker] || [])[1] || 'Fundos e ETFs, vários emissores';
+}
+function groupBy(list, keyOf) {
+  const m = new Map();
+  list.forEach(p => { const k = keyOf(p); const g = m.get(k) || {k, value:0, items:[]}; g.value += valueBRL(p); g.items.push(p.ticker); m.set(k, g); });
+  return [...m.values()].sort((a, b) => b.value - a.value);
+}
+const concRows = (groups, total, note) => groups.map(g => `<div class="conc">
+    <span><b>${esc(g.k)}</b><span class="sub">${esc(g.items.slice(0, 4).join(', '))}${g.items.length > 4 ? ` e mais ${g.items.length - 4}` : ''}</span></span>
+    <span class="track"><span style="width:${(g.value / groups[0].value * 100).toFixed(1)}%"></span></span>
+    <span class="num r"><b>${pct(g.value / total * 100)}</b><span class="sub">${money(g.value)}</span></span>
+  </div>`).join('') + (note ? `<p class="hint" style="margin:12px 0 0">${note}</p>` : '');
+
+function rfTab() {
+  const ms = maturities();
+  const rfs = positions.filter(p => p.rf && p.rf.type !== 'treasury');
+  const f = fgc();
+  const capPct = Math.min(100, f.covered / FGC_CAP * 100);
   return `
-  <div class="head"><div>${title('wallet', 'Meus ativos')}<p>Cadastro manual. Ações, fundos e cripto atualizam pela cotação; renda fixa é calculada pelo indexador. A classe vem sugerida e você pode trocar.</p></div><div class="controls">${baseSeg()}<button class="btn" data-export="ativos">${ic('download')}Baixar planilha</button><button class="btn primary" data-add="">${ic('plus')}Adicionar ativo</button></div></div>
+  <section class="card">
+    <div class="cardhead"><div><h2>Próximos vencimentos</h2><p>Valor bruto estimado na data, antes do IR. Quando um título vence, o dinheiro volta para a conta: use "Realocar" para ver onde aportar.</p></div></div>
+    ${ms.length ? `<div class="tablewrap"><table style="min-width:620px"><thead><tr><th>Título</th><th>Vence</th><th class="r">Valor na data</th><th></th></tr></thead><tbody>
+      ${ms.map(x => { const d = daysTo(x.mat); return `<tr><td><span class="cname">${esc(x.p.ticker)}</span><span class="sub">${esc(x.p.rf ? (ISS[x.p.rf.issuer] ? ISS[x.p.rf.issuer].name + ' · ' : '') + x.p.name : 'Tesouro Direto')}</span></td>
+        <td>${fmtDate(x.mat)}<span class="sub" style="${d <= 60 ? 'color:var(--warn);font-weight:700' : ''}">${whenTxt(d)}</span></td>
+        <td class="r num">${brl.format(x.value)}</td>
+        <td class="r"><button class="btn sm ${d <= 90 ? '' : 'ghost'}" data-act="realloc" data-arg="${Math.round(x.value)}">${ic('zap')}Realocar</button></td></tr>`; }).join('')}
+    </tbody></table></div>` : '<p class="muted" style="margin:0">Nenhum título com vencimento cadastrado.</p>'}
+  </section>
+  <section class="card" style="margin-top:16px">
+    <div class="cardhead"><div><h2>Taxa real</h2><p>A taxa de cada título descontado o IPCA de 12 meses (${pct(IPCA * 100)}), antes do IR. LCI e LCA são isentas de IR.</p></div></div>
+    ${rfs.length ? `<div class="tablewrap"><table style="min-width:680px"><thead><tr><th>Título</th><th>Contratado</th><th class="r">Taxa ao ano</th><th class="r">Taxa real</th><th class="r">Acima da inflação</th></tr></thead><tbody>
+      ${rfs.map(p => { const r = realRate(p); return `<tr><td><span class="cname">${esc(p.ticker)}</span><span class="sub">${RF_TYPES[p.rf.type]} · aplicado em ${fmtDate(p.rf.date)}</span></td>
+        <td>${r.label}</td><td class="r num">${pct(r.nominal * 100)}</td>
+        <td class="r num"><b style="color:${r.real < 0.03 ? 'var(--warn)' : 'var(--good)'}">${pct(r.real * 100)}</b></td>
+        <td class="r num">${r.gain >= 0 ? '+' : '−'}${brl.format(Math.abs(r.gain))}<span class="sub">poder de compra ${r.gain >= 0 ? '+' : '−'}${pct(Math.abs(r.gain) / r.corrected * 100)}</span></td></tr>`; }).join('')}
+    </tbody></table></div>
+    <p class="hint" style="margin:12px 0 0">"Acima da inflação" compara o valor de hoje com o que foi aplicado corrigido pelo IPCA desde a data da aplicação.</p>` : '<p class="muted" style="margin:0">Nenhum título de renda fixa cadastrado com taxa.</p>'}
+  </section>
+  <section class="card" style="margin-top:16px">
+    <div class="cardhead"><div><h2>Cobertura do FGC</h2><p>O FGC garante até R$ 250 mil por CPF em cada conglomerado, com teto de R$ 1 milhão a cada 4 anos. Entram CDB, LCI, LCA e LC.</p></div></div>
+    <div class="meterbox" style="margin-bottom:16px">
+      <div class="row between"><span class="label">Coberto pelo FGC</span><span class="num"><b>${brl.format(f.covered)}</b> <span class="muted">de R$ 1.000.000</span></span></div>
+      <div class="meter ${f.overCap ? 'crit' : ''}"><span style="width:${capPct}%"></span></div>
+    </div>
+    ${f.groups.length ? `<div class="tablewrap"><table style="min-width:620px"><thead><tr><th>Conglomerado</th><th class="r">Em títulos cobertos</th><th class="r">Coberto</th><th class="r">Acima do limite</th></tr></thead><tbody>
+      ${f.groups.map(g => `<tr><td><span class="cname">${esc(g.cong)}</span><span class="sub">${esc([...new Set(g.items.map(p => ISS[p.rf.issuer].name))].join(' e '))} · ${esc(g.items.map(p => p.ticker).join(', '))}</span></td>
+        <td class="r num">${brl.format(g.total)}</td><td class="r num">${brl.format(g.covered)}</td>
+        <td class="r">${g.over ? `<span class="chip up">${brl.format(g.over)}</span>` : '<span class="chip ok">dentro</span>'}</td></tr>`).join('')}
+    </tbody></table></div>` : ''}
+    ${f.outside.length ? `<p class="hint" style="margin:12px 0 0">Fora do FGC: ${esc(f.outside.map(p => p.ticker).join(', '))}. Tesouro Direto tem garantia do Tesouro Nacional; debênture depende só da empresa.</p>` : ''}
+  </section>`;
+}
+function concTab() {
+  const total = positions.reduce((t, p) => t + valueBRL(p), 0);
+  const eq = positions.filter(p => ['acoes_br', 'acoes_eua', 'fii', 'reits'].includes(p.cls));
+  const eqTotal = eq.reduce((t, p) => t + valueBRL(p), 0);
+  return `<div class="two">
+    <section class="card"><div class="cardhead"><div><h2>Por emissor</h2><p>Quanto do patrimônio depende de cada empresa ou banco. Renda fixa e ações do mesmo grupo somam juntas.</p></div></div>
+      ${concRows(groupBy(positions, issuerOf).slice(0, 10), total, 'ETFs, fundos imobiliários e cripto não têm um emissor único e aparecem agrupados.')}</section>
+    <section class="card"><div class="cardhead"><div><h2>Por setor</h2><p>Ações, FIIs e REITs, em percentual da renda variável (${money(eqTotal)}).</p></div></div>
+      ${eq.length ? concRows(groupBy(eq, p => (PROFILE[p.ticker] || [])[0] || 'Sem setor no catálogo'), eqTotal, 'O setor vem do catálogo de ativos. ETFs de índice somam vários setores.') : '<p class="muted" style="margin:0">Nenhuma ação, FII ou REIT cadastrado.</p>'}</section>
+  </div>`;
+}
+
+screens.ativos = () => {
+  const tab = state.atab || 'lista';
+  const list = positions.slice().sort((a, b) => CLASSES.findIndex(c => c.id === a.cls) - CLASSES.findIndex(c => c.id === b.cls) || valueBRL(b) - valueBRL(a));
+  const tabs = [['lista', 'Ativos'], ['rf', 'Renda fixa'], ['conc', 'Emissores e setores']];
+  const body = tab === 'rf' ? rfTab() : tab === 'conc' ? concTab() : `
   <section class="card">
     <div class="tablewrap"><table style="min-width:760px">
       <thead><tr><th>Ativo</th><th>Classe</th><th class="r">Quantidade</th><th class="r">Valor</th><th>Fonte do valor</th><th></th></tr></thead>
@@ -890,6 +1062,10 @@ screens.ativos = () => {
         <td><button class="iconbtn" data-del="${p.id}" aria-label="Remover ${esc(p.ticker)}">${ic('trash')}</button></td></tr>`).join('')}</tbody>
     </table></div>
   </section>`;
+  return `
+  <div class="head"><div>${title('wallet', 'Meus ativos')}<p>Cadastro manual. Ações, fundos e cripto atualizam pela cotação; renda fixa é calculada pelo indexador.</p></div><div class="controls">${baseSeg()}<button class="btn" data-export="ativos">${ic('download')}Baixar planilha</button><button class="btn primary" data-add="">${ic('plus')}Adicionar ativo</button></div></div>
+  <div class="seg pagetabs" role="tablist" aria-label="Visões de Meus ativos">${tabs.map(([k, l]) => `<button role="tab" data-act="atab" data-arg="${k}" aria-pressed="${tab === k}" aria-selected="${tab === k}">${l}</button>`).join('')}</div>
+  ${body}`;
 };
 
 function catTotals() {
@@ -1070,7 +1246,8 @@ function rfCalc(f) {
   const yr = f.idx === 'cdi' ? CDI * f.rate / 100 : f.idx === 'pre' ? f.rate / 100 : (1.045 * (1 + f.rate / 100) - 1);
   const value = f.applied * Math.pow(1 + yr, years);
   const cls = f.idx === 'cdi' ? 'rf_pos' : f.idx === 'pre' ? 'rf_pre' : 'rf_ipca';
-  const label = f.idx === 'cdi' ? `${f.rate}% do CDI` : f.idx === 'pre' ? `pré ${f.rate}% a.a.` : `IPCA + ${f.rate}%`;
+  const rt = String(f.rate).replace('.', ',');
+  const label = f.idx === 'cdi' ? `${rt}% do CDI` : f.idx === 'pre' ? `pré ${rt}% a.a.` : `IPCA + ${rt}%`;
   const src = f.idx === 'ipca' ? 'IPCA + taxa (BC)' : f.idx === 'pre' ? 'Taxa contratada' : 'Curva do CDI (BC)';
   return {value, cls, label, src, years, yr};
 }
@@ -1092,7 +1269,9 @@ const typeCards = (attr) => `<div class="typegrid">${TYPES.map(t => { const n = 
 function openAdd(cls, opts = {}) {
   const fromCls = cls ? (cls.startsWith('rf_') ? null : cls) : null;
   const m = {q:'', pick:null, type: opts.type || fromCls, qty:null, pickCls:null,
-    rf:{name:'CDB Banco XP', idx:'cdi', rate:105, applied:50000, date:'2025-03-10', mat:'2028-03-10'}};
+    iq:'', nameTouched:false,
+    rf:{name:'CDB Banco XP', type:'cdb', issuer:'xp', idx:'cdi', rate:105, applied:50000, date:'2025-03-10', mat:'2028-03-10'}};
+  const autoName = () => { if (!m.nameTouched) m.rf.name = `${RF_TYPES[m.rf.type]} ${ISS[m.rf.issuer].name}`; };
   const root = document.getElementById('modal-root');
   const rvPreview = () => {
     const p = m.pick;
@@ -1116,9 +1295,19 @@ function openAdd(cls, opts = {}) {
     return `<div class="preview">
       <div class="ptitle"><span class="tile" style="${tint(r.cls)}">${ic(CLS[r.cls].icon)}</span><span><b>${esc(m.rf.name || 'Título')}</b><span class="muted">${r.label}</span></span></div>
       <div class="pvalue"><div class="label">Valor estimado hoje</div><div class="big num">${brl.format(r.value)}</div><span class="muted" style="font-size:12.5px">${brl.format(m.rf.applied)} aplicados há ${r.years.toFixed(1).replace('.', ',')} anos · ${pct(r.yr * 100)} a.a.</span></div>
-      <div class="pills"><span class="pill">${ic('target')}${CLS[r.cls].name}</span><span class="pill">${ic('landmark')}${r.src}</span><span class="pill">${ic('calendar')}vence ${m.rf.mat.split('-').reverse().join('/')}</span></div>
-      <p class="note" style="margin:0">${ic('info')}<span>O sistema recalcula esse valor todo dia com as séries do Banco Central. Você nunca precisa atualizar o saldo à mão.</span></p>
+      <div class="pills"><span class="pill">${ic('target')}${CLS[r.cls].name}</span><span class="pill">${ic('calendar')}vence ${fmtDate(m.rf.mat)}</span><span class="pill">taxa real ${pct(((1 + r.yr) / (1 + IPCA) - 1) * 100)} a.a.</span></div>
+      ${fgcPreview(r.value)}
+      <p class="note" style="margin:0">${ic('info')}<span>A Vera recalcula o valor todo dia com as séries do Banco Central.</span></p>
     </div>`;
+  };
+  const fgcPreview = v => {
+    const iss = ISS[m.rf.issuer];
+    if (!FGC_TYPES.includes(m.rf.type)) return `<p class="note" style="margin:0">${ic('shield')}<span>Debênture não tem cobertura do FGC: o risco é só da empresa emissora.</span></p>`;
+    const now = fgc().groups.find(g => g.cong === iss.cong);
+    const tot = (now ? now.total : 0) + v;
+    return tot > FGC_LIMIT
+      ? `<div class="warnbox" style="margin:0">${ic('shield')}<span>Com este título, você terá <b>${brl.format(tot)}</b> no conglomerado ${esc(iss.cong)}: <b>${brl.format(tot - FGC_LIMIT)}</b> acima do limite de R$ 250 mil do FGC.</span></div>`
+      : `<p class="note" style="margin:0">${ic('shield')}<span>Coberto pelo FGC. Com este título, você terá ${brl.format(tot)} no conglomerado ${esc(iss.cong)}, de um limite de R$ 250 mil.</span></p>`;
   };
   const draw = () => {
     const t = m.type ? TYPEMAP[m.type] : null;
@@ -1132,6 +1321,10 @@ function openAdd(cls, opts = {}) {
       : `<div class="sheet-body">
         <div class="sheet-left">${isRf ? `
           <div class="formgrid">
+            <div class="field"><label for="rf-type">Tipo do título</label><select class="input" id="rf-type" data-rf="type">${Object.entries(RF_TYPES).map(([k, l]) => `<option value="${k}" ${m.rf.type === k ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+            <div class="field"><label for="rf-iq">Emissor</label><div class="searchbox issuerbox">${ic('search')}<input class="input" id="rf-iq" placeholder="${esc(ISS[m.rf.issuer].name)}" value="${esc(m.iq)}" autocomplete="off" aria-describedby="rf-cong"></div>
+              <span class="hint" id="rf-cong">${esc(ISS[m.rf.issuer].name)} · conglomerado ${esc(ISS[m.rf.issuer].cong)}</span></div>
+            ${m.iq ? `<div class="issuerlist" style="grid-column:1 / -1">${ISSUERS.filter(i => i.bank === (m.rf.type !== 'deb')).filter(i => (i.name + ' ' + i.cong).toLowerCase().includes(m.iq.toLowerCase())).map(i => `<button class="result" data-issuer="${i.id}"><span><b>${i.name}</b><span class="sub">Conglomerado ${i.cong}</span></span></button>`).join('') || '<p class="muted" style="margin:0">Nenhum emissor com esse nome na lista de exemplo.</p>'}</div>` : ''}
             <div class="field" style="grid-column:1 / -1"><label for="rf-name">Nome do título</label><input class="input" id="rf-name" data-rf="name" value="${esc(m.rf.name)}"></div>
             <div class="field"><label for="rf-idx">Indexador</label><select class="input" id="rf-idx" data-rf="idx"><option value="cdi" ${m.rf.idx === 'cdi' ? 'selected' : ''}>% do CDI</option><option value="pre" ${m.rf.idx === 'pre' ? 'selected' : ''}>Prefixado</option><option value="ipca" ${m.rf.idx === 'ipca' ? 'selected' : ''}>IPCA +</option></select></div>
             <div class="field"><label for="rf-rate">${m.rf.idx === 'cdi' ? 'Percentual do CDI' : 'Taxa ao ano (%)'}</label><input class="input num" id="rf-rate" data-rf="rate" type="number" step="0.01" value="${m.rf.rate}"></div>
@@ -1139,7 +1332,7 @@ function openAdd(cls, opts = {}) {
             <div class="field"><label for="rf-date">Data da aplicação</label><input class="input" id="rf-date" data-rf="date" type="date" value="${m.rf.date}"></div>
             <div class="field"><label for="rf-mat">Vencimento</label><input class="input" id="rf-mat" data-rf="mat" type="date" value="${m.rf.mat}"></div>
           </div>
-          <p class="note" style="margin:0">${ic('info')}<span>Tem Tesouro Direto? Volte e escolha o card "Tesouro Direto": lá você informa só a quantidade de títulos.</span></p>
+          <p class="note" style="margin:0">${ic('info')}<span>Tem Tesouro Direto? Volte e escolha "Tesouro Direto": lá você informa só a quantidade de títulos.</span></p>
         ` : `
           <div class="searchbox">${ic('search')}<input class="input" id="q" placeholder="Busque por ticker ou nome" value="${esc(m.q)}" autocomplete="off" aria-label="Buscar ${t.name}"></div>
           <div class="results">${results.map(a => `<button class="result" data-pick="${a.ticker}" aria-pressed="${m.pick && m.pick.ticker === a.ticker}"><span class="tile" style="${tint(a.cls)}">${ic(CLS[a.cls].icon)}</span><span><b>${a.ticker}</b> <span class="muted">${a.name}</span><span class="sub">${a.type} · ${a.cur === 'USD' ? usd2.format(a.price) : brl2.format(a.price)}</span></span>${a.flag ? `<span class="chip plain">${a.type}</span>` : ''}</button>`).join('') || '<p class="muted">Nada encontrado no catálogo de exemplo.</p>'}</div>
@@ -1153,12 +1346,15 @@ function openAdd(cls, opts = {}) {
     </div></div>`;
     const q = root.querySelector('#q');
     if (q && m.focusQ) { q.focus(); q.setSelectionRange(q.value.length, q.value.length); }
+    const iq = root.querySelector('#rf-iq');
+    if (iq && m.focusIq) { iq.focus(); iq.setSelectionRange(iq.value.length, iq.value.length); }
   };
   const close = () => { root.innerHTML = ''; root.onclick = null; root.oninput = null; };
   root.onclick = e => {
-    const el = e.target.closest('[data-close],[data-type],[data-back],[data-pick],[data-save]');
+    const el = e.target.closest('[data-close],[data-type],[data-back],[data-pick],[data-save],[data-issuer]');
     if (!el) { if (e.target.hasAttribute('data-close-bg')) close(); return; }
-    m.focusQ = false;
+    m.focusQ = false; m.focusIq = false;
+    if (el.dataset.issuer) { m.rf.issuer = el.dataset.issuer; m.iq = ''; autoName(); return draw(); }
     if (el.hasAttribute('data-close')) return close();
     if (el.dataset.type) { m.type = el.dataset.type; m.pick = null; m.q = ''; m.focusQ = true; return draw(); }
     if (el.hasAttribute('data-back')) { m.type = null; m.pick = null; return draw(); }
@@ -1168,11 +1364,19 @@ function openAdd(cls, opts = {}) {
   root.oninput = e => {
     const el = e.target;
     if (el.id === 'q') { m.q = el.value; m.focusQ = true; return draw(); }
+    if (el.id === 'rf-iq') { m.iq = el.value; m.focusIq = true; return draw(); }
     if (el.id === 'add-qty') { m.qty = Number(el.value) || 0; const p = m.pick; root.querySelector('#pv').textContent = brl.format(m.qty * p.price * (p.cur === 'USD' ? FX : 1)); return; }
     if (el.id === 'add-cls') { m.pickCls = el.value; root.querySelector('#preview').innerHTML = rvPreview(); return; }
     if (el.dataset.rf) {
       const k = el.dataset.rf;
       m.rf[k] = ['rate', 'applied'].includes(k) ? (Number(el.value) || 0) : el.value;
+      if (k === 'name') m.nameTouched = true;
+      if (k === 'type') {
+        const wantBank = el.value !== 'deb';
+        if (ISS[m.rf.issuer].bank !== wantBank) m.rf.issuer = wantBank ? 'xp' : 'eletrobras';
+        if (!wantBank && m.rf.idx === 'cdi') { m.rf.idx = 'ipca'; m.rf.rate = 6.2; }
+        autoName(); return draw();
+      }
       if (k === 'idx') { m.rf.rate = el.value === 'cdi' ? 105 : el.value === 'pre' ? 12.5 : 6.2; return draw(); }
       root.querySelector('#preview').innerHTML = rfPreview();
     }
@@ -1181,11 +1385,12 @@ function openAdd(cls, opts = {}) {
     if (TYPEMAP[m.type].mode !== 'rf') {
       if (!m.pick) return;
       const p = m.pick, qty = m.qty ?? (p.cls === 'cripto' ? 0.1 : p.type === 'Tesouro' ? 1 : 100), c = m.pickCls || p.cls;
-      positions.push({id:nextId++, ticker:p.ticker, name:p.name, cls:c, kind:'rv', qty, price:p.price, cur:p.cur, src:p.src, usdExp:p.usdExp, flag:p.flag});
+      positions.push({id:nextId++, ticker:p.ticker, name:p.name, cls:c, kind:'rv', qty, price:p.price, cur:p.cur, src:p.src, usdExp:p.usdExp, flag:p.flag, mat:p.mat});
       toast(`${p.ticker} adicionado em ${CLS[c].name}`);
     } else {
       const r = rfCalc(m.rf);
-      positions.push({id:nextId++, ticker:m.rf.name || 'Título', name:r.label, cls:r.cls, kind:'rf', value:r.value, cur:'BRL', src:r.src});
+      const np = {id:nextId++, ticker:m.rf.name || 'Título', kind:'rf', cur:'BRL', rf:{type:m.rf.type, issuer:m.rf.issuer, idx:m.rf.idx, rate:m.rf.rate, applied:m.rf.applied, date:m.rf.date, mat:m.rf.mat}};
+      positions.push(Object.assign(np, rfFields(np)));
       toast(`${m.rf.name}: ${brl.format(r.value)} hoje, em ${CLS[r.cls].name}`);
     }
     close(); render();
@@ -2071,6 +2276,8 @@ function act(a, arg) {
   const w = state.wa;
   switch (a) {
     case 'umenu': state.umenu = !state.umenu; render(); if (state.umenu) document.querySelector('.umenu .mi')?.focus(); return;
+    case 'atab': state.atab = arg; return go('ativos');
+    case 'realloc': state.aporte = Math.round(Number(arg) / 100) * 100; toast(`${brl.format(state.aporte)} para aportar`); return go('aporte');
     case 'file-del': state.imported = null; toast('Extrato removido'); return render();
     case 'checkout': return openCheckout();
     case 'cfg': state.cfg = arg; return go('config');
