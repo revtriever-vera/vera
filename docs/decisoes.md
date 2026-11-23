@@ -13,7 +13,7 @@ Registro das decisões tomadas na fase de design, com o motivo de cada uma. Deci
 | Stack, padrões de projeto e skills **iguais aos do GetCart** | Reaproveita o que já funciona e o que o time e os agentes já conhecem. Detalhes em [`stack.md`](stack.md). |
 | Nome **Vera** | Nome feminino, curto, que remete a "verdadeiro": o retrato real da carteira contra o ideal. "Prumo" foi descartado por conflito com a Prumo Logística. Disponibilidade de domínio e INPI ainda não checada. |
 | Licença **AGPL-3.0** | Impede que alguém feche o código e ofereça como serviço sem publicar as mudanças. |
-| Open source e gratuito no plano Free | O objetivo é relevância e marca pessoal, não receita. O Premium cobre IA e WhatsApp (ver acima). |
+| Open source e gratuito no plano Free | O objetivo é relevância e marca pessoal. O Premium cobre o custo de IA e WhatsApp (ver acima). |
 | Versão hospedada pela Revtriever | Investidor comum não sobe servidor; sem versão hospedada, só desenvolvedores usariam. |
 | Concorrência relevante = outros open source | Os pagos (Kinvo, Gorila) não disputam o mesmo objetivo. |
 
@@ -44,7 +44,7 @@ Registro das decisões tomadas na fase de design, com o motivo de cada uma. Deci
 | --- | --- |
 | Open Finance via Meu Pluggy com credencial do usuário, hospedagem nossa | Acesso comercial custa milhares de reais por mês; com a conta gratuita de cada pessoa, o custo para nós é zero. |
 | Importação OFX/CSV como alternativa | Funciona com qualquer banco e é plano B se o Meu Pluggy mudar. |
-| Classificação sem IA | Categoria do agregador + dicionário curado + regras aprendidas cobrem a maior parte; IA só opcional. |
+| Classificação sem IA | Categoria do agregador + dicionário curado + regras aprendidas cobrem a maior parte; O modelo de linguagem não classifica; só escreve os resumos do Premium. |
 | Sugestão de corte determinística | É matemática: meta contra realizado, categorias flexíveis contra a média do próprio usuário. |
 | Exportar transações em planilha | Os dados são do usuário. |
 
