@@ -8,7 +8,7 @@ Registro das decisões tomadas na fase de design, com o motivo de cada uma. Deci
 | --- | --- |
 | Plano **Free** com tudo da carteira e dos gastos, sem custo; **Premium a R$ 14,90/mês** com IA e WhatsApp | IA e WhatsApp têm custo por uso, ao contrário das outras fontes. Nada do que é grátis vira pago. |
 | Teto de uso de IA + WhatsApp de **R$ 4/mês por conta**, mostrado como cota (em porcentagem, não em reais), com aviso perto do teto e pausa dessas funções até o mês virar | Limita o custo por conta sem cobrança extra; o resto do app segue funcionando. |
-| Assinatura pelo **Asaas**, com Pix ou cartão; um Premium por conta vale para todas as pessoas da conta | Uma cobrança por conta, não por pessoa. |
+| Assinatura com cobrança pela **Revtriever** (Asaas por baixo, conta própria da Vera), com Pix ou cartão; um Premium por conta vale para todas as pessoas da conta | Uma cobrança por conta, não por pessoa. A Revtriever cuida da assinatura, das páginas de pagamento, da régua e da NFS-e; o `vera-api` não tem driver do Asaas. |
 | **Pessoas na conta**: convite por e-mail (a pessoa entra com Google ou Facebook pelo link) e papéis Dono (pode tudo, inclusive o plano), Editor (mexe em carteira e gastos) e Leitura (só vê) | Mais de uma pessoa cuida do mesmo dinheiro. |
 | Stack, padrões de projeto e skills **iguais aos do GetCart** | Reaproveita o que já funciona e o que o time e os agentes já conhecem. Detalhes em [`stack.md`](stack.md). |
 | Nome **Vera** | Nome feminino, curto, que remete a "verdadeiro": o retrato real da carteira contra o ideal. "Prumo" foi descartado por conflito com a Prumo Logística. Disponibilidade de domínio e INPI ainda não checada. |
