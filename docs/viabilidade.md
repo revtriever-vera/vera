@@ -4,10 +4,10 @@ Análise feita em outubro de 2026, antes de qualquer implementação.
 
 ## Resumo
 
-Os dois módulos são tecnicamente viáveis com custo de operação perto de zero e sem depender de IA. O único ponto que ameaça o "gratuito" é o Open Finance, resolvido com as credenciais do próprio usuário no Meu Pluggy.
+Os dois módulos são viáveis com custo perto de zero no Free. Resumos em texto e WhatsApp têm custo por conta e ficam no Premium. O único ponto que ameaça o "gratuito" é o Open Finance, resolvido com as credenciais do próprio usuário no Meu Pluggy.
 
 - **Produto:** plataforma financeira open source e gratuita com dois módulos, gestão patrimonial e gestão de gastos.
-- **Objetivo:** marca pessoal e relevância no mercado, não receita direta.
+- **Objetivo:** relevância e marca pessoal; o Premium cobre o custo das funções pagas.
 - **Entidade:** a Revtriever hospeda a versão oficial e responde pelos termos de uso e pela LGPD.
 - **Público:** investidor de longo prazo com patrimônio espalhado entre Brasil, EUA e cripto.
 
@@ -24,6 +24,7 @@ Responde em segundos "como meu patrimônio está distribuído" e "onde estou des
 - Renda variável e cripto: só a posição atual (quantidade e preço médio opcional). Sem histórico de transações e sem eventos corporativos; num desdobramento, o usuário edita a quantidade.
 - Renda fixa: cadastro do título (valor aplicado, data, indexador, taxa, vencimento) e valorização automática. Nunca atualizar saldo à mão.
 - Classificação determinística por exposição, sem IA, editável pelo usuário; as classes também são editáveis.
+- Renda fixa, no Free: cobertura do FGC por conglomerado, próximos vencimentos, taxa real e concentração por emissor e setor (fontes na tabela abaixo).
 
 ### Regras de cadastro
 
@@ -47,6 +48,16 @@ Responde em segundos "como meu patrimônio está distribuído" e "onde estou des
 | Debêntures, CRI, CRA | Indexador + taxa | Aproximada (na curva) |
 | Renda fixa EUA | Taxa contratada; preço público do Treasury | Boa |
 
+**Fontes dos dados de renda fixa do Free:**
+
+| Dado | Fonte |
+| --- | --- |
+| Cobertura do FGC por conglomerado | Emissor informado no cadastro + lista curada de instituições e conglomerados no repositório (corrigida por PR) |
+| Vencimentos | Cadastro do título |
+| Taxa real | Taxa do cadastro contra o IPCA da série SGS do BC |
+| Concentração por emissor | Emissor informado no cadastro |
+| Concentração por setor | Catálogo de instrumentos da B3 (renda variável) e classe do cadastro |
+
 **Armadilhas da classificação:** IVVB11 é negociado na B3, mas expõe a ações dos EUA; BDR é empresa estrangeira; FII pode ser tratado como "imóveis" ao lado de REITs. Solução: um mapa curado de ETFs em arquivo no repositório, que a comunidade corrige por PR.
 
 **Diferencial, o aporte inteligente:** dado um valor novo ("tenho R$ 10 mil"), o sistema calcula onde aportar, nas duas camadas, para aproximar a carteira da meta sem vender nada (vender gera IR). Faixas de tolerância evitam alerta por desvio pequeno.
@@ -55,7 +66,7 @@ Responde em segundos "como meu patrimônio está distribuído" e "onde estou des
 
 ## Módulo de gestão de gastos
 
-Baixa os gastos, classifica por categoria e sugere onde cortar para bater a meta de economia mensal. Classificação e sugestão funcionam sem IA; a parte difícil é o acesso ao Open Finance.
+Baixa os gastos, classifica por categoria e sugere onde cortar para bater a meta de economia mensal. Classificação e sugestão não usam modelo de linguagem; a parte difícil é o acesso ao Open Finance.
 
 ### Acesso aos dados: credencial do usuário, hospedagem nossa
 
@@ -75,9 +86,9 @@ O [Actual Budget](https://actualbudget.org/docs/advanced/bank-sync/pluggyai) usa
 - Categoria que o agregador já entrega (qualidade a confirmar).
 - Dicionário de estabelecimentos curado no repositório ("UBER" → transporte, "IFOOD" → delivery).
 - Regras aprendidas com as correções do usuário ("Pix para João Silva = aluguel", para sempre).
-- IA só como opcional, com a chave do próprio usuário, para a sobra que as regras não pegam.
+- O modelo de linguagem não classifica: só escreve os resumos do Premium, a partir de totais agregados.
 
-O caso difícil é Pix para pessoa física, que nem a IA adivinha; só o usuário resolve, uma vez. Estimativa, não medida: 80 a 90% classificado sozinho depois do primeiro mês.
+O caso difícil é Pix para pessoa física, que nenhum modelo adivinha; só o usuário resolve, uma vez. Estimativa, não medida: 80 a 90% classificado sozinho depois do primeiro mês.
 
 ### Sugestão de corte (determinística)
 
@@ -102,12 +113,29 @@ flowchart LR
     J --> D
     W --> D
   end
+  W --> L[Gateway do modelo de linguagem<br/>só Premium]
+  W --> Z[WhatsApp Cloud API<br/>só Premium]
+  W --> R[Revtriever<br/>Motor de Cobrança + gateway]
   C[Cotações<br/>brapi, Finnhub, CoinGecko] --> J
   P[Dados públicos<br/>BC, Tesouro, CVM] --> J
   M[Meu Pluggy<br/>credencial de cada usuário] --> J
 ```
 
-Mil pessoas com ITUB4 geram uma consulta de preço por dia. O Open Finance roda na credencial de cada usuário, então também não pesa na conta. O custo esperado é só de servidor e banco, provavelmente dezenas de dólares por mês no começo (estimativa).
+Mil pessoas com ITUB4 geram uma consulta de preço por dia. O Open Finance roda na credencial de cada usuário, então também não pesa na conta. No Free, o custo esperado é só de servidor e banco, provavelmente dezenas de dólares por mês no começo (estimativa). O Premium acrescenta o modelo de linguagem e o WhatsApp, que cobram por uso de cada conta.
+
+### Custo por assinante do Premium (estimativa)
+
+Valores em reais por conta por mês, no pior caso (cota de uso esgotada). São estimativas, não medições; os valores finais dependem do contrato com o gateway e do card do épico de Planos, IA e WhatsApp (a criar).
+
+| Linha | Valor | Fonte |
+| --- | --- | --- |
+| Receita do Premium | R$ 14,90 | Decisão de produto |
+| Taxa da Revtriever e do gateway por cobrança (Pix e cartão) | a definir | Tabela do gateway e contrato do card de Planos (a criar) |
+| Modelo de linguagem + WhatsApp | até R$ 4,00 | Teto por conta da decisão de produto; tabela do gateway do modelo, tabela da Meta para o Brasil, convertidos pela PTAX |
+| Rateio do servidor e do banco | a definir | Custo do Free dividido pelas contas |
+| **Margem no pior caso** | R$ 14,90 menos as três linhas de custo | Calculada quando as taxas forem fechadas |
+
+Como o teto de R$ 4 já está embutido na cota, o custo variável por conta não passa disso; o que falta fechar são as taxas de cobrança.
 
 - **Login:** só login social, com Google e Facebook (OAuth). A plataforma não guarda senha própria.
 - **Segurança:** Client Secret de cada usuário cifrado com KMS desde o primeiro dia, nunca em texto puro nem em log.
@@ -130,6 +158,10 @@ Como o objetivo é relevância, o concorrente que importa é outro open source g
 - Conexões só podem ser criadas durante o teste do painel; dá para renovar consentimento depois?
 - Qual a qualidade da categorização que a Pluggy já entrega?
 - O Ghostfolio ou outro open source já faz carteira-alvo em duas camadas com foco Brasil?
+- Qual a retenção de dados do provedor do modelo de linguagem, e ela é compatível com a política de privacidade?
+- A verificação do app no Google (Agenda) exige o quê, e em quanto tempo sai?
+- O override de callback da Meta para o WhatsApp funciona como a documentação indica? Confirmar em teste.
+- Como emitir nota fiscal das assinaturas do Premium?
 - O nome Vera está livre (domínio, INPI, GitHub)?
 
 ## Fontes
