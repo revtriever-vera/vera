@@ -26,7 +26,7 @@ Registro das decisões tomadas na fase de design, com o motivo de cada uma. Deci
 | Taxa real e poder de compra de cada título de renda fixa no Free | Responde se o título ganha da inflação. No Kinvo é Premium. |
 | Alocação por emissor e por setor no Free | A visão por classe não mostra concentração ("quanto do patrimônio é risco Itaú"). |
 | Cadastro de renda fixa com **tipo do título** (CDB, LCI, LCA, LC, debênture) e **emissor** (busca numa lista de bancos, com o conglomerado); setor de ações e FIIs vem do catálogo | São os dados que o FGC e a concentração precisam. |
-| Uma carteira por conta, sem "de quem" | Simplicidade: o que importa é a distribuição do patrimônio, não o dono de cada posição. |
+| Uma carteira por conta, com **titular opcional por ativo** quando há 2 pessoas ou mais (Conta toda ou alguém da conta), com filtro por titular | A distribuição continua sendo do patrimônio da conta, mas quem divide a conta precisa saber o que é de quem. O FGC é calculado por titular, porque o limite vale por CPF. Com 1 pessoa nada muda; gastos seguem sem titular, por enquanto. |
 | Cadastro manual | Não há forma gratuita e confiável de puxar posições de todas as corretoras, bancos de fora e exchanges. |
 | Renda variável só com posição (quantidade) | Registrar transações exigiria tratar eventos corporativos (desdobramento, grupamento, bonificação), complexidade que não serve à visão de alocação. |
 | Renda fixa com valorização automática | Atualizar saldo à mão é chato demais; o valor aproximado na curva é melhor do que nenhum. |
@@ -35,7 +35,7 @@ Registro das decisões tomadas na fase de design, com o motivo de cada uma. Deci
 | Mapa curado de ETFs no repositório | A comunidade corrige por PR, de graça. |
 | Carteira-alvo em duas camadas | Classe (ex.: 25% em ações EUA) e ativo dentro da classe (ex.: 30% ITUB4, 40% WEGE3, 30% PETR4). |
 | **Onde aportar** (antes "Aporte inteligente") como diferencial | Investidor de longo prazo não vende para rebalancear; a pergunta mensal é "onde coloco este dinheiro". |
-| Não permitir o mesmo ativo duas vezes | Evita posições duplicadas que distorcem a distribuição; leva à posição existente para editar a quantidade. Renda fixa é exceção (títulos distintos). |
+| Não permitir o mesmo ativo duas vezes para o mesmo titular | Evita posições duplicadas que distorcem a distribuição; leva à posição existente para editar a quantidade. O mesmo ativo pode aparecer uma vez por titular. Renda fixa é exceção (títulos distintos). |
 | Exportar carteira em planilha | Os dados são do usuário. |
 
 ## Gestão de gastos

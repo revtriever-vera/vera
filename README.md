@@ -32,7 +32,7 @@ Abra `prototipo/index.html` no navegador. Não precisa de build nem de servidor.
 - Resumo de gastos, transações com regras de categoria, sugestão de corte e conexões
 - Resumos em texto do mês, dos cortes e da carteira dentro das próprias telas (Premium, com permissão explícita para enviar só totais agregados)
 - Pessoas na conta (Dono, Editor e Leitura)
-- Em avaliação, ainda não decidido: titular de cada ativo e filtro por titular, que aparecem com 2 pessoas ou mais
+- Titular de cada ativo e filtro por titular, que aparecem com 2 pessoas ou mais
 - Configurações com plano e uso (assinatura simulada via Asaas, Pix ou cartão, e cota mensal), Vera no WhatsApp (vínculo por código e conversa simulada), Google Agenda, bancos, preferências e dados e privacidade
 - Um modo "auto-hospedado", em que não há planos e cada função aparece só com a chave da pessoa
 
