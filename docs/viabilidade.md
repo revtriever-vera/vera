@@ -146,7 +146,7 @@ Como o teto de R$ 4 já está embutido na cota, o custo variável por conta não
 
 Como o objetivo é relevância, o concorrente que importa é outro open source gratuito; os pagos (Kinvo, Gorila, Investidor10) não.
 
-- **Posicionamento:** "a ferramenta aberta de carteira-alvo para quem investe no Brasil e lá fora". O Ghostfolio provavelmente cobre o genérico (ações, cripto, multimoeda) e não o brasileiro (CDB na curva, Tesouro oficial, cota CVM, ETF da B3 por exposição). Hipótese ainda não verificada.
+- **Posicionamento:** "A carteira-alvo aberta para quem investe no Brasil e lá fora, com renda fixa brasileira de verdade e aporte guiado nas duas camadas." (antes: "a ferramenta aberta de carteira-alvo para quem investe no Brasil e lá fora"). O Ghostfolio provavelmente cobre o genérico (ações, cripto, multimoeda) e não o brasileiro (CDB na curva, Tesouro oficial, cota CVM, ETF da B3 por exposição). Hipótese ainda não verificada.
 - **Público existe:** a metodologia da Bastter e o Método ARCA são alocação-alvo por classe, hoje feita em planilha.
 - **Marca pessoal:** o fundador aparece como autor (repositório, README, site); a Revtriever é a entidade dos termos e da LGPD.
 - **Licença:** AGPL-3.0, para que ninguém feche o código e ofereça como serviço sem devolver melhorias.

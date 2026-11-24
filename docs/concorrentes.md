@@ -87,13 +87,15 @@ Rotki (cripto e privacidade, AGPL-3.0) e Paisa (contabilidade em texto, AGPL-3.0
 
 ## Posicionamento
 
-O texto atual é "a ferramenta aberta de carteira-alvo para quem investe no Brasil e lá fora". A pesquisa **confirma a parte do Brasil e ajusta a da carteira-alvo**:
+O texto anterior era "a ferramenta aberta de carteira-alvo para quem investe no Brasil e lá fora". A pesquisa **confirma a parte do Brasil e ajusta a da carteira-alvo**:
 
 - **Confirmado:** nenhum open source trata renda fixa brasileira na curva, Tesouro e cota CVM com fonte oficial, ETF da B3 por exposição e FGC por conglomerado. Esse é o espaço livre.
 - **Ajustado:** "carteira-alvo" sozinha deixou de ser exclusiva. O Wealthfolio tem alvo e rebalanceamento só com aporte, e o Ghostfolio pode ganhar o desvio da alocação. O que ainda ninguém tem é a **segunda camada** (ativo dentro da classe, como 30% ITUB4 dentro de ações Brasil) combinada com o Onde aportar nas duas camadas.
 - **Também diferente:** carteira e gastos no mesmo produto, com Open Finance pelo Meu Pluggy sem o passo a passo manual do Actual; versão hospedada gratuita, que Ghostfolio (Premium) e Wealthfolio (assinatura de sincronização) não oferecem nesse formato.
 
-Frase sugerida: **"A carteira-alvo aberta para quem investe no Brasil e lá fora, com renda fixa brasileira de verdade e aporte guiado nas duas camadas."** A decisão de trocar o texto é do produto; esta pesquisa só indica que "carteira-alvo" sozinha não basta.
+Frase adotada (decisão do dono, #271): **"A carteira-alvo aberta para quem investe no Brasil e lá fora, com renda fixa brasileira de verdade e aporte guiado nas duas camadas."** A pesquisa indicava que "carteira-alvo" sozinha não basta.
+
+Em inglês, para a landing: "The open target portfolio for people who invest in Brazil and abroad, with real Brazilian fixed income and guided contributions across both layers."
 
 ## Riscos
 
