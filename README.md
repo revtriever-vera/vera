@@ -39,6 +39,48 @@ Abra `prototipo/index.html` no navegador. Não precisa de build nem de servidor.
 
 Todos os valores são de exemplo; nada é salvo.
 
+## Instalar com Docker Compose
+
+Roda a Vera inteira na sua máquina ou servidor: API, front-end, Postgres e Redis. Cobrança e Open Finance (Pluggy) ficam desligados; modelo de linguagem, WhatsApp e Google são opcionais e usam as chaves que cada conta cadastra na aba Integrações. Ver [auto-hospedagem](docs/auto-hospedagem.md).
+
+Pré-requisitos: Docker com Compose v2 e acesso à internet no primeiro build (o código da API e do front-end é baixado dos repositórios [`vera-api`](https://github.com/revtriever-vera/vera-api) e [`vera-fe`](https://github.com/revtriever-vera/vera-fe)).
+
+```sh
+git clone https://github.com/revtriever-vera/vera.git
+cd vera
+cp .env.example .env
+# preencha os segredos do .env; gere cada um com: openssl rand -hex 32
+docker compose up -d --build
+```
+
+Depois que tudo subir (a primeira vez demora por causa do build):
+
+| O quê | Onde |
+| --- | --- |
+| Aplicação | <http://localhost:8080> |
+| API | <http://localhost:3333> (saúde em `/health`) |
+| E-mails de teste (Mailpit) | <http://localhost:8025> |
+
+### Configuração
+
+Tudo se configura no `.env` (o `.env.example` explica cada variável):
+
+- **Segredos obrigatórios:** `POSTGRES_PASSWORD`, `JWT_SECRET`, `CRYPTO_KEY_HEX` (64 caracteres hexadecimais), `SWAGGER_PASSWORD` e `QUEUES_DASHBOARD_PASSWORD`. Faça backup do `CRYPTO_KEY_HEX`: sem ele os dados cifrados não abrem mais.
+- **Endereço público:** para hospedar fora do `localhost`, ajuste `PUBLIC_API_URL`, `APP_URL` e `CORS_ORIGINS`, ponha HTTPS na frente (proxy reverso) e use `COOKIE_SECURE=true`. O front-end lê `PUBLIC_API_URL` no build, então rode `docker compose up -d --build` de novo ao mudar.
+- **E-mail:** por padrão os e-mails caem no Mailpit. Para enviar de verdade, aponte `SMTP_HOST`, `SMTP_PORT` e `MAIL_FROM_EMAIL` para o seu servidor SMTP.
+- **Versões:** `VERA_API_REF` e `VERA_WEB_REF` escolhem a branch, a tag ou o commit dos dois repositórios (padrão `main`).
+
+### Operação
+
+```sh
+docker compose logs -f api            # logs
+docker compose pull && docker compose up -d --build   # atualizar (as migrações rodam sozinhas)
+docker compose --profile worker up -d # consumidor de filas extra, opcional
+docker compose down                   # parar (os dados ficam nos volumes)
+```
+
+As migrações do banco rodam no serviço `migrate`, antes de a API subir. A própria API já consome as filas; o perfil `worker` só soma capacidade. Os dados ficam nos volumes `pgdata` e `redisdata`: para backup, `docker compose exec postgres pg_dump -U vera vera > vera.sql`.
+
 ## Princípios
 
 - **Free completo.** Carteira, carteira-alvo, Onde aportar, gastos e Onde cortar não custam nada. Nenhuma fonte de dados dessas funções cobra por usuário: cotações são por ativo e ficam em cache, e o Open Finance usa a conta gratuita de cada pessoa no Meu Pluggy.
