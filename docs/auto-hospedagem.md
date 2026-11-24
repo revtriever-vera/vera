@@ -1,6 +1,6 @@
 # Guia de auto-hospedagem
 
-Como a versão que você hospeda difere da hospedada pela Revtriever. A instalação em si (Docker Compose) está no README do `vera-api`.
+Como a versão que você hospeda difere da hospedada pela Revtriever. A instalação em si (Docker Compose) está no [README](../README.md#instalar-com-docker-compose).
 
 ## Chaves
 
