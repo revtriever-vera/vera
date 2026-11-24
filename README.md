@@ -16,6 +16,7 @@
 | [`docs/concorrentes.md`](docs/concorrentes.md) | Mapa dos concorrentes open source, tabela comparativa e posicionamento |
 | [`docs/stack.md`](docs/stack.md) | Stack e padrões de projeto (os mesmos do GetCart) |
 | [`docs/tom-de-voz.md`](docs/tom-de-voz.md) | Como a Vera escreve: regras, padrões por tipo de texto e referências |
+| [`landing/`](landing/) | Landing page estática (HTML e CSS, sem build), em português e inglês |
 | [`prototipo/`](prototipo/) | Protótipo navegável em um único HTML, com dados de exemplo |
 
 O trabalho está organizado no [Project da Vera](https://github.com/orgs/revtriever-vera/projects/1), um card por entrega.
