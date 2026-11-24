@@ -157,7 +157,7 @@ Como o objetivo é relevância, o concorrente que importa é outro open source g
 - Os termos do Meu Pluggy permitem que um serviço hospedado guarde as credenciais dos usuários?
 - Conexões só podem ser criadas durante o teste do painel; dá para renovar consentimento depois?
 - Qual a qualidade da categorização que a Pluggy já entrega?
-- O Ghostfolio ou outro open source já faz carteira-alvo em duas camadas com foco Brasil?
+- ~~O Ghostfolio ou outro open source já faz carteira-alvo em duas camadas com foco Brasil?~~ Respondido em [`concorrentes.md`](concorrentes.md): não; o Wealthfolio faz alvo de uma camada, sem Brasil.
 - Qual a retenção de dados do provedor do modelo de linguagem, e ela é compatível com a política de privacidade?
 - A verificação do app no Google (Agenda) exige o quê, e em quanto tempo sai?
 - O override de callback da Meta para o WhatsApp funciona como a documentação indica? Confirmar em teste.
