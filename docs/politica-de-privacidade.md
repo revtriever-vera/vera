@@ -10,6 +10,7 @@ A Revtriever é a controladora dos dados da sua conta na Vera hospedada, nos ter
 
 - **Cadastro:** nome e e-mail que o Google ou o Facebook informam no login. A Vera não guarda senha.
 - **Carteira e gastos:** o que você cadastra, importa ou conecta: ativos, metas, transações, contas e cartões vindos do Meu Pluggy ou de arquivos OFX e CSV.
+- **Importação de investimentos:** você pode trazer operações de relatórios da B3, nota de corretagem, extrato de corretora no exterior, CSV de exchange de cripto e print ou foto da corretora. O arquivo é descartado assim que é lido e nunca é guardado. As operações lidas ficam por até **30 minutos** aguardando a sua confirmação e depois são apagadas; só o que você confirma entra na carteira. Print e foto só são enviados a um modelo de linguagem, por um serviço da Vercel, com a sua confirmação a cada arquivo.
 - **Pessoas da conta:** nome, e-mail e papel (Dono, Editor ou Leitura) de quem você convida.
 - **Plano e cobrança:** plano, assinatura, faturas e teste. A Vera não guarda número de cartão: o pagamento acontece na página da Revtriever.
 - **Chaves e credenciais** (Meu Pluggy, WhatsApp, Google Agenda): guardadas cifradas e nunca exibidas.
