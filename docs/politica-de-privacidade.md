@@ -10,6 +10,7 @@ A Revtriever é a controladora dos dados da sua conta na Vera hospedada, nos ter
 
 - **Cadastro:** nome e e-mail que o Google ou o Facebook informam no login. A Vera não guarda senha.
 - **Carteira e gastos:** o que você cadastra, importa ou conecta: ativos, metas, transações, contas e cartões vindos do Meu Pluggy ou de arquivos OFX e CSV.
+- **Importação de investimentos:** relatórios da B3, nota de corretagem, extrato de corretora no exterior, CSV de exchange de cripto, print e foto da corretora. Veja a seção "Importação de investimentos".
 - **Pessoas da conta:** nome, e-mail e papel (Dono, Editor ou Leitura) de quem você convida.
 - **Plano e cobrança:** plano, assinatura, faturas e teste. A Vera não guarda número de cartão: o pagamento acontece na página da Revtriever.
 - **Chaves e credenciais** (Meu Pluggy, WhatsApp, Google Agenda): guardadas cifradas e nunca exibidas.
@@ -28,6 +29,17 @@ Só no Premium e só depois de você permitir. Para escrever um resumo, a Vera e
 - **Desligar:** em Dados e privacidade. Desligado, nada mais é enviado e os resumos já escritos são apagados.
 
 **Uso pelo provedor.** O modelo usado na versão hospedada é de um provedor externo, que pode reter o que recebe e usar esses dados agregados para treinar e melhorar os próprios modelos. A Vera não promete o contrário. O que a Vera controla é o que sai: só os totais acima. Se isso não serve para você, deixe o envio desligado: o resto da Vera funciona igual.
+
+## Importação de investimentos
+
+Você pode trazer operações de relatórios da B3 (Excel e PDF), nota de corretagem, extrato de corretora no exterior, CSV de exchange de cripto, print e foto da corretora.
+
+- **O arquivo é descartado assim que é lido** e nunca é guardado pela Vera.
+- **As operações lidas ficam por até 30 minutos** aguardando a sua confirmação e depois são apagadas. Só o que você confirma entra na carteira.
+- **Só o relatório em Excel da B3 e o CSV de exchange de cripto** são lidos pela própria Vera, sem modelo de linguagem.
+- **Os outros arquivos** (nota de corretagem, extrato de corretora no exterior, PDF da B3, print e foto) são lidos por um modelo de linguagem, por um serviço da Vercel, e só são enviados com a sua confirmação a cada arquivo: sem a confirmação, nada sai. Esse envio é separado dos resumos e não segue a regra de "só totais" da seção anterior.
+- **O que vai ao modelo.** PDF com texto vai como texto, com nome do titular, CPF e conta mascarados. Imagem e PDF escaneado vão como imagem, que pode mostrar ativos, quantidades, corretora e o nome do titular.
+- **Uso pelo provedor.** O modelo é de um provedor externo, que pode reter o que recebe e usar como descrito em "Uso pelo provedor" acima. "Descartado" vale para a cópia da Vera, não para a que está com o provedor. Se isso não serve para você, importe só o relatório em Excel da B3 ou o CSV de exchange: eles não passam por modelo de linguagem.
 
 ## Acesso do suporte aos dados da sua conta
 
@@ -57,7 +69,7 @@ Você pode exportar os dados da conta em planilha, corrigi-los no app e excluir 
 
 - Meu Pluggy: leitura de contas e transações, com a credencial que você cadastra.
 - Meta: entrega das mensagens do WhatsApp.
-- Vercel e o provedor do modelo: totais agregados dos resumos, se você permitir.
+- Vercel e o provedor do modelo: totais agregados dos resumos, se você permitir; e os arquivos de importação que não são Excel da B3 nem CSV de exchange (nota, extrato, PDF, print e foto), um a um, quando você confirmar o envio, para a leitura das operações.
 - Google e Facebook: login. Google também para a Agenda, se você conectar.
 - Revtriever e o provedor de pagamento: cobrança do Premium.
 
@@ -65,4 +77,4 @@ A Vera não vende dados nem usa a sua carteira para publicidade.
 
 ## Mudanças nesta política
 
-Mudança no que é enviado ao modelo pede um novo aceite no app. As demais ficam registradas com a data neste repositório.
+Mudança no que é enviado ao modelo pede um novo aceite no app (para a leitura de arquivos de importação por modelo, é a confirmação a cada arquivo). As demais ficam registradas com a data neste repositório.
