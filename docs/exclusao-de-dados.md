@@ -7,7 +7,7 @@
 1. Entre na Vera com o Google ou o Facebook.
 2. Abra **Configurações › Dados e privacidade**.
 3. Se quiser uma cópia, use **Exportar tudo** antes: baixa os dados da conta em planilhas.
-4. Use **Excluir conta** e confirme digitando o seu e-mail.
+4. Use **Excluir conta** e confirme escrevendo a palavra **EXCLUIR**. Só o Dono da conta pode excluí-la.
 
 A exclusão é imediata e não tem volta. Ela cancela a assinatura do Premium, se houver, e apaga carteira, gastos, pessoas da conta, chaves, vínculos do WhatsApp e da Google Agenda e o cadastro. As cópias de segurança do banco são sobrescritas em até 35 dias.
 
