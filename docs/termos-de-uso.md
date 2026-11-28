@@ -1,6 +1,6 @@
 # Termos de Uso
 
-Rascunho de produto, a revisar antes da publicação. Vale para a Vera hospedada pela Revtriever. O código é AGPL-3.0; quem hospeda por conta própria não é parte destes termos.
+Última atualização: 28 de novembro de 2026. Vale para a Vera hospedada pela Revtriever LTDA, CNPJ 68.648.441/0001-38. Contato: contato@revtriever.com. O código é AGPL-3.0; quem hospeda por conta própria não é parte destes termos.
 
 ## O que a Vera é
 
@@ -14,8 +14,17 @@ Uma ferramenta de acompanhamento de carteira e de gastos. A Vera só lê os dado
 ## Planos
 
 - **Free:** carteira e gastos completos, sem custo.
-- **Premium:** R$ 14,90 por mês, com resumos escritos por modelo de linguagem e WhatsApp, até a cota de uso de R$ 4 por mês por conta. Perto do teto a Vera avisa; no teto, essas funções pausam até o mês virar, sem cobrança extra.
-- A cobrança é da Revtriever. Cancelar vale para o ciclo seguinte.
+- **Premium:** R$ 14,90 por mês, com resumos escritos por modelo de linguagem, WhatsApp e Google Agenda, até a cota de uso de R$ 4 por mês por conta. Perto do teto a Vera avisa; no teto, essas funções pausam até o mês virar, sem cobrança extra.
+
+## Assinatura do Premium
+
+- **Pagamento:** por cartão de crédito ou Pix, na página de pagamento da Revtriever. A Vera não vê nem guarda os dados do cartão.
+- **Renovação:** mensal e automática. No cartão, a cobrança se repete a cada ciclo; no Pix, uma fatura nova é enviada por e-mail a cada ciclo.
+- **Atraso:** se a fatura não for paga, o Premium segue por 3 dias de carência. Depois disso, a conta volta ao Free.
+- **Cancelar:** quando quiser, em Configurações › Plano e uso. O Premium vale até o fim do ciclo já pago, sem cobrança nova.
+- **Arrependimento:** se você cancelar em até 7 dias do primeiro pagamento, o Premium termina na hora e o valor pago é devolvido integralmente, pelo mesmo meio de pagamento.
+- **Fim do Premium:** o WhatsApp é desvinculado, a Google Agenda é desconectada e os lembretes param. A carteira, os gastos e o resto da conta continuam no Free.
+- **Preço:** uma mudança de preço é avisada antes de valer e só se aplica a partir do ciclo seguinte ao aviso.
 
 ## Teste grátis e ofertas
 
@@ -40,3 +49,7 @@ O tratamento dos dados está na [Política de Privacidade](politica-de-privacida
 ## Mudanças
 
 Mudança nestes termos é avisada no app antes de valer.
+
+## Contato
+
+Dúvidas sobre estes termos: contato@revtriever.com.

@@ -203,6 +203,8 @@ export const pt = {
     by: 'Vera, por',
     maintained: 'Mantido por Lucas Oliveira. A versão hospedada é operada pela Revtriever.',
     license: 'Licença AGPL-3.0',
+    privacy: 'Privacidade',
+    terms: 'Termos de uso',
   },
 } as const;
 
