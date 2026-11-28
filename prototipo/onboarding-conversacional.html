@@ -51,11 +51,15 @@ a{color:var(--accent-strong);font-weight:700}
 ::-webkit-scrollbar-thumb:hover{background:#dccfd6}
 
 /* chat */
-.chat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);display:grid;grid-template-rows:auto minmax(0,1fr) auto;height:min(820px,calc(100dvh - 40px));min-height:560px;overflow:hidden}
+.chat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;height:min(820px,calc(100dvh - 40px));min-height:560px;overflow:hidden}
 .chat-head{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line)}
 .chat-head .who{display:grid;line-height:1.2}
 .chat-head .who b{font-family:var(--f-word);font-size:20px;letter-spacing:-.04em}
 .chat-head .who span{font-size:12.5px;color:var(--ink-3)}
+.head-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;padding:8px 18px;border-bottom:1px solid var(--line);background:var(--surface-2);font-size:13px;color:var(--ink-2)}
+.head-actions:empty{display:none}
+.head-actions .row{gap:6px}
+.head-actions .btn{font-size:13px;padding:5px 11px}
 .progress{margin-left:auto;display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
 .progress span{font-size:12px;font-weight:700;border-radius:99px;padding:2px 10px;background:var(--surface-2);color:var(--ink-3)}
 .progress span.on{background:var(--accent-soft);color:var(--accent-strong)}
@@ -170,6 +174,7 @@ svg.i{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke
         <div class="who"><b>vera</b><span>Configurando sua conta</span></div>
         <div class="progress" id="progress"></div>
       </div>
+      <div class="head-actions" id="headActions"></div>
       <div class="msgs" id="msgs" aria-live="polite"></div>
       <form class="composer" id="composer">
         <input type="file" id="file" hidden>
@@ -417,6 +422,10 @@ const Onboarding = (() => {
   function say(s, text, extra = {}) { return push(s, { from: 'vera', text: [].concat(text), open: Boolean(extra.chips || extra.card), ...extra }); }
   function me(s, text, extra = {}) { return push(s, { from: 'me', text: [].concat(text), ...extra }); }
   function sys(s, text) { return push(s, { from: 'sys', text: [].concat(text) }); }
+
+  function remainingCount(s) {
+    return new Set(s.plan).size + (s.chosen ? 0 : 1);
+  }
 
   function planFor(s) {
     const plan = [];
@@ -852,20 +861,32 @@ const Onboarding = (() => {
 
       case 'SKIP': {
         if (s.done || s.paused) return s;
-        let t = me(s, 'Pular por agora');
+        let t = me(s, 'Continuar depois');
         t = { ...t, paused: true, resumeStep: s.step, plan: s.step === 'modules' || s.step === 'explain' ? s.plan : [s.step, ...s.plan] };
-        return say(t, 'Tudo bem. O que você já fez fica salvo. Quando quiser continuar, é só me chamar no painel.', {
-          chips: [{ label: 'Retomar a configuração', action: { type: 'RESUME' } }]
-        });
+        t = say(t, 'Tudo bem. Guardei a conversa e tudo o que você já fez. No painel fica um cartão para você continuar daqui, quando quiser.');
+        return sys(t, `A pessoa vai para o painel. Cartão "Continuar configuração · ${remainingCount(t)} ${remainingCount(t) === 1 ? 'etapa' : 'etapas'} pela frente".`);
       }
 
       case 'RESUME': {
         if (!s.paused && !s.done) return s;
-        let t = me(s, 'Retomar a configuração');
+        let t = sys(s, 'A pessoa tocou em "Continuar configuração" no painel. A conversa reabre com todo o histórico acima.');
         t = { ...t, paused: false };
-        if (!t.chosen) return say({ ...t, step: 'modules' }, 'Voltando: o que você quer acompanhar aqui?', { chips: moduleChips() });
-        if (t.done) return say(t, 'Sua configuração já está completa. Se quiser ligar outro módulo, é só pedir.');
+        if (!t.chosen) return say({ ...t, step: 'modules' }, 'Que bom te ver de volta. Para começar: o que você quer acompanhar aqui?', { chips: moduleChips() });
+        if (t.done) return say(t, 'Sua configuração já está concluída. Se quiser ligar outro módulo ou mandar mais arquivos, é só pedir aqui.');
+        t = say(t, `Que bom te ver de volta. Continuo de onde paramos: ${STEP_LABEL[t.plan[0]] || 'o próximo passo'}.`);
         return advance({ ...t, done: false });
+      }
+
+      case 'FINISH_NOW': {
+        if (s.done) return s;
+        let t = me(s, 'Concluir agora');
+        const left = [...(['modules', 'explain', 'done'].includes(s.step) || s.paused ? [] : [s.step]), ...s.plan.filter((p) => !(s.paused && p === s.step && false))];
+        const uniq = [...new Set(s.paused ? s.plan : left)];
+        for (const step of uniq) t = addPending(t, `Configuração: ${STEP_LABEL[step] || step}`);
+        if (!s.chosen) t = addPending(t, 'Configuração: escolher o que acompanhar');
+        t = { ...t, plan: [], paused: false, pendingImport: null, pendingConsent: null };
+        t = say(t, uniq.length || !s.chosen ? 'Fechado. Concluí com o que já temos; o que faltou fica como pendência no painel, e você pode me chamar para seguir quando quiser.' : 'Fechado.');
+        return finish(t);
       }
 
       case 'ENABLE_MODULE': {
@@ -920,7 +941,8 @@ const Onboarding = (() => {
           if (inv) return reduce({ ...t, messages: t.messages.slice(0, -1), seq: t.seq - 1 }, { type: 'CHOOSE_MODULES', portfolio: true, spending: false, typed: text });
           if (gas) return reduce({ ...t, messages: t.messages.slice(0, -1), seq: t.seq - 1 }, { type: 'CHOOSE_MODULES', portfolio: false, spending: true, typed: text });
         }
-        if (/pular|depois|agora n[ãa]o|mais tarde/.test(low) && !s.done && !s.paused) return reduce({ ...t, messages: t.messages.slice(0, -1), seq: t.seq - 1 }, { type: 'SKIP' });
+        if (/conclu|terminar|finaliz|encerrar/.test(low) && !s.done) return reduce({ ...t, messages: t.messages.slice(0, -1), seq: t.seq - 1 }, { type: 'FINISH_NOW' });
+        if (/pular|depois|agora n[ãa]o|mais tarde|sair/.test(low) && !s.done && !s.paused) return reduce({ ...t, messages: t.messages.slice(0, -1), seq: t.seq - 1 }, { type: 'SKIP' });
         if (/ligar gastos|quero gastos/.test(low)) return reduce(t, { type: 'ENABLE_MODULE', module: 'spending', typed: true });
         if (/ligar invest|quero invest/.test(low)) return reduce(t, { type: 'ENABLE_MODULE', module: 'portfolio', typed: true });
         return say(t, ['Aqui eu sigo um roteiro curto para montar a conta, então ainda não respondo perguntas soltas.', 'Escolhe uma das opções acima ou manda o arquivo. Sua pergunta eu respondo no Perguntar à Vera, depois da configuração.'], { chips: currentChips(s) });
@@ -938,11 +960,12 @@ const Onboarding = (() => {
       next: s.plan.map((p) => STEP_LABEL[p] || p), assets: s.assets.length, total: money(total),
       classes: [...new Set(s.assets.map((x) => x.cls))], banks: s.banks.map((b) => b.name), transactions: s.transactions,
       uncategorized: s.uncategorized, files: s.files, secrets: s.secrets, consents: s.consents, pending: s.pending,
-      goal: s.goal ? money(s.goal) : s.goal === null ? 'sem meta' : '—', target: s.target || '—'
+      goal: s.goal ? money(s.goal) : s.goal === null ? 'sem meta' : '—', target: s.target || '—',
+      situation: s.done ? 'Concluída' : s.paused ? `Em pausa, ${remainingCount(s)} ${remainingCount(s) === 1 ? 'etapa' : 'etapas'} pela frente` : 'Em andamento', messages: s.messages.length
     };
   }
 
-  return { initial, reduce, snapshot, kindOf, SOURCES, SAMPLES, GUIDES, money, valueOf };
+  return { remainingCount, initial, reduce, snapshot, kindOf, SOURCES, SAMPLES, GUIDES, money, valueOf };
 })();
 </script>
 
@@ -1048,6 +1071,7 @@ const Onboarding = (() => {
     const s = Onboarding.snapshot(state);
     const pill = (on, a, b) => `<span class="pill ${on ? 'on' : 'off'}">${on ? a : b}</span>`;
     const rows = [
+      ['situation', 'Configuração', `${esc(s.situation)}<br><small>${s.messages} mensagens salvas${savedAt ? ` · salvo às ${savedAt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}` : ''}</small>`],
       ['modules', 'Módulos', `${pill(s.modules.portfolio, 'Investimentos ligado', 'Investimentos desligado')}${pill(s.modules.spending, 'Gastos ligado', 'Gastos desligado')}`],
       ['stepLabel', 'Etapa atual', esc(s.stepLabel)],
       ['next', 'Próximas etapas', s.next.length ? s.next.map(esc).join(' › ') : '—'],
@@ -1065,8 +1089,42 @@ const Onboarding = (() => {
     $('lastaction').textContent = last;
   }
 
+  function renderHeadActions() {
+    const s = state; const n = Onboarding.remainingCount(s);
+    let html = '';
+    if (s.paused) html = `<span>Você saiu no meio. Faltam ${n} ${n === 1 ? 'etapa' : 'etapas'}.</span><div class="row"><button class="btn primary" type="button" data-head="RESUME">Continuar configuração</button><button class="btn" type="button" data-head="FINISH_NOW">Concluir assim</button></div>`;
+    else if (s.done) html = `<span>Configuração concluída${s.pending.length ? `, com ${s.pending.length} ${s.pending.length === 1 ? 'pendência' : 'pendências'} no painel` : ''}. A conversa fica aqui para quando você voltar.</span>`;
+    else html = `<span>Tudo o que você faz aqui fica salvo.</span><div class="row"><button class="btn" type="button" data-head="SKIP">Continuar depois</button><button class="btn" type="button" data-head="FINISH_NOW">Concluir agora</button></div>`;
+    $('headActions').innerHTML = html;
+  }
+  $('headActions').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-head]'); if (!b) return;
+    dispatch({ type: b.dataset.head }, b.textContent);
+  });
+
+  // ---- permanência: no protótipo, no navegador; na Vera, no servidor ----
+  const STORE = 'vera-onboarding-prototipo-v1';
+  let savedAt = null;
+  function save() {
+    try { localStorage.setItem(STORE, JSON.stringify({ state, at: Date.now() })); savedAt = new Date(); } catch (_) { savedAt = null; }
+  }
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORE);
+      if (!raw) return false;
+      const data = JSON.parse(raw);
+      if (!data || !data.state || !Array.isArray(data.state.messages)) return false;
+      state = data.state; savedAt = new Date(data.at);
+      last = `Conversa recuperada do que estava salvo (${savedAt.toLocaleString('pt-BR')}).`;
+      return true;
+    } catch (_) { return false; }
+  }
+  function forget() { try { localStorage.removeItem(STORE); } catch (_) { /* sem armazenamento */ } }
+
   function render() {
     renderProgress();
+    renderHeadActions();
+    save();
     const box = $('msgs');
     box.innerHTML = state.messages.map(msgHtml).join('');
     box.scrollTop = box.scrollHeight;
@@ -1194,6 +1252,20 @@ const Onboarding = (() => {
       ]
     },
     {
+      title: 'Sai no meio e volta',
+      text: 'A pessoa sai no meio, volta pelo cartão do painel e encerra antes do fim. Depois de "Continuar depois", recarregue a página: a conversa continua salva.',
+      steps: [
+        ['Escolher "Os dois"', { type: 'CHOOSE_MODULES', portfolio: true, spending: true }],
+        ['Marcar "Corretora no Brasil"', { type: 'PICK_SOURCES', sources: ['b3'] }],
+        ['Mandar a Negociação da B3', { type: 'FILE', file: F.b3 }],
+        ['Adicionar à carteira', { type: 'CONFIRM_IMPORT' }],
+        ['Continuar depois', { type: 'SKIP' }],
+        ['Voltar pelo cartão do painel', { type: 'RESUME' }],
+        ['Movimentação: não tenho agora', { type: 'NO_FILE' }],
+        ['Concluir agora', { type: 'FINISH_NOW' }]
+      ]
+    },
+    {
       title: 'Cripto na carteira própria',
       text: 'Cripto fora de exchange: a Vera pede um print dos saldos, pede a permissão para ler a imagem e avisa que falta o preço de compra.',
       steps: [
@@ -1233,7 +1305,7 @@ const Onboarding = (() => {
         ['Mandar a Negociação antes de escolher', { type: 'FILE', file: F.b3 }],
         ['Adicionar à carteira', { type: 'CONFIRM_IMPORT' }],
         ['Mandar a Posição no lugar da Movimentação', { type: 'FILE', file: F.pos }],
-        ['Pular por agora', { type: 'SKIP' }],
+        ['Continuar depois', { type: 'SKIP' }],
         ['Mandar o OFX com Gastos desligado', { type: 'FILE', file: F.ofx }],
         ['Retomar a configuração', { type: 'RESUME' }],
         ['Escrever "quero ligar gastos também"', { type: 'TEXT', text: 'quero ligar gastos também' }]
@@ -1275,8 +1347,9 @@ const Onboarding = (() => {
     ['Mandar OFX do banco', { type: 'FILE', file: F.ofx }],
     ['Mandar print da corretora', { type: 'FILE', file: F.photo }],
     ['Mandar arquivo errado (.docx)', { type: 'FILE', file: F.docx }],
-    ['Pular por agora', { type: 'SKIP' }],
-    ['Retomar', { type: 'RESUME' }],
+    ['Continuar depois', { type: 'SKIP' }],
+    ['Continuar configuração (do painel)', { type: 'RESUME' }],
+    ['Concluir agora', { type: 'FINISH_NOW' }],
     ['Ligar Gastos em Configurações', { type: 'ENABLE_MODULE', module: 'spending' }],
     ['Ligar Investimentos em Configurações', { type: 'ENABLE_MODULE', module: 'portfolio' }],
     ['Recomeçar a conversa', { type: 'RESET' }]
@@ -1285,10 +1358,11 @@ const Onboarding = (() => {
   $('free').addEventListener('click', (e) => {
     const b = e.target.closest('[data-free]'); if (!b) return;
     const [label, action] = FREE[Number(b.dataset.free)];
-    if (action.type === 'RESET') scenarioPos = -1;
+    if (action.type === 'RESET') { scenarioPos = -1; forget(); }
     dispatch(action, label);
   });
 
+  load();
   renderTabs();
   render();
 })();
