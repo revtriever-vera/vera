@@ -1,0 +1,1021 @@
+<title>Onboarding conversacional da Vera</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: protótipo de lógica. Chat da Vera à esquerda (o que a pessoa vê), estado da conta e roteiros à direita (o que muda a cada resposta). No celular, empilha. */
+:root{
+  --bg:#fbf6f8; --surface:#ffffff; --surface-2:#f8eff3; --hover:#f6ebf0; --line:#f0e1e8;
+  --ink:#2a1822; --ink-2:#64505b; --ink-3:#8c7783;
+  --accent:#e0407b; --accent-strong:#bf2a62; --accent-soft:#fde6ef; --on-accent:#ffffff;
+  --good:#1b8f63; --good-soft:#dbf2e7; --warn:#b4570b; --warn-soft:#fdead6; --bad:#c32d3a; --bad-soft:#fbdfe2;
+  --changed:#fff3c4;
+  --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-word:"Bricolage Grotesque","Nunito",system-ui,sans-serif;
+  --f-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --r:18px; --rc:12px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1a1216; --surface:#241a1f; --surface-2:#2e2228; --hover:#33262d; --line:#3b2c34;
+  --ink:#f6ecf1; --ink-2:#cdb8c3; --ink-3:#a28d99;
+  --accent:#f0619a; --accent-strong:#ff86b3; --accent-soft:#4a2133; --on-accent:#1a1216;
+  --good:#52c493; --good-soft:#173a2c; --warn:#f0a35a; --warn-soft:#3d2a16; --bad:#f2717c; --bad-soft:#40191e;
+  --changed:#4a3d12; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1a1216; --surface:#241a1f; --surface-2:#2e2228; --hover:#33262d; --line:#3b2c34;
+  --ink:#f6ecf1; --ink-2:#cdb8c3; --ink-3:#a28d99;
+  --accent:#f0619a; --accent-strong:#ff86b3; --accent-soft:#4a2133; --on-accent:#1a1216;
+  --good:#52c493; --good-soft:#173a2c; --warn:#f0a35a; --warn-soft:#3d2a16; --bad:#f2717c; --bad-soft:#40191e;
+  --changed:#4a3d12; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3{text-wrap:balance;margin:0}p{text-wrap:pretty}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+a{color:var(--accent-strong);font-weight:700}
+.wrap{max-width:1280px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 48px;display:grid;gap:20px}
+.intro{display:grid;gap:8px;max-width:78ch}
+.intro .eyebrow{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-strong)}
+.intro h1{font-size:clamp(24px,3vw,32px);font-weight:800;letter-spacing:-.02em}
+.intro p{margin:0;color:var(--ink-2)}
+.layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:980px){.layout{grid-template-columns:minmax(0,1fr)}}
+
+/* chat */
+.chat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);display:grid;grid-template-rows:auto minmax(0,1fr) auto;height:min(820px,calc(100dvh - 40px));min-height:560px;overflow:hidden}
+.chat-head{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.chat-head .who{display:grid;line-height:1.2}
+.chat-head .who b{font-family:var(--f-word);font-size:20px;letter-spacing:-.04em}
+.chat-head .who span{font-size:12.5px;color:var(--ink-3)}
+.progress{margin-left:auto;display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+.progress span{font-size:12px;font-weight:700;border-radius:99px;padding:2px 10px;background:var(--surface-2);color:var(--ink-3)}
+.progress span.on{background:var(--accent-soft);color:var(--accent-strong)}
+.progress span.ok{background:var(--good-soft);color:var(--good)}
+.progress span.off{text-decoration:line-through}
+.msgs{overflow:auto;padding:18px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){.msgs{scroll-behavior:auto}}
+.msg{display:flex;gap:10px;align-items:flex-end;max-width:100%}
+.msg.me{justify-content:flex-end}
+.msg .av{flex:none;width:28px;height:28px}
+.bubble{max-width:min(560px,86%);padding:10px 14px;border-radius:16px;background:var(--surface-2);min-width:0;overflow-wrap:anywhere}
+.msg.vera .bubble{border-bottom-left-radius:5px}
+.msg.me .bubble{background:var(--accent);color:var(--on-accent);border-bottom-right-radius:5px}
+.msg.sys{justify-content:center}
+.msg.sys .bubble{background:none;border:1px dashed var(--line);color:var(--ink-3);font-size:13px;text-align:center}
+.bubble p{margin:0}.bubble p+p{margin-top:6px}
+.file-chip{display:inline-flex;align-items:center;gap:8px;font-weight:700}
+.file-chip small{font-weight:600;opacity:.8}
+.secret-chip{display:inline-flex;align-items:center;gap:8px;font-weight:700}
+.card{margin-top:10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:10px;color:var(--ink)}
+.card.done{opacity:.62}
+.card h3{font-size:14px;font-weight:800}
+.card .hint{font-size:12.5px;color:var(--ink-3);margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{border:1px solid var(--accent);background:var(--surface);color:var(--accent-strong);border-radius:99px;padding:6px 14px;font-weight:700;font-size:14px;cursor:pointer}
+.chip:hover{background:var(--accent-soft)}
+.chip.quiet{border-color:var(--line);color:var(--ink-2)}
+.chip[disabled]{opacity:.45;cursor:default;background:var(--surface)}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 14px;font-weight:700;cursor:pointer;font-size:14px}
+.btn:hover{background:var(--hover)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.primary:hover{filter:brightness(1.06)}
+.btn[disabled]{opacity:.5;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.drop{border:1.5px dashed var(--line);border-radius:12px;padding:16px;display:grid;justify-items:center;gap:6px;text-align:center;background:var(--surface-2)}
+.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.drop b{font-size:14px}
+.drop span{font-size:12.5px;color:var(--ink-3)}
+.checks{display:grid;gap:6px}
+.checks label{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--line);border-radius:10px;cursor:pointer}
+.checks label:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.checks input{accent-color:var(--accent);margin-top:3px}
+.checks small{display:block;color:var(--ink-3)}
+.field{display:grid;gap:4px}
+.field label{font-size:13px;font-weight:700}
+.field input{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 12px;width:100%;min-width:0}
+.field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:520px){.grid2{grid-template-columns:minmax(0,1fr)}}
+.lockline{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--ink-2);background:var(--surface-2);border-radius:10px;padding:8px 10px}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:340px}
+th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:6px;border-bottom:1px solid var(--line)}
+td{padding:7px 6px;border-bottom:1px solid var(--line)}
+td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
+.steps{margin:0;padding-left:20px;display:grid;gap:6px;font-size:14px}
+.summary{display:grid;gap:8px}
+.summary div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:6px;font-size:14px}
+.summary div:last-child{border-bottom:0}
+.summary span{color:var(--ink-2)}
+.typing{font-size:12.5px;color:var(--ink-3);padding:0 18px 6px}
+.composer{border-top:1px solid var(--line);padding:12px;display:flex;gap:8px;align-items:center}
+.composer input[type=text]{flex:1;min-width:0;border:1px solid var(--line);background:var(--surface-2);border-radius:99px;padding:10px 16px}
+.iconbtn{width:42px;height:42px;flex:none;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--ink-2)}
+.iconbtn:hover{background:var(--hover);color:var(--ink)}
+.iconbtn.send{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+svg.i{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* painel */
+.side{display:grid;gap:16px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:grid;gap:12px;min-width:0}
+.panel h2{font-size:15px;font-weight:800}
+.panel .sub{font-size:12.5px;color:var(--ink-3);margin:-8px 0 0}
+.state{display:grid;gap:0;margin:0}
+.state div{display:grid;grid-template-columns:minmax(120px,.8fr) minmax(0,1.2fr);gap:10px;padding:7px 8px;border-bottom:1px solid var(--line);border-radius:8px;transition:background .6s}
+.state div:last-child{border-bottom:0}
+.state dt{font-size:13px;color:var(--ink-2);font-weight:700}
+.state dd{margin:0;font-size:13.5px;min-width:0;overflow-wrap:anywhere}
+.state div.changed{background:var(--changed)}
+@media (prefers-reduced-motion:reduce){.state div{transition:none}}
+.pill{display:inline-block;font-size:12px;font-weight:800;border-radius:99px;padding:1px 9px;margin:1px 4px 1px 0}
+.pill.on{background:var(--good-soft);color:var(--good)}
+.pill.off{background:var(--surface-2);color:var(--ink-3)}
+.pill.wait{background:var(--warn-soft);color:var(--warn)}
+.pill.lock{background:var(--accent-soft);color:var(--accent-strong)}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tab{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:5px 12px;font-size:13px;font-weight:700;cursor:pointer;color:var(--ink-2)}
+.tab[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.scenario p{margin:0 0 10px;font-size:14px;color:var(--ink-2)}
+.scenario ol{margin:0;padding:0;list-style:none;display:grid;gap:6px;counter-reset:s}
+.scenario li{counter-increment:s;display:grid;grid-template-columns:26px minmax(0,1fr);gap:8px;align-items:center}
+.scenario li::before{content:counter(s);width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;background:var(--surface-2);color:var(--ink-3)}
+.scenario li.done::before{background:var(--good);color:var(--on-accent);content:"✓"}
+.scenario li.next::before{background:var(--accent);color:var(--on-accent)}
+.scenario li button{justify-self:start;text-align:left}
+.free{display:flex;flex-wrap:wrap;gap:8px}
+.free .btn{font-size:13px;padding:6px 11px}
+.lastaction{font-size:13px;color:var(--ink-2);background:var(--surface-2);border-radius:10px;padding:8px 10px;margin:0}
+</style>
+
+<div class="wrap">
+  <header class="intro">
+    <span class="eyebrow">Protótipo · descartável</span>
+    <h1>Onboarding conversacional da Vera</h1>
+    <p><b>A pergunta:</b> um onboarding em que a Vera conduz a conversa (primeiro pergunta se a pessoa quer gastos, investimentos ou os dois, depois pede o arquivo ou a credencial certa para cada caso e se adapta ao que chega) faz sentido para quem acabou de criar a conta? E o que acontece quando a pessoa foge do roteiro, manda o arquivo errado, nega uma permissão ou decide ligar um módulo depois?</p>
+    <p>Converse no chat à esquerda como a pessoa faria, inclusive mandando arquivos de verdade (a leitura é simulada pelo nome e pelo tipo do arquivo). À direita, o estado da conta muda a cada resposta e o que mudou fica marcado. Os roteiros guiados repetem os casos difíceis sempre do mesmo jeito. Nada sai deste navegador: a credencial digitada nunca é mostrada nem guardada.</p>
+  </header>
+
+  <div class="layout">
+    <section class="chat" aria-label="Conversa com a Vera">
+      <div class="chat-head">
+        <span id="mark"></span>
+        <div class="who"><b>vera</b><span>Configurando sua conta</span></div>
+        <div class="progress" id="progress"></div>
+      </div>
+      <div class="msgs" id="msgs" aria-live="polite"></div>
+      <form class="composer" id="composer">
+        <input type="file" id="file" hidden>
+        <button type="button" class="iconbtn" id="attach" aria-label="Anexar arquivo"><svg class="i" viewBox="0 0 24 24"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
+        <input type="text" id="text" placeholder="Escreva para a Vera…" autocomplete="off" aria-label="Mensagem para a Vera">
+        <button type="submit" class="iconbtn send" aria-label="Enviar"><svg class="i" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></button>
+      </form>
+    </section>
+
+    <aside class="side">
+      <section class="panel" aria-labelledby="st-title">
+        <h2 id="st-title">Estado da conta</h2>
+        <p class="sub">O que a conversa já gravou. Amarelo é o que acabou de mudar.</p>
+        <p class="lastaction" id="lastaction">Nenhuma ação ainda.</p>
+        <dl class="state" id="state"></dl>
+      </section>
+
+      <section class="panel" aria-labelledby="sc-title">
+        <h2 id="sc-title">Roteiros guiados</h2>
+        <p class="sub">Cada roteiro recomeça a conversa e mostra um caso. Clique nos passos em ordem.</p>
+        <div class="tabs" role="tablist" id="tabs"></div>
+        <div class="scenario" id="scenario"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="fp-title">
+        <h2 id="fp-title">Ações livres</h2>
+        <p class="sub">A qualquer momento, em qualquer ordem. Os arquivos são de exemplo.</p>
+        <div class="free" id="free"></div>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<script>
+/* ===== Lógica do onboarding: módulo puro, sem DOM. (state, action) => state ===== */
+const Onboarding = (() => {
+  const SAMPLES = {
+    b3: [
+      { ticker: 'PETR4', name: 'Petrobras PN', cls: 'Ações Brasil', qty: 200, price: 38.12, cur: 'BRL' },
+      { ticker: 'ITUB4', name: 'Itaú Unibanco PN', cls: 'Ações Brasil', qty: 150, price: 36.4, cur: 'BRL' },
+      { ticker: 'MXRF11', name: 'Maxi Renda FII', cls: 'FIIs', qty: 300, price: 9.87, cur: 'BRL' },
+      { ticker: 'IVVB11', name: 'iShares S&P 500', cls: 'ETFs', qty: 40, price: 342.1, cur: 'BRL' },
+      { ticker: 'IPCA+ 2035', name: 'Tesouro IPCA+ 2035', cls: 'Renda fixa', qty: 3.2, price: 2341.55, cur: 'BRL' }
+    ],
+    note: [
+      { ticker: 'WEGE3', name: 'WEG ON', cls: 'Ações Brasil', qty: 50, price: 52.3, cur: 'BRL' }
+    ],
+    ext: [
+      { ticker: 'VOO', name: 'Vanguard S&P 500', cls: 'Ações EUA', qty: 4.5, price: 512.3, cur: 'USD' },
+      { ticker: 'AAPL', name: 'Apple', cls: 'Ações EUA', qty: 10, price: 231.4, cur: 'USD' }
+    ],
+    crypto: [
+      { ticker: 'BTC', name: 'Bitcoin', cls: 'Cripto', qty: 0.012, price: 512000, cur: 'BRL' },
+      { ticker: 'ETH', name: 'Ethereum', cls: 'Cripto', qty: 0.4, price: 19800, cur: 'BRL' }
+    ],
+    banks: [
+      { name: 'Nubank', what: 'conta e cartão de crédito' },
+      { name: 'Itaú', what: 'conta corrente' }
+    ]
+  };
+  const USD = 5.42;
+
+  const SOURCES = [
+    { id: 'b3', label: 'Corretora no Brasil', hint: 'ações, FIIs, ETFs e Tesouro Direto, tudo pela B3' },
+    { id: 'ext', label: 'Corretora no exterior', hint: 'Avenue, Inter Global, Nomad e afins' },
+    { id: 'crypto', label: 'Cripto', hint: 'Binance, Mercado Bitcoin, Coinbase' },
+    { id: 'bank', label: 'Renda fixa no banco', hint: 'CDB, LCI ou LCA direto no banco' }
+  ];
+
+  const STEP_LABEL = {
+    modules: 'Escolher o que acompanhar', explain: 'Explicar os módulos', sources: 'Onde estão os investimentos',
+    b3File: 'Relatório da B3', extFile: 'Extrato do exterior', cryptoFile: 'CSV da exchange', bankFixed: 'Renda fixa no banco',
+    target: 'Carteira-alvo', spendPath: 'Como trazer os gastos', pluggySecret: 'Credencial do Meu Pluggy',
+    pluggyRange: 'Período dos gastos', statement: 'Extrato do banco', goal: 'Meta de economia', done: 'Pronto'
+  };
+
+  const money = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
+  const valueOf = (a) => a.qty * a.price * (a.cur === 'USD' ? USD : 1);
+
+  function kindOf(file) {
+    const n = file.name.toLowerCase();
+    if (file.size > 10 * 1024 * 1024) return 'tooLarge';
+    if (/\.(xlsx|xls)$/.test(n)) return 'xlsx';
+    if (/\.pdf$/.test(n)) return 'pdf';
+    if (/\.ofx$/.test(n)) return 'ofx';
+    if (/\.csv$/.test(n)) return 'csv';
+    if (/\.(png|jpe?g|heic|webp)$/.test(n)) return 'image';
+    return 'other';
+  }
+
+  function initial(name = 'Marina') {
+    const s = {
+      name, step: 'modules', plan: [], modules: { portfolio: false, spending: false }, chosen: false,
+      files: [], secrets: [], assets: [], banks: [], transactions: 0, uncategorized: 0,
+      consents: [], pending: [], goal: null, target: null, paused: false, done: false,
+      pendingImport: null, pendingConsent: null, pendingModuleFile: null, messages: [], seq: 0
+    };
+    return say(s, [`Oi, ${name}! Eu sou a Vera. Vou montar sua conta com você em poucos minutos.`, 'Para começar: o que você quer acompanhar aqui?'], { chips: moduleChips() });
+  }
+
+  function moduleChips() {
+    return [
+      { label: 'Meus investimentos', action: { type: 'CHOOSE_MODULES', portfolio: true, spending: false } },
+      { label: 'Meus gastos', action: { type: 'CHOOSE_MODULES', portfolio: false, spending: true } },
+      { label: 'Os dois', action: { type: 'CHOOSE_MODULES', portfolio: true, spending: true } },
+      { label: 'Ainda não sei', action: { type: 'EXPLAIN' }, quiet: true }
+    ];
+  }
+
+  // helpers que devolvem estado novo
+  function push(s, msg) { return { ...s, seq: s.seq + 1, messages: [...closeOpen(s.messages), { id: s.seq + 1, ...msg }] }; }
+  function closeOpen(messages) { return messages.map((m) => (m.open ? { ...m, open: false } : m)); }
+  function say(s, text, extra = {}) { return push(s, { from: 'vera', text: [].concat(text), open: Boolean(extra.chips || extra.card), ...extra }); }
+  function me(s, text, extra = {}) { return push(s, { from: 'me', text: [].concat(text), ...extra }); }
+  function sys(s, text) { return push(s, { from: 'sys', text: [].concat(text) }); }
+
+  function planFor(s) {
+    const plan = [];
+    if (s.modules.portfolio) plan.push('sources');
+    if (s.modules.spending) plan.push('spendPath');
+    return plan;
+  }
+
+  function advance(s) {
+    if (s.plan.length === 0) return finish(s);
+    const [next, ...rest] = s.plan;
+    return enter({ ...s, plan: rest }, next);
+  }
+
+  function enter(s, step) {
+    const t = { ...s, step };
+    switch (step) {
+      case 'sources':
+        return say(t, 'Onde estão seus investimentos hoje? Pode marcar mais de um.', { card: { type: 'sources' } });
+      case 'b3File':
+        return say(t, ['Para o que está na B3, o caminho mais rápido é o relatório de posição.', 'Na Área do Investidor da B3: Extratos › Posição › Baixar em Excel. Manda o arquivo aqui que eu leio, sem modelo de linguagem.'], {
+          card: { type: 'upload', accept: '.xlsx', expect: 'o Excel de posição da B3', sample: { name: 'posicao-b3-2026-11-28.xlsx', size: 48211 } },
+          chips: [{ label: 'Não tenho agora', action: { type: 'NO_FILE' }, quiet: true }]
+        });
+      case 'extFile':
+        return say(t, ['Do exterior, manda o extrato mensal da corretora em PDF.', 'Esse eu leio com um modelo de linguagem, então antes de ler eu te peço a permissão para esse arquivo.'], {
+          card: { type: 'upload', accept: '.pdf', expect: 'o extrato mensal em PDF', sample: { name: 'extrato-avenue-out-2026.pdf', size: 182330 } },
+          chips: [{ label: 'Não tenho agora', action: { type: 'NO_FILE' }, quiet: true }]
+        });
+      case 'cryptoFile':
+        return say(t, 'Para cripto, exporta o histórico da exchange em CSV e manda aqui. Esse eu leio direto.', {
+          card: { type: 'upload', accept: '.csv', expect: 'o CSV da exchange', sample: { name: 'binance-historico.csv', size: 9120 } },
+          chips: [{ label: 'Não tenho agora', action: { type: 'NO_FILE' }, quiet: true }]
+        });
+      case 'bankFixed':
+        return say(t, 'Me conta o título que está no banco. Se tiver mais de um, você adiciona os outros depois na carteira.', { card: { type: 'fixed' } });
+      case 'target':
+        return say(t, ['Quer definir a carteira-alvo agora? É a divisão que você quer entre as classes.', 'Com ela, eu comparo com a carteira atual e mostro para onde vai o próximo aporte. Não recomendo ativo.'], {
+          chips: [
+            { label: 'Definir agora', action: { type: 'TARGET', choice: 'agora' } },
+            { label: 'Depois', action: { type: 'TARGET', choice: 'depois' }, quiet: true }
+          ]
+        });
+      case 'spendPath':
+        return say(t, ['Agora os gastos. Você pode conectar o banco pelo Meu Pluggy, que atualiza sozinho, ou mandar o extrato em OFX ou CSV.'], {
+          chips: [
+            { label: 'Conectar o banco', action: { type: 'SPEND_PATH', path: 'pluggy' } },
+            { label: 'Mandar o extrato', action: { type: 'SPEND_PATH', path: 'statement' } },
+            { label: 'Depois', action: { type: 'SPEND_PATH', path: 'later' }, quiet: true }
+          ]
+        });
+      case 'pluggySecret':
+        return say(t, ['A conexão usa a sua própria conta no Meu Pluggy. São três passos fora daqui:'], {
+          card: { type: 'pluggy' },
+          chips: [{ label: 'Prefiro mandar o extrato', action: { type: 'SPEND_PATH', path: 'statement' }, quiet: true }]
+        });
+      case 'pluggyRange':
+        return say(t, ['Guardei a credencial cifrada e testei: está funcionando.', `Encontrei ${SAMPLES.banks.length} conexões: ${SAMPLES.banks.map((b) => `${b.name} (${b.what})`).join(' e ')}.`, 'Puxo desde quando?'], {
+          chips: [
+            { label: 'Últimos 90 dias', action: { type: 'PLUGGY_RANGE', days: 90 } },
+            { label: 'Só a partir de hoje', action: { type: 'PLUGGY_RANGE', days: 0 }, quiet: true }
+          ]
+        });
+      case 'statement':
+        return say(t, 'Manda o extrato do banco em OFX (o mais certeiro) ou CSV. Pode mandar um de cada conta.', {
+          card: { type: 'upload', accept: '.ofx,.csv', expect: 'o extrato em OFX ou CSV', sample: { name: 'extrato-nubank-set-nov.ofx', size: 30544 } },
+          chips: [{ label: 'Não tenho agora', action: { type: 'NO_FILE' }, quiet: true }]
+        });
+      case 'goal':
+        return say(t, 'Última coisa dos gastos: quer uma meta de economia por mês? Eu mostro quanto falta e onde dá para cortar.', {
+          chips: [
+            { label: 'R$ 500', action: { type: 'GOAL', amount: 500 } },
+            { label: 'R$ 1.000', action: { type: 'GOAL', amount: 1000 } },
+            { label: 'R$ 2.000', action: { type: 'GOAL', amount: 2000 } },
+            { label: 'Sem meta por enquanto', action: { type: 'GOAL', amount: null }, quiet: true }
+          ]
+        });
+      default:
+        return t;
+    }
+  }
+
+  function finish(s) {
+    const t = { ...s, step: 'done', done: true };
+    return say(t, ['Pronto, sua conta está montada. Aqui está o que ficou:'], {
+      card: { type: 'summary' },
+      chips: [{ label: 'Ir para o painel', action: { type: 'GO_DASHBOARD' } }]
+    });
+  }
+
+  function addPending(s, text) { return s.pending.includes(text) ? s : { ...s, pending: [...s.pending, text] }; }
+  function dropPending(s, prefix) { return { ...s, pending: s.pending.filter((p) => !p.startsWith(prefix)) }; }
+
+  function review(s, rows, origin) {
+    const t = { ...s, pendingImport: { rows, origin } };
+    const total = rows.reduce((acc, r) => acc + valueOf(r), 0);
+    return say(t, [`Li ${rows.length} ${rows.length === 1 ? 'posição' : 'posições'}, somando ${money(total)}. Confere antes de eu adicionar à carteira:`], {
+      card: { type: 'review', rows },
+      chips: [
+        { label: 'Adicionar à carteira', action: { type: 'CONFIRM_IMPORT' } },
+        { label: 'Tem algo errado', action: { type: 'FIX_IMPORT' }, quiet: true }
+      ]
+    });
+  }
+
+  function handleFile(s, file) {
+    const kind = kindOf(file);
+    let t = me(s, '', { file: { name: file.name, size: file.size } });
+    t = { ...t, files: [...t.files, file.name] };
+    if (kind === 'tooLarge') return say(t, 'Esse arquivo passa de 10 MB, o limite daqui. Se for PDF, tenta exportar só o mês que interessa.', { keep: true, chips: currentChips(s) });
+    // arquivo de um módulo desligado: oferece ligar e já ler
+    const isInvestment = kind === 'xlsx' || (kind === 'pdf' && s.step !== 'statement');
+    const isSpending = kind === 'ofx' || (kind === 'csv' && s.step !== 'cryptoFile');
+    const offModule = s.chosen && isInvestment && !s.modules.portfolio ? 'portfolio' : s.chosen && isSpending && !s.modules.spending ? 'spending' : null;
+    if (offModule) {
+      const name = offModule === 'portfolio' ? 'Investimentos' : 'Gastos';
+      return say({ ...t, pendingModuleFile: file }, [`Esse parece um arquivo de ${offModule === 'portfolio' ? 'investimentos' : 'gastos'}, e você deixou ${name} desligado.`, 'Quer ligar agora e eu leio esse arquivo?'], {
+        chips: [
+          { label: `Ligar ${name} e ler`, action: { type: 'ENABLE_MODULE', module: offModule, fromFile: true } },
+          { label: 'Agora não', action: { type: 'SKIP_MODULE_FILE' }, quiet: true }
+        ]
+      });
+    }
+    if (s.done || s.paused) return say(t, 'Recebi. Para usar esse arquivo, volto à configuração rapidinho.', { chips: [{ label: 'Retomar a configuração', action: { type: 'RESUME' } }] });
+
+    switch (s.step) {
+      case 'modules':
+      case 'explain':
+        if (kind === 'xlsx') {
+          t = { ...t, modules: { ...t.modules, portfolio: true }, chosen: true, plan: ['target'] };
+          t = sys(t, 'Investimentos ligado pelo arquivo. Gastos fica desligado; dá para ligar depois.');
+          return review({ ...t, step: 'b3File' }, SAMPLES.b3, 'b3');
+        }
+        if (kind === 'ofx') {
+          t = { ...t, modules: { ...t.modules, spending: true }, chosen: true, plan: ['goal'] };
+          t = sys(t, 'Gastos ligado pelo arquivo. Investimentos fica desligado; dá para ligar depois.');
+          return readStatement({ ...t, step: 'statement' });
+        }
+        return say(t, ['Antes do arquivo, me diz o que você quer acompanhar: assim eu sei o que fazer com ele.'], { chips: moduleChips() });
+      case 'b3File':
+        if (kind === 'xlsx') return review(t, SAMPLES.b3, 'b3');
+        if (kind === 'pdf' || kind === 'image') return askConsent(t, file, 'note', 'Isso parece uma nota de corretagem ou um print, não o relatório de posição. Consigo ler, mas com modelo de linguagem: só traz as operações dessa nota.');
+        return say(t, `Esse arquivo (${file.name}) eu não consigo ler. Para a B3, preciso do Excel de posição.`, { keep: true, chips: currentChips(s) });
+      case 'extFile':
+        if (kind === 'pdf' || kind === 'image') return askConsent(t, file, 'ext', 'Para ler esse extrato, eu envio o arquivo a um modelo de linguagem, por um serviço da Vercel. Nome do titular, documento e número da conta vão mascarados no texto; numa imagem, podem aparecer.');
+        return say(t, `Para o exterior, preciso do extrato em PDF. Esse (${file.name}) não é o que eu leio aqui.`, { keep: true, chips: currentChips(s) });
+      case 'cryptoFile':
+        if (kind === 'csv') return review(t, SAMPLES.crypto, 'crypto');
+        return say(t, 'Para cripto, preciso do CSV exportado da exchange.', { keep: true, chips: currentChips(s) });
+      case 'statement':
+        if (kind === 'ofx' || kind === 'csv') return readStatement(t);
+        if (kind === 'pdf') return say(t, 'Extrato em PDF eu ainda não leio. No app do banco, procura "Exportar" e escolhe OFX; se não tiver, CSV.', { keep: true, chips: currentChips(s) });
+        return say(t, `Esse arquivo (${file.name}) não é um extrato que eu leio. Preciso de OFX ou CSV.`, { keep: true, chips: currentChips(s) });
+      default:
+        return say(t, `Recebi ${file.name}, mas agora estamos em outra etapa (${STEP_LABEL[s.step] || s.step}). Termina esta que eu te peço o arquivo na hora certa.`, { keep: true, chips: currentChips(s) });
+    }
+  }
+
+  function currentChips(s) {
+    const last = [...s.messages].reverse().find((m) => m.from === 'vera' && m.chips);
+    return last ? last.chips : undefined;
+  }
+
+  function askConsent(s, file, origin, text) {
+    const t = { ...s, pendingConsent: { file: file.name, origin } };
+    return say(t, [text, 'Permite o envio deste arquivo?'], {
+      card: { type: 'consent', file: file.name },
+      chips: [
+        { label: 'Permitir este envio', action: { type: 'CONSENT', allow: true } },
+        { label: 'Não enviar', action: { type: 'CONSENT', allow: false }, quiet: true }
+      ]
+    });
+  }
+
+  function readStatement(s) {
+    const t = { ...s, transactions: s.transactions + 84, uncategorized: s.uncategorized + 12 };
+    return say(t, ['Li 84 transações de 01/09 a 27/11. Separei por categoria; 12 ficaram sem categoria porque a descrição não diz o que é.'], {
+      chips: [
+        { label: 'Revisar as 12 agora', action: { type: 'REVIEW_UNCATEGORIZED', now: true } },
+        { label: 'Revisar depois', action: { type: 'REVIEW_UNCATEGORIZED', now: false }, quiet: true }
+      ]
+    });
+  }
+
+  function reduce(s, a) {
+    switch (a.type) {
+      case 'RESET':
+        return initial(s.name);
+
+      case 'EXPLAIN': {
+        let t = me(s, 'Ainda não sei');
+        t = say({ ...t, step: 'explain' }, [
+          'Sem problema. São dois módulos, e dá para ligar o outro quando quiser:',
+          'Investimentos soma o que você tem em corretoras, no exterior e em cripto, numa moeda só, e compara com a divisão que você quer.',
+          'Gastos traz o extrato do banco, separa por categoria e mostra onde dá para cortar para chegar numa meta.'
+        ], { chips: moduleChips().slice(0, 3) });
+        return t;
+      }
+
+      case 'CHOOSE_MODULES': {
+        const label = a.portfolio && a.spending ? 'Os dois' : a.portfolio ? 'Meus investimentos' : 'Meus gastos';
+        let t = me(s, a.typed || label);
+        t = { ...t, modules: { portfolio: a.portfolio, spending: a.spending }, chosen: true };
+        const off = !a.portfolio ? 'Investimentos' : !a.spending ? 'Gastos' : null;
+        t = say(t, off ? `Fechado. ${off} fica desligado por enquanto; dá para ligar em Configurações › Módulos, ou é só me pedir aqui.` : 'Fechado, os dois ligados. Começo pelos investimentos.');
+        t = { ...t, plan: planFor(t) };
+        return advance(t);
+      }
+
+      case 'PICK_SOURCES': {
+        const chosen = SOURCES.filter((src) => a.sources.includes(src.id));
+        let t = me(s, chosen.map((c) => c.label).join(', ') || 'Nenhum desses');
+        if (chosen.length === 0) {
+          t = say(t, 'Tudo bem. Você cadastra os ativos à mão depois, em Carteira › Adicionar.');
+          t = addPending(t, 'Investimentos: cadastrar os ativos à mão');
+          return advance({ ...t, plan: ['target', ...t.plan] });
+        }
+        const stepOf = { b3: 'b3File', ext: 'extFile', crypto: 'cryptoFile', bank: 'bankFixed' };
+        const steps = chosen.map((c) => stepOf[c.id]);
+        return advance({ ...t, plan: [...steps, 'target', ...t.plan] });
+      }
+
+      case 'FILE':
+        return handleFile(s, a.file);
+
+      case 'NO_FILE': {
+        let t = me(s, 'Não tenho agora');
+        const what = { b3File: 'Investimentos: mandar o relatório da B3', extFile: 'Investimentos: mandar o extrato do exterior', cryptoFile: 'Investimentos: mandar o CSV da exchange', statement: 'Gastos: mandar o extrato do banco' }[s.step];
+        if (what) t = addPending(t, what);
+        t = say(t, 'Sem problema, deixo anotado e te lembro no painel. Seguindo.');
+        return advance(t);
+      }
+
+      case 'CONSENT': {
+        if (!s.pendingConsent) return s;
+        const { file, origin } = s.pendingConsent;
+        let t = me(s, a.allow ? 'Permitir este envio' : 'Não enviar');
+        t = { ...t, pendingConsent: null, consents: [...t.consents, { file, allowed: a.allow }] };
+        if (!a.allow) {
+          t = addPending(t, origin === 'ext' ? 'Investimentos: cadastrar o exterior à mão' : 'Investimentos: cadastrar a nota à mão');
+          t = say(t, 'Não enviei nada. Descartei o arquivo e anotei para você cadastrar à mão depois.');
+          return advance(t);
+        }
+        return review(t, origin === 'ext' ? SAMPLES.ext : SAMPLES.note, origin);
+      }
+
+      case 'CONFIRM_IMPORT': {
+        if (!s.pendingImport) return s;
+        let t = me(s, 'Adicionar à carteira');
+        const known = new Set(t.assets.map((x) => x.ticker));
+        const fresh = s.pendingImport.rows.filter((r) => !known.has(r.ticker));
+        t = { ...t, assets: [...t.assets, ...fresh], pendingImport: null };
+        t = dropPending(t, s.pendingImport.origin === 'b3' ? 'Investimentos: mandar o relatório da B3' : s.pendingImport.origin === 'ext' ? 'Investimentos: mandar o extrato do exterior' : 'Investimentos: mandar o CSV');
+        t = say(t, `Adicionei ${fresh.length} ${fresh.length === 1 ? 'ativo' : 'ativos'}. Sua carteira está em ${money(t.assets.reduce((acc, x) => acc + valueOf(x), 0))}.`);
+        return advance(t);
+      }
+
+      case 'FIX_IMPORT': {
+        let t = me(s, 'Tem algo errado');
+        return say(t, 'Você corrige linha a linha na tela de revisão (quantidade, preço médio ou tirar a linha). No protótipo, sigo como se estivesse certo.', {
+          chips: [{ label: 'Adicionar à carteira', action: { type: 'CONFIRM_IMPORT' } }]
+        });
+      }
+
+      case 'BANK_FIXED': {
+        let t = me(s, `${a.issuer}, ${money(a.amount)}, ${a.rate}, vence em ${a.maturity}`);
+        t = { ...t, assets: [...t.assets, { ticker: `CDB ${a.issuer}`, name: `CDB ${a.issuer} ${a.rate}`, cls: 'Renda fixa', qty: 1, price: a.amount, cur: 'BRL' }] };
+        t = say(t, `Anotado. Como está no ${a.issuer}, eu acompanho a cobertura do FGC desse emissor para você.`);
+        return advance(t);
+      }
+
+      case 'TARGET': {
+        let t = me(s, a.choice === 'agora' ? 'Definir agora' : 'Depois');
+        t = { ...t, target: a.choice === 'agora' ? 'definida' : 'depois' };
+        if (a.choice === 'depois') t = addPending(t, 'Investimentos: definir a carteira-alvo');
+        t = say(t, a.choice === 'agora' ? 'Abro a tela da carteira-alvo quando você terminar aqui. Seguindo.' : 'Ok, fica para depois.');
+        return advance(t);
+      }
+
+      case 'SPEND_PATH': {
+        const label = { pluggy: 'Conectar o banco', statement: 'Mandar o extrato', later: 'Depois' }[a.path];
+        let t = me(s, a.path === 'statement' && s.step === 'pluggySecret' ? 'Prefiro mandar o extrato' : label);
+        if (a.path === 'later') {
+          t = addPending(t, 'Gastos: trazer as transações');
+          t = say(t, 'Ok. Os gastos ficam ligados, vazios até você trazer o extrato ou conectar o banco.');
+          return advance({ ...t, plan: ['goal', ...t.plan] });
+        }
+        return enter(t, a.path === 'pluggy' ? 'pluggySecret' : 'statement');
+      }
+
+      case 'PLUGGY_SECRET': {
+        let t = me(s, '', { secret: 'Credencial do Meu Pluggy' });
+        if (!a.valid) {
+          return say(t, ['Não consegui entrar com essa credencial: o Meu Pluggy recusou. Confere se copiou o Client Secret inteiro (ele só aparece uma vez no painel; se perdeu, gera outro).'], {
+            card: { type: 'pluggy', retry: true },
+            chips: [{ label: 'Prefiro mandar o extrato', action: { type: 'SPEND_PATH', path: 'statement' }, quiet: true }]
+          });
+        }
+        t = { ...t, secrets: [...t.secrets.filter((x) => x !== 'Meu Pluggy'), 'Meu Pluggy'], banks: SAMPLES.banks };
+        return enter(t, 'pluggyRange');
+      }
+
+      case 'PLUGGY_RANGE': {
+        let t = me(s, a.days ? `Últimos ${a.days} dias` : 'Só a partir de hoje');
+        if (a.days) t = { ...t, transactions: t.transactions + 212, uncategorized: t.uncategorized + 9 };
+        t = say(t, a.days ? 'Puxei 212 transações dos dois bancos. 9 ficaram sem categoria; você revisa quando quiser.' : 'Combinado. As transações aparecem a partir de amanhã, quando o banco atualizar.');
+        if (a.days) t = addPending(t, 'Gastos: revisar 9 transações sem categoria');
+        return advance({ ...t, plan: ['goal', ...t.plan] });
+      }
+
+      case 'REVIEW_UNCATEGORIZED': {
+        let t = me(s, a.now ? 'Revisar as 12 agora' : 'Revisar depois');
+        if (!a.now) t = addPending(t, `Gastos: revisar ${t.uncategorized} transações sem categoria`);
+        t = say(t, a.now ? 'Abro a revisão quando você terminar aqui (no protótipo, conto como revisadas).' : 'Ok, deixo anotado.');
+        if (a.now) t = { ...t, uncategorized: 0 };
+        const plan = t.plan.includes('goal') ? t.plan : ['goal', ...t.plan];
+        return advance({ ...t, plan });
+      }
+
+      case 'GOAL': {
+        let t = me(s, a.amount ? money(a.amount) : 'Sem meta por enquanto');
+        t = { ...t, goal: a.amount };
+        t = say(t, a.amount ? `Meta de ${money(a.amount)} por mês. Eu acompanho no resumo do mês.` : 'Ok, sem meta. Dá para definir depois em Gastos › Onde cortar.');
+        return advance(t);
+      }
+
+      case 'GO_DASHBOARD': {
+        let t = me(s, 'Ir para o painel');
+        return sys(t, 'A pessoa vai para a Visão geral. O que ficou pendente aparece num cartão "Continuar configuração".');
+      }
+
+      case 'SKIP': {
+        if (s.done || s.paused) return s;
+        let t = me(s, 'Pular por agora');
+        t = { ...t, paused: true, resumeStep: s.step, plan: s.step === 'modules' || s.step === 'explain' ? s.plan : [s.step, ...s.plan] };
+        return say(t, 'Tudo bem. O que você já fez fica salvo. Quando quiser continuar, é só me chamar no painel.', {
+          chips: [{ label: 'Retomar a configuração', action: { type: 'RESUME' } }]
+        });
+      }
+
+      case 'RESUME': {
+        if (!s.paused && !s.done) return s;
+        let t = me(s, 'Retomar a configuração');
+        t = { ...t, paused: false };
+        if (!t.chosen) return say({ ...t, step: 'modules' }, 'Voltando: o que você quer acompanhar aqui?', { chips: moduleChips() });
+        if (t.done) return say(t, 'Sua configuração já está completa. Se quiser ligar outro módulo, é só pedir.');
+        return advance({ ...t, done: false });
+      }
+
+      case 'ENABLE_MODULE': {
+        if (s.modules[a.module]) return sys(s, `${a.module === 'portfolio' ? 'Investimentos' : 'Gastos'} já está ligado.`);
+        const name = a.module === 'portfolio' ? 'Investimentos' : 'Gastos';
+        let t = a.fromFile ? me(s, `Ligar ${name} e ler`) : a.typed ? s : sys(s, `A pessoa ligou ${name} em Configurações › Módulos.`);
+        t = { ...t, modules: { ...t.modules, [a.module]: true }, chosen: true, done: false, paused: false };
+        if (a.fromFile && s.pendingModuleFile) {
+          const file = s.pendingModuleFile;
+          t = { ...t, pendingModuleFile: null };
+          const k = kindOf(file);
+          if (a.module === 'spending') return readStatement({ ...t, step: 'statement', plan: ['goal', ...t.plan] });
+          if (k === 'xlsx') return review({ ...t, step: 'b3File', plan: ['target', ...t.plan] }, SAMPLES.b3, 'b3');
+          return askConsent({ ...t, step: 'extFile', plan: ['target', ...t.plan] }, file, 'ext', 'Esse PDF eu leio com modelo de linguagem, por um serviço da Vercel. Dados de identificação vão mascarados no texto.');
+        }
+        t = say(t, `${name} ligado. Quer configurar agora? Leva uns dois minutos.`, {
+          chips: [
+            { label: 'Configurar agora', action: { type: 'CONFIGURE_MODULE', module: a.module } },
+            { label: 'Mais tarde', action: { type: 'LATER' }, quiet: true }
+          ]
+        });
+        return t;
+      }
+
+      case 'CONFIGURE_MODULE': {
+        let t = me(s, 'Configurar agora');
+        return advance({ ...t, plan: [a.module === 'portfolio' ? 'sources' : 'spendPath'] });
+      }
+
+      case 'LATER': {
+        let t = me(s, 'Mais tarde');
+        t = addPending(t, 'Configurar o módulo que acabou de ligar');
+        return say({ ...t, step: 'done', done: true }, 'Ok. Fica um cartão no painel para você continuar.');
+      }
+
+      case 'SKIP_MODULE_FILE': {
+        let t = me(s, 'Agora não');
+        t = { ...t, pendingModuleFile: null };
+        return say(t, 'Descartei o arquivo. Seguimos de onde paramos.', { chips: currentChips(s) });
+      }
+
+      case 'TEXT': {
+        const text = a.text.trim();
+        if (!text) return s;
+        let t = me(s, text);
+        const low = text.toLowerCase();
+        if ((s.step === 'modules' || s.step === 'explain') && !s.chosen && !text.includes('?')) {
+          const inv = /invest|carteira|a[çc][õo]es|corretora|cripto|fii/.test(low);
+          const gas = /gast|despes|cart[ãa]o|conta|banco|extrato|econom/.test(low);
+          const both = /dois|ambos|tudo|os 2/.test(low);
+          if (both || (inv && gas)) return reduce({ ...t, messages: t.messages.slice(0, -1), seq: t.seq - 1 }, { type: 'CHOOSE_MODULES', portfolio: true, spending: true, typed: text });
+          if (inv) return reduce({ ...t, messages: t.messages.slice(0, -1), seq: t.seq - 1 }, { type: 'CHOOSE_MODULES', portfolio: true, spending: false, typed: text });
+          if (gas) return reduce({ ...t, messages: t.messages.slice(0, -1), seq: t.seq - 1 }, { type: 'CHOOSE_MODULES', portfolio: false, spending: true, typed: text });
+        }
+        if (/pular|depois|agora n[ãa]o|mais tarde/.test(low) && !s.done && !s.paused) return reduce({ ...t, messages: t.messages.slice(0, -1), seq: t.seq - 1 }, { type: 'SKIP' });
+        if (/ligar gastos|quero gastos/.test(low)) return reduce(t, { type: 'ENABLE_MODULE', module: 'spending', typed: true });
+        if (/ligar invest|quero invest/.test(low)) return reduce(t, { type: 'ENABLE_MODULE', module: 'portfolio', typed: true });
+        return say(t, ['Aqui eu sigo um roteiro curto para montar a conta, então ainda não respondo perguntas soltas.', 'Escolhe uma das opções acima ou manda o arquivo. Sua pergunta eu respondo no Perguntar à Vera, depois da configuração.'], { chips: currentChips(s) });
+      }
+
+      default:
+        return s;
+    }
+  }
+
+  function snapshot(s) {
+    const total = s.assets.reduce((acc, x) => acc + valueOf(x), 0);
+    return {
+      modules: s.modules, step: s.done ? 'done' : s.step, stepLabel: s.paused ? 'Pausado pela pessoa' : (STEP_LABEL[s.done ? 'done' : s.step] || s.step),
+      next: s.plan.map((p) => STEP_LABEL[p] || p), assets: s.assets.length, total: money(total),
+      classes: [...new Set(s.assets.map((x) => x.cls))], banks: s.banks.map((b) => b.name), transactions: s.transactions,
+      uncategorized: s.uncategorized, files: s.files, secrets: s.secrets, consents: s.consents, pending: s.pending,
+      goal: s.goal ? money(s.goal) : s.goal === null ? 'sem meta' : '—', target: s.target || '—'
+    };
+  }
+
+  return { initial, reduce, snapshot, kindOf, SOURCES, SAMPLES, money, valueOf };
+})();
+</script>
+
+<script>
+/* ===== Página: casca descartável sobre o módulo acima ===== */
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const esc = (v) => String(v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  const MARK = (size) => `<svg width="${size}" height="${size}" viewBox="0 0 220 220" aria-hidden="true"><circle cx="110" cy="110" r="78" fill="none" stroke="var(--ink)" stroke-width="10"/><g transform="rotate(35 110 110)"><path d="M110 46 L129 106 L110 174 L91 114 Z" fill="var(--ink)"/><path d="M110 46 L91 114 L110 110 Z" fill="var(--accent)"/></g><circle cx="110" cy="110" r="9" fill="var(--surface)"/></svg>`;
+  const ICON = {
+    file: '<svg class="i" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>',
+    lock: '<svg class="i" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+    upload: '<svg class="i" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>'
+  };
+  $('mark').innerHTML = MARK(34);
+
+  let state = Onboarding.initial();
+  let prevSnap = Onboarding.snapshot(state);
+  let changedKeys = new Set();
+  let last = 'Nenhuma ação ainda.';
+  let scenarioIdx = 0;
+  let scenarioPos = -1;
+
+  function dispatch(action, label) {
+    const before = Onboarding.snapshot(state);
+    state = Onboarding.reduce(state, action);
+    const after = Onboarding.snapshot(state);
+    changedKeys = new Set(Object.keys(after).filter((k) => JSON.stringify(after[k]) !== JSON.stringify(before[k])));
+    prevSnap = after;
+    last = label ? `Última ação: ${label}` : last;
+    render();
+  }
+
+  const kb = (n) => (n > 1024 * 1024 ? `${(n / 1024 / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(n / 1024))} KB`);
+
+  function cardHtml(m) {
+    const c = m.card; const off = m.open ? '' : ' disabled';
+    const done = m.open ? '' : ' done';
+    if (c.type === 'sources') {
+      return `<form class="card${done}" data-form="sources"><div class="checks">${Onboarding.SOURCES.map((src) => `<label><input type="checkbox" name="src" value="${src.id}" id="src-${m.id}-${src.id}"${off}><span><b>${esc(src.label)}</b><small>${esc(src.hint)}</small></span></label>`).join('')}</div><div class="row"><button class="btn primary" type="submit"${off}>Continuar</button></div></form>`;
+    }
+    if (c.type === 'upload') {
+      return `<div class="card${done}"><div class="drop" data-drop="${m.id}">${ICON.upload}<b>Arraste ${esc(c.expect)} aqui</b><span>ou</span><div class="row"><button class="btn" type="button" data-pick="${esc(c.accept)}"${off}>Escolher arquivo</button><button class="btn" type="button" data-sample='${esc(JSON.stringify(c.sample))}'${off}>Usar um de exemplo</button></div><span>Até 10 MB · ${esc(c.accept.replace(/\./g, '').toUpperCase().replace(/,/g, ', '))}</span></div></div>`;
+    }
+    if (c.type === 'review') {
+      return `<div class="card${done}"><div class="tablewrap"><table><thead><tr><th>Ativo</th><th>Classe</th><th class="r">Qtd.</th><th class="r">Valor</th></tr></thead><tbody>${c.rows.map((r) => `<tr><td><b>${esc(r.ticker)}</b><br><small>${esc(r.name)}</small></td><td>${esc(r.cls)}</td><td class="r">${r.qty.toLocaleString('pt-BR')}</td><td class="r">${Onboarding.money(Onboarding.valueOf(r))}</td></tr>`).join('')}</tbody></table></div>${c.rows.some((r) => r.cur === 'USD') ? '<p class="hint">Valores em dólar convertidos pela PTAX de hoje (R$ 5,42, exemplo).</p>' : ''}</div>`;
+    }
+    if (c.type === 'consent') {
+      return `<div class="card${done}"><h3>O que vai para o modelo</h3><p class="hint">O arquivo ${esc(c.file)}, uma vez, só para ler as operações. Ele é descartado depois da leitura; o que você não confirmar some em 30 minutos. Isso é separado da permissão dos resumos.</p></div>`;
+    }
+    if (c.type === 'fixed') {
+      return `<form class="card${done}" data-form="fixed"><div class="grid2"><div class="field"><label for="fx-issuer-${m.id}">Banco emissor</label><input id="fx-issuer-${m.id}" name="issuer" value="Banco Inter"${off}></div><div class="field"><label for="fx-amount-${m.id}">Valor aplicado (R$)</label><input id="fx-amount-${m.id}" name="amount" inputmode="decimal" value="15000"${off}></div><div class="field"><label for="fx-rate-${m.id}">Taxa</label><input id="fx-rate-${m.id}" name="rate" value="110% do CDI"${off}></div><div class="field"><label for="fx-mat-${m.id}">Vencimento</label><input id="fx-mat-${m.id}" name="maturity" value="03/2028"${off}></div></div><div class="row"><button class="btn primary" type="submit"${off}>Adicionar</button></div></form>`;
+    }
+    if (c.type === 'pluggy') {
+      return `<form class="card${done}" data-form="pluggy" autocomplete="off">${c.retry ? '' : `<ol class="steps"><li>Crie a conta em <a href="https://meu.pluggy.ai" target="_blank" rel="noopener">meu.pluggy.ai</a> e conecte seus bancos lá.</li><li>Em <a href="https://dashboard.pluggy.ai" target="_blank" rel="noopener">dashboard.pluggy.ai</a>, crie uma aplicação e inclua o conector MeuPluggy.</li><li>Copie o Client ID e o Client Secret da aplicação e cole abaixo.</li></ol>`}<div class="grid2"><div class="field"><label for="pg-id-${m.id}">Client ID</label><input id="pg-id-${m.id}" name="clientId" placeholder="ex.: 6f1c…" spellcheck="false"${off}></div><div class="field"><label for="pg-secret-${m.id}">Client Secret</label><input id="pg-secret-${m.id}" name="clientSecret" type="password" placeholder="••••••••" spellcheck="false"${off}></div></div><p class="lockline">${ICON.lock}<span>Vai cifrado direto para o cofre da Vera. Não aparece na conversa, no histórico nem para o suporte, e dá para apagar em Configurações › Conexões.</span></p><div class="row"><button class="btn primary" type="submit"${off}>Salvar com segurança</button><button class="btn" type="button" data-fill="ok"${off}>Preencher exemplo válido</button><button class="btn" type="button" data-fill="bad"${off}>Preencher exemplo errado</button></div></form>`;
+    }
+    if (c.type === 'summary') {
+      const s = Onboarding.snapshot(state);
+      const rows = [
+        ['Módulos', `${state.modules.portfolio ? 'Investimentos' : ''}${state.modules.portfolio && state.modules.spending ? ' e ' : ''}${state.modules.spending ? 'Gastos' : ''}` || 'nenhum'],
+        state.modules.portfolio ? ['Carteira', `${s.assets} ativos · ${s.total}`] : null,
+        state.modules.spending ? ['Gastos', `${s.banks.length ? s.banks.join(' e ') + ' conectados' : s.transactions ? s.transactions + ' transações do extrato' : 'sem transações ainda'}`] : null,
+        state.modules.spending ? ['Meta de economia', s.goal] : null,
+        ['Pendências', s.pending.length ? `${s.pending.length}, no cartão do painel` : 'nenhuma']
+      ].filter(Boolean);
+      return `<div class="card"><div class="summary">${rows.map(([k, v]) => `<div><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join('')}</div>${!state.modules.portfolio || !state.modules.spending ? `<p class="hint">${!state.modules.portfolio ? 'Investimentos' : 'Gastos'} está desligado. Para ligar: Configurações › Módulos, ou peça aqui.</p>` : ''}</div>`;
+    }
+    return '';
+  }
+
+  function msgHtml(m) {
+    if (m.from === 'sys') return `<div class="msg sys"><div class="bubble">${m.text.map(esc).join(' ')}</div></div>`;
+    let body = '';
+    if (m.file) body = `<span class="file-chip">${ICON.file}${esc(m.file.name)} <small>${kb(m.file.size)}</small></span>`;
+    else if (m.secret) body = `<span class="secret-chip">${ICON.lock}${esc(m.secret)} enviada</span>`;
+    else body = m.text.map((t) => `<p>${esc(t)}</p>`).join('');
+    if (m.card) body += cardHtml(m);
+    if (m.chips) body += `<div class="chips">${m.chips.map((c, i) => `<button class="chip${c.quiet ? ' quiet' : ''}" type="button" data-chip="${m.id}:${i}"${m.open || m.keep ? '' : ' disabled'}>${esc(c.label)}</button>`).join('')}</div>`;
+    return `<div class="msg ${m.from}">${m.from === 'vera' ? `<span class="av">${MARK(28)}</span>` : ''}<div class="bubble">${body}</div></div>`;
+  }
+
+  function renderProgress() {
+    const s = state; const parts = [];
+    parts.push(`<span class="${s.chosen ? 'ok' : 'on'}">Módulos</span>`);
+    const invDone = s.modules.portfolio && !['sources', 'b3File', 'extFile', 'cryptoFile', 'bankFixed', 'target'].includes(s.step) && !s.plan.some((p) => ['sources', 'b3File', 'extFile', 'cryptoFile', 'bankFixed', 'target'].includes(p));
+    const spDone = s.modules.spending && !['spendPath', 'pluggySecret', 'pluggyRange', 'statement', 'goal'].includes(s.step) && !s.plan.some((p) => ['spendPath', 'pluggySecret', 'pluggyRange', 'statement', 'goal'].includes(p));
+    if (s.chosen) {
+      parts.push(`<span class="${!s.modules.portfolio ? 'off' : invDone ? 'ok' : 'on'}">Investimentos</span>`);
+      parts.push(`<span class="${!s.modules.spending ? 'off' : spDone ? 'ok' : 'on'}">Gastos</span>`);
+    }
+    parts.push(`<span class="${s.done ? 'ok' : ''}">Pronto</span>`);
+    $('progress').innerHTML = parts.join('');
+  }
+
+  function renderState() {
+    const s = Onboarding.snapshot(state);
+    const pill = (on, a, b) => `<span class="pill ${on ? 'on' : 'off'}">${on ? a : b}</span>`;
+    const rows = [
+      ['modules', 'Módulos', `${pill(s.modules.portfolio, 'Investimentos ligado', 'Investimentos desligado')}${pill(s.modules.spending, 'Gastos ligado', 'Gastos desligado')}`],
+      ['stepLabel', 'Etapa atual', esc(s.stepLabel)],
+      ['next', 'Próximas etapas', s.next.length ? s.next.map(esc).join(' › ') : '—'],
+      ['assets', 'Carteira', s.assets ? `${s.assets} ativos · ${esc(s.total)}<br><small>${s.classes.map(esc).join(', ')}</small>` : '—'],
+      ['banks', 'Bancos conectados', s.banks.length ? s.banks.map(esc).join(', ') : '—'],
+      ['transactions', 'Transações', s.transactions ? `${s.transactions} (${s.uncategorized} sem categoria)` : '—'],
+      ['files', 'Arquivos recebidos', s.files.length ? s.files.map(esc).join('<br>') : '—'],
+      ['secrets', 'Credenciais guardadas', s.secrets.length ? s.secrets.map((x) => `<span class="pill lock">${esc(x)}: cifrada, valor nunca exibido</span>`).join('') : '—'],
+      ['consents', 'Permissões de envio', s.consents.length ? s.consents.map((c) => `<span class="pill ${c.allowed ? 'on' : 'wait'}">${esc(c.file)}: ${c.allowed ? 'permitido' : 'negado'}</span>`).join('') : '—'],
+      ['goal', 'Meta de economia', esc(s.goal)],
+      ['target', 'Carteira-alvo', esc(s.target)],
+      ['pending', 'Pendências', s.pending.length ? s.pending.map((p) => `<span class="pill wait">${esc(p)}</span>`).join('') : '—']
+    ];
+    $('state').innerHTML = rows.map(([k, label, v]) => `<div class="${changedKeys.has(k) ? 'changed' : ''}"><dt>${label}</dt><dd>${v}</dd></div>`).join('');
+    $('lastaction').textContent = last;
+  }
+
+  function render() {
+    renderProgress();
+    const box = $('msgs');
+    box.innerHTML = state.messages.map(msgHtml).join('');
+    box.scrollTop = box.scrollHeight;
+    renderState();
+    renderScenario();
+  }
+
+  // ---- interação do chat ----
+  let pickTarget = null;
+  $('msgs').addEventListener('click', (e) => {
+    const chip = e.target.closest('[data-chip]');
+    if (chip && !chip.disabled) {
+      const [id, i] = chip.dataset.chip.split(':').map(Number);
+      const m = state.messages.find((x) => x.id === id);
+      const c = m.chips[i];
+      return dispatch(c.action, `"${c.label}"`);
+    }
+    const pick = e.target.closest('[data-pick]');
+    if (pick && !pick.disabled) { $('file').accept = pick.dataset.pick; return $('file').click(); }
+    const sample = e.target.closest('[data-sample]');
+    if (sample && !sample.disabled) { const f = JSON.parse(sample.dataset.sample); return dispatch({ type: 'FILE', file: f }, `enviou ${f.name}`); }
+    const fill = e.target.closest('[data-fill]');
+    if (fill && !fill.disabled) {
+      const form = fill.closest('form');
+      form.clientId.value = '6f1c2a90-3b7e-4d21-9c55-8e0f4a7b1d23';
+      form.clientSecret.value = fill.dataset.fill === 'ok' ? 'exemplo-valido-123456' : 'curta';
+    }
+  });
+  $('msgs').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const form = e.target;
+    if (form.dataset.form === 'sources') {
+      const sources = [...form.querySelectorAll('input[name=src]:checked')].map((x) => x.value);
+      return dispatch({ type: 'PICK_SOURCES', sources }, 'escolheu onde investe');
+    }
+    if (form.dataset.form === 'fixed') {
+      return dispatch({ type: 'BANK_FIXED', issuer: form.issuer.value.trim() || 'Banco', amount: Number(String(form.amount.value).replace(/\./g, '').replace(',', '.')) || 0, rate: form.rate.value.trim(), maturity: form.maturity.value.trim() }, 'cadastrou a renda fixa');
+    }
+    if (form.dataset.form === 'pluggy') {
+      const valid = form.clientId.value.trim().length >= 8 && form.clientSecret.value.trim().length >= 12;
+      form.clientSecret.value = ''; form.clientId.value = '';
+      return dispatch({ type: 'PLUGGY_SECRET', valid }, valid ? 'enviou uma credencial válida' : 'enviou uma credencial que o Meu Pluggy recusa');
+    }
+  });
+  $('msgs').addEventListener('dragover', (e) => { const d = e.target.closest('[data-drop]'); if (d) { e.preventDefault(); d.classList.add('over'); } });
+  $('msgs').addEventListener('dragleave', (e) => { const d = e.target.closest('[data-drop]'); if (d) d.classList.remove('over'); });
+  document.addEventListener('dragover', (e) => e.preventDefault());
+  document.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const f = e.dataTransfer && e.dataTransfer.files[0];
+    if (f) dispatch({ type: 'FILE', file: { name: f.name, size: f.size } }, `arrastou ${f.name}`);
+  });
+  $('attach').addEventListener('click', () => { $('file').accept = ''; $('file').click(); });
+  $('file').addEventListener('change', () => {
+    const f = $('file').files[0];
+    if (f) dispatch({ type: 'FILE', file: { name: f.name, size: f.size } }, `anexou ${f.name}`);
+    $('file').value = '';
+  });
+  $('composer').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const v = $('text').value;
+    if (!v.trim()) return;
+    $('text').value = '';
+    dispatch({ type: 'TEXT', text: v }, `escreveu "${v.trim()}"`);
+  });
+
+  // ---- roteiros guiados ----
+  const F = {
+    b3: { name: 'posicao-b3-2026-11-28.xlsx', size: 48211 },
+    ext: { name: 'extrato-avenue-out-2026.pdf', size: 182330 },
+    ofx: { name: 'extrato-nubank-set-nov.ofx', size: 30544 },
+    csv: { name: 'binance-historico.csv', size: 9120 },
+    docx: { name: 'planilha-do-contador.docx', size: 66000 },
+    photo: { name: 'print-corretora.jpg', size: 412000 }
+  };
+  const SCENARIOS = [
+    {
+      title: 'Só investimentos',
+      text: 'Caminho feliz de quem só quer a carteira. Repare que Gastos fica desligado e o resumo final diz onde ligar.',
+      steps: [
+        ['Escolher "Meus investimentos"', { type: 'CHOOSE_MODULES', portfolio: true, spending: false }],
+        ['Marcar "Corretora no Brasil" e continuar', { type: 'PICK_SOURCES', sources: ['b3'] }],
+        ['Mandar o Excel de posição da B3', { type: 'FILE', file: F.b3 }],
+        ['Adicionar à carteira', { type: 'CONFIRM_IMPORT' }],
+        ['Carteira-alvo: depois', { type: 'TARGET', choice: 'depois' }],
+        ['Ir para o painel', { type: 'GO_DASHBOARD' }]
+      ]
+    },
+    {
+      title: 'Só gastos, com o Meu Pluggy',
+      text: 'A credencial entra por um cartão seguro. Confira que o valor nunca aparece na conversa nem no estado, e o que acontece quando o Meu Pluggy recusa.',
+      steps: [
+        ['Escolher "Meus gastos"', { type: 'CHOOSE_MODULES', portfolio: false, spending: true }],
+        ['Escolher "Conectar o banco"', { type: 'SPEND_PATH', path: 'pluggy' }],
+        ['Enviar uma credencial errada', { type: 'PLUGGY_SECRET', valid: false }],
+        ['Enviar a credencial certa', { type: 'PLUGGY_SECRET', valid: true }],
+        ['Puxar os últimos 90 dias', { type: 'PLUGGY_RANGE', days: 90 }],
+        ['Meta de R$ 1.000', { type: 'GOAL', amount: 1000 }],
+        ['Ir para o painel', { type: 'GO_DASHBOARD' }]
+      ]
+    },
+    {
+      title: 'Os dois, permissão negada',
+      text: 'O PDF do exterior precisa de modelo de linguagem. A pessoa nega: nada é enviado, o arquivo é descartado e vira pendência.',
+      steps: [
+        ['Escolher "Os dois"', { type: 'CHOOSE_MODULES', portfolio: true, spending: true }],
+        ['Marcar Brasil e exterior', { type: 'PICK_SOURCES', sources: ['b3', 'ext'] }],
+        ['Mandar o Excel da B3', { type: 'FILE', file: F.b3 }],
+        ['Adicionar à carteira', { type: 'CONFIRM_IMPORT' }],
+        ['Mandar o PDF do exterior', { type: 'FILE', file: F.ext }],
+        ['Não enviar', { type: 'CONSENT', allow: false }],
+        ['Carteira-alvo: depois', { type: 'TARGET', choice: 'depois' }],
+        ['Gastos: mandar o extrato', { type: 'SPEND_PATH', path: 'statement' }],
+        ['Mandar o OFX do banco', { type: 'FILE', file: F.ofx }],
+        ['Revisar depois', { type: 'REVIEW_UNCATEGORIZED', now: false }],
+        ['Sem meta por enquanto', { type: 'GOAL', amount: null }]
+      ]
+    },
+    {
+      title: 'Liga Gastos depois',
+      text: 'A pessoa começa só com investimentos e, depois de pronto, liga Gastos em Configurações. A conversa retoma só o que falta.',
+      steps: [
+        ['Escolher "Meus investimentos"', { type: 'CHOOSE_MODULES', portfolio: true, spending: false }],
+        ['Marcar "Corretora no Brasil"', { type: 'PICK_SOURCES', sources: ['b3'] }],
+        ['Mandar o Excel da B3', { type: 'FILE', file: F.b3 }],
+        ['Adicionar à carteira', { type: 'CONFIRM_IMPORT' }],
+        ['Carteira-alvo: depois', { type: 'TARGET', choice: 'depois' }],
+        ['Ligar Gastos em Configurações', { type: 'ENABLE_MODULE', module: 'spending' }],
+        ['Configurar agora', { type: 'CONFIGURE_MODULE', module: 'spending' }],
+        ['Mandar o extrato', { type: 'SPEND_PATH', path: 'statement' }],
+        ['Mandar o OFX', { type: 'FILE', file: F.ofx }],
+        ['Revisar as 12 agora', { type: 'REVIEW_UNCATEGORIZED', now: true }],
+        ['Meta de R$ 500', { type: 'GOAL', amount: 500 }]
+      ]
+    },
+    {
+      title: 'Fora do roteiro',
+      text: 'Pergunta solta, arquivo antes da hora, arquivo errado e pausa. A Vera deve reorientar sem travar e sem perder o que já foi feito.',
+      steps: [
+        ['Escrever "quanto rendeu minha carteira?"', { type: 'TEXT', text: 'quanto rendeu minha carteira?' }],
+        ['Mandar o Excel da B3 antes de escolher', { type: 'FILE', file: F.b3 }],
+        ['Adicionar à carteira', { type: 'CONFIRM_IMPORT' }],
+        ['Mandar um .docx na etapa errada', { type: 'FILE', file: F.docx }],
+        ['Pular por agora', { type: 'SKIP' }],
+        ['Mandar o OFX com Gastos desligado', { type: 'FILE', file: F.ofx }],
+        ['Retomar a configuração', { type: 'RESUME' }],
+        ['Escrever "quero ligar gastos também"', { type: 'TEXT', text: 'quero ligar gastos também' }]
+      ]
+    }
+  ];
+
+  function renderTabs() {
+    $('tabs').innerHTML = SCENARIOS.map((sc, i) => `<button class="tab" role="tab" type="button" aria-selected="${i === scenarioIdx}" data-tab="${i}">${esc(sc.title)}</button>`).join('');
+  }
+  function renderScenario() {
+    const sc = SCENARIOS[scenarioIdx];
+    $('scenario').innerHTML = `<p>${esc(sc.text)}</p><ol>${sc.steps.map(([label], i) => `<li class="${i < scenarioPos + 1 && scenarioPos >= 0 ? 'done' : i === scenarioPos + 1 ? 'next' : ''}"><button class="btn${i === scenarioPos + 1 ? ' primary' : ''}" type="button" data-step="${i}"${i === scenarioPos + 1 ? '' : ' disabled'}>${esc(label)}</button></li>`).join('')}</ol>${scenarioPos === -1 ? '' : `<div class="row" style="margin-top:10px"><button class="btn" type="button" data-restart>Recomeçar este roteiro</button></div>`}`;
+  }
+  $('tabs').addEventListener('click', (e) => {
+    const t = e.target.closest('[data-tab]'); if (!t) return;
+    scenarioIdx = Number(t.dataset.tab); scenarioPos = -1;
+    state = Onboarding.initial(); changedKeys = new Set(); last = `Roteiro "${SCENARIOS[scenarioIdx].title}" pronto. A conversa recomeçou.`;
+    renderTabs(); render();
+  });
+  $('scenario').addEventListener('click', (e) => {
+    if (e.target.closest('[data-restart]')) { scenarioPos = -1; state = Onboarding.initial(); changedKeys = new Set(); last = 'Roteiro recomeçado.'; return render(); }
+    const b = e.target.closest('[data-step]'); if (!b || b.disabled) return;
+    const i = Number(b.dataset.step);
+    if (i === 0 && scenarioPos === -1) state = Onboarding.initial();
+    const [label, action] = SCENARIOS[scenarioIdx].steps[i];
+    scenarioPos = i;
+    dispatch(action, label);
+  });
+
+  // ---- ações livres ----
+  const FREE = [
+    ['Mandar Excel da B3', { type: 'FILE', file: F.b3 }],
+    ['Mandar PDF do exterior', { type: 'FILE', file: F.ext }],
+    ['Mandar CSV da exchange', { type: 'FILE', file: F.csv }],
+    ['Mandar OFX do banco', { type: 'FILE', file: F.ofx }],
+    ['Mandar print da corretora', { type: 'FILE', file: F.photo }],
+    ['Mandar arquivo errado (.docx)', { type: 'FILE', file: F.docx }],
+    ['Pular por agora', { type: 'SKIP' }],
+    ['Retomar', { type: 'RESUME' }],
+    ['Ligar Gastos em Configurações', { type: 'ENABLE_MODULE', module: 'spending' }],
+    ['Ligar Investimentos em Configurações', { type: 'ENABLE_MODULE', module: 'portfolio' }],
+    ['Recomeçar a conversa', { type: 'RESET' }]
+  ];
+  $('free').innerHTML = FREE.map(([label], i) => `<button class="btn" type="button" data-free="${i}">${esc(label)}</button>`).join('');
+  $('free').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-free]'); if (!b) return;
+    const [label, action] = FREE[Number(b.dataset.free)];
+    if (action.type === 'RESET') scenarioPos = -1;
+    dispatch(action, label);
+  });
+
+  renderTabs();
+  render();
+})();
+</script>
