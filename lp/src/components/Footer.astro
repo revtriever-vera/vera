@@ -1,0 +1,31 @@
+---
+import Revtriever from './Revtriever.astro';
+import type { Dict } from '../i18n/pt';
+
+interface Props {
+  f: Dict['footer'];
+}
+const { f } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const repo = 'https://github.com/revtriever-vera/vera';
+---
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-main">
+      <div class="foot-brand">
+        <a href="https://revtriever.com" class="foot-rt"><Revtriever size={28} /></a>
+        <p>{f.operated}</p>
+      </div>
+      <nav class="foot-links" aria-label={f.label}>
+        <a href={`${base}privacidade/`}>{f.privacy}</a>
+        <a href={`${base}termos/`}>{f.terms}</a>
+        <a href={`${base}exclusao-de-dados/`}>{f.deletion}</a>
+        <a href={repo}>{f.code}</a>
+        <a href={`${repo}/blob/main/LICENSE`}>{f.license}</a>
+        <a href="mailto:contato@revtriever.com" translate="no">contato@revtriever.com</a>
+      </nav>
+    </div>
+    <p class="foot-legal">{f.legal}</p>
+  </div>
+</footer>

@@ -1,14 +1,13 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import ChatDemo from './ChatDemo.astro';
+import Revtriever from './Revtriever.astro';
 import type { Dict } from '../i18n/pt';
 import { pt } from '../i18n/pt';
 import { en } from '../i18n/en';
-import RotatingWord from '../islands/RotatingWord';
-import DotGrid from '../islands/DotGrid';
-import TiltFrame from '../islands/TiltFrame';
-import Odometer from '../islands/Odometer';
-import ChatDemo from '../islands/ChatDemo';
 import visao from '../assets/visao.png';
 import aporte from '../assets/aporte.png';
 import cortes from '../assets/cortes.png';
@@ -24,232 +23,175 @@ const other = t.path === pt.path ? en : pt;
 const otherHref = `${base}${other.path.replace(/^\//, '')}`;
 const signup = import.meta.env.PUBLIC_APP_URL ?? '#' + t.plans.id;
 const repo = 'https://github.com/revtriever-vera/vera';
-const sizes = '(min-width: 1080px) 640px, 92vw';
+const sizes = '(min-width: 1120px) 620px, (min-width: 900px) 56vw, 92vw';
 const widths = [480, 720, 960, 1280];
+const links = [
+  { href: `#${t.wealth.id}`, label: t.nav.wealth, hideSmall: true },
+  { href: `#${t.spending.id}`, label: t.nav.spending, hideSmall: true },
+  { href: `#${t.plans.id}`, label: t.nav.plans, hideSmall: true },
+  { href: `#${t.operator.id}`, label: t.nav.operator, hideSmall: true },
+  { href: otherHref, label: t.nav.otherLang, lang: other.lang },
+];
 ---
 
 <Base t={t}>
-  <div class="heroBg">
-    <DotGrid client:idle />
+  <Header home={home} by={t.nav.by} byHref={`#${t.operator.id}`} navLabel={t.nav.label} links={links} />
+
+  <main id="main">
     <div class="wrap">
-      <header class="top">
-        <a class="brand" href={home}>
-          <span class="logo">
-            <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"
-              ><path d="M4.8 6 L12 19.2 L19.2 6" fill="none" stroke="#fff" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="12" cy="8.6" r="2.2" fill="#fff"></circle></svg
-            >
-          </span>
-          <span>vera<i>.</i></span>
-        </a>
-        <nav aria-label={t.nav.label}>
-          <a class="hide-s" href={`#${t.wealth.id}`}>{t.nav.wealth}</a>
-          <a class="hide-s" href={`#${t.spending.id}`}>{t.nav.spending}</a>
-          <a class="hide-s" href={`#${t.ask.id}`}>{t.nav.ask}</a>
-          <a class="hide-s" href={`#${t.plans.id}`}>{t.nav.plans}</a>
-          <a href={otherHref} hreflang={other.lang} lang={other.lang}>{t.nav.otherLang}</a>
-        </nav>
-      </header>
-      <main id="main">
-        <div class="hero">
-          <h1>{t.hero.h1}</h1>
-          <p class="lead">
-            {t.hero.leadBefore}{' '}<RotatingWord client:idle words={t.hero.words} />{' '}{t.hero.leadAfter}
-          </p>
-          <div class="cta" style="margin-top:28px">
-            <a class="btn primary" href={signup}>{t.hero.primary}</a>
-            <a class="btn" href={repo}>{t.hero.secondary}</a>
-          </div>
+      <div class="hero">
+        <h1>{t.hero.h1}</h1>
+        <p class="lead">{t.hero.lead}</p>
+        <div class="cta">
+          <a class="btn primary" href={signup}>{t.hero.primary}</a>
+          <a class="btn" href={repo}>{t.hero.secondary}</a>
         </div>
-        <figure class="mock">
-          <TiltFrame client:media="(min-width: 1024px) and (hover: hover)">
-            <div class="bar" aria-hidden="true"><i></i><i></i><i></i></div>
-            <Image src={visao} alt={t.mock.alt} widths={[640, 960, 1280]} sizes="(min-width: 960px) 900px, 92vw" loading="eager" fetchpriority="high" format="webp" quality={70} />
-          </TiltFrame>
-          <div class="chartCard" role="img" aria-label={t.mock.chartLabel}>
-            <div class="ct">{t.mock.chartTitle}</div>
-            <div class="v nums">{t.mock.chartValue}</div>
-            <svg viewBox="0 0 240 80" aria-hidden="true" focusable="false">
-              <defs>
-                <linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e0407b" stop-opacity=".28"></stop><stop offset="1" stop-color="#e0407b" stop-opacity="0"></stop></linearGradient>
-              </defs>
-              <path class="area" d="M0 70 L20 64 L40 66 L60 54 L80 56 L100 44 L120 46 L140 34 L160 30 L180 22 L200 24 L220 12 L240 8 L240 80 L0 80 Z"></path>
-              <path class="line draw" pathLength="1" d="M0 70 L20 64 L40 66 L60 54 L80 56 L100 44 L120 46 L140 34 L160 30 L180 22 L200 24 L220 12 L240 8"></path>
-            </svg>
-            <small>{t.mock.chartNote}</small>
-          </div>
-          <figcaption>{t.mock.caption}</figcaption>
-        </figure>
-      </main>
-    </div>
-  </div>
-
-  <div class="band">
-    <section class="wrap" aria-labelledby="proof-h">
-      <h2 id="proof-h" class="reveal">{t.proof.title}</h2>
-      <div class="proof">
-        {
-          t.proof.items.map((it) => (
-            <div class="stat reveal">
-              <div class="n">
-                <Odometer client:visible={{ rootMargin: '300px' }} value={it.value} />
-                {it.unit && <small>{it.unit}</small>}
-              </div>
-              <p>{it.text}</p>
-            </div>
-          ))
-        }
+        <p class="facts">{t.hero.facts}</p>
       </div>
-      <p class="fine">{t.proof.note}</p>
-    </section>
-  </div>
-
-  <section class="wrap" aria-labelledby="pillars-h">
-    <h2 id="pillars-h" class="reveal">{t.pillars.title}</h2>
-    <p class="sub">{t.pillars.sub}</p>
-    <div class="pillars">
-      {
-        t.pillars.items.map((it) => (
-          <a class="spot reveal" href={it.href}>
-            <h3>{it.title}</h3>
-            <p>{it.text}</p>
-          </a>
-        ))
-      }
+      <figure class="shot hero-shot">
+        <Image src={visao} alt={t.mock.alt} widths={[640, 960, 1280, 1600]} sizes="(min-width: 1120px) 1056px, 92vw" loading="eager" fetchpriority="high" format="webp" quality={72} />
+        <figcaption>{t.mock.caption}</figcaption>
+      </figure>
     </div>
-  </section>
 
-  <div class="band">
-    <div class="wrap">
-      <section id={t.wealth.id} aria-labelledby="wealth-h">
-        <h2 id="wealth-h">{t.wealth.title}</h2>
-        <p class="sub">{t.wealth.sub}</p>
-        <div class="mod">
-          <div class="txt reveal l">
-            <span class="tag">{t.wealth.tag}</span>
+    <div class="band">
+      <div class="wrap sec">
+        <section id={t.wealth.id} class="feature" aria-labelledby="wealth-h">
+          <div class="txt">
+            <h2 id="wealth-h">{t.wealth.title}</h2>
             <p>{t.wealth.text}</p>
-            <ul>{t.wealth.bullets.map((b) => <li>{b}</li>)}</ul>
+            <ul class="list">{t.wealth.bullets.map(([b, s]) => <li><b>{b}:</b> {s}</li>)}</ul>
           </div>
-          <figure class="shot reveal r">
+          <figure class="shot">
             <Image src={aporte} alt={t.wealth.alt} widths={widths} sizes={sizes} loading="lazy" format="webp" quality={80} />
             <figcaption>{t.wealth.caption}</figcaption>
           </figure>
-        </div>
-      </section>
-      <section id={t.spending.id} style="padding-top:0" aria-labelledby="spending-h">
-        <h2 id="spending-h">{t.spending.title}</h2>
-        <p class="sub">{t.spending.sub}</p>
-        <div class="mod rev">
-          <div class="txt reveal r">
-            <span class="tag">{t.spending.tag}</span>
+        </section>
+        <section id={t.spending.id} class="feature" aria-labelledby="spending-h">
+          <div class="txt">
+            <h2 id="spending-h">{t.spending.title}</h2>
             <p>{t.spending.text}</p>
-            <ul>{t.spending.bullets.map((b) => <li>{b}</li>)}</ul>
+            <ul class="list">{t.spending.bullets.map(([b, s]) => <li><b>{b}:</b> {s}</li>)}</ul>
           </div>
-          <figure class="shot reveal l">
+          <figure class="shot">
             <Image src={cortes} alt={t.spending.alt} widths={widths} sizes={sizes} loading="lazy" format="webp" quality={80} />
             <figcaption>{t.spending.caption}</figcaption>
           </figure>
-        </div>
-      </section>
-    </div>
-  </div>
-
-  <section id={t.ask.id} class="wrap" aria-labelledby="ask-h">
-    <h2 id="ask-h">{t.ask.title}</h2>
-    <p class="sub">{t.ask.sub}</p>
-    <div class="ask">
-      <ul class="reveal l">{t.ask.bullets.map((b) => <li>{b}</li>)}</ul>
-      <div class="reveal r">
-        <ChatDemo client:visible={{ rootMargin: '300px' }} question={t.ask.question} answer={t.ask.answer} thinking={t.ask.thinking} note={t.ask.disclaimer} label={t.ask.chatLabel} />
-      </div>
-    </div>
-  </section>
-
-  <div class="band">
-    <section id={t.tracking.id} class="wrap" aria-labelledby="track-h">
-      <h2 id="track-h">{t.tracking.title}</h2>
-      <p class="sub">{t.tracking.sub}</p>
-      {
-        t.tracking.items.map((it, i) => (
-          <div class={`track${i % 2 ? ' rev' : ''}`}>
-            <div class={`txt reveal ${i % 2 ? 'r' : 'l'}`}>
-              <span class="tag">{it.tag}</span>
-              <h3>{it.title}</h3>
-              <p>{it.text}</p>
-            </div>
-            <div class={`panel reveal ${i % 2 ? 'l' : 'r'}`}>
-              {it.rows.map(([a, b]) => (
-                <div class="row"><b>{a}</b><span>{b}</span></div>
-              ))}
-              <p class="fine">{t.tracking.sample}</p>
-            </div>
+        </section>
+        <section id={t.ask.id} class="feature" aria-labelledby="ask-h">
+          <div class="txt">
+            <h2 id="ask-h">{t.ask.title}</h2>
+            <p>{t.ask.text}</p>
+            <ul class="list">{t.ask.bullets.map(([b, s]) => <li><b>{b}:</b> {s}</li>)}</ul>
           </div>
-        ))
-      }
-    </section>
-  </div>
-
-  <section id={t.importing.id} class="wrap" aria-labelledby="imp-h">
-    <h2 id="imp-h">{t.importing.title}</h2>
-    <p class="sub">{t.importing.sub}</p>
-    <div class="marquee" role="group" aria-label={t.importing.marqueeLabel}>
-      <div class="track2">
-        {t.importing.formats.map((f) => <span class="chip">{f}</span>)}
-        {t.importing.formats.map((f) => <span class="chip dup" aria-hidden="true">{f}</span>)}
+          <ChatDemo question={t.ask.question} answer={t.ask.answer} thinking={t.ask.thinking} note={t.ask.disclaimer} label={t.ask.chatLabel} />
+        </section>
       </div>
     </div>
-    <div class="two">
-      <p class="card reveal l">{t.importing.free}</p>
-      <p class="card reveal r">{t.importing.premium}</p>
-    </div>
-  </section>
 
-  <div class="band">
-    <section id={t.security.id} class="wrap" aria-labelledby="sec-h">
-      <span class="badge">{t.security.badge}</span>
-      <h2 id="sec-h">{t.security.title}</h2>
-      <div class="sec" style="margin-top:24px">
+    <section id={t.tracking.id} class="wrap sec" aria-labelledby="track-h">
+      <div class="head"><h2 id="track-h">{t.tracking.title}</h2></div>
+      <div class="cols">
         {
-          t.security.items.map((it) => (
-            <div class="card reveal">
+          t.tracking.items.map((it) => (
+            <div>
+              <span class="plan">{it.plan}</span>
               <h3>{it.title}</h3>
               <p>{it.text}</p>
             </div>
           ))
         }
       </div>
-      <p style="margin-top:24px"><a class="btn" href={repo}>{t.security.cta}</a></p>
     </section>
-  </div>
 
-  <section id={t.plans.id} class="wrap" aria-labelledby="plans-h">
-    <h2 id="plans-h">{t.plans.title}</h2>
-    <p class="sub">{t.plans.sub}</p>
-    <div class="cards">
-      <div class="card reveal">
-        <h3>{t.plans.free.name}</h3>
-        <div class="price">{t.plans.free.price}</div>
-        <ul>{t.plans.free.items.map((b) => <li>{b}</li>)}</ul>
-        <a class="btn" href={signup}>{t.plans.cta}</a>
+    <section id={t.importing.id} class="wrap sec flush" aria-labelledby="imp-h">
+      <div class="head">
+        <h2 id="imp-h">{t.importing.title}</h2>
+        <p class="sub">{t.importing.sub}</p>
       </div>
-      <div class="card glow reveal">
-        <h3>{t.plans.premium.name}</h3>
-        <div class="price">{t.plans.premium.price} <small>{t.plans.premium.per}</small></div>
-        <ul>{t.plans.premium.items.map((b) => <li>{b}</li>)}</ul>
-        <a class="btn primary" href={signup}>{t.plans.cta}</a>
+      <div class="formats">
+        {
+          t.importing.groups.map((g) => (
+            <div>
+              <h3>{g.title}</h3>
+              <ul class="list">{g.items.map((i) => <li>{i}</li>)}</ul>
+            </div>
+          ))
+        }
       </div>
-      <div class="card reveal">
-        <h3>{t.plans.open.name}</h3>
-        <p>{t.plans.open.text}</p>
-        <a class="btn" href={repo}>{t.security.cta}</a>
-      </div>
+      <p class="fine">{t.importing.note}</p>
+    </section>
+
+    <div class="band">
+      <section id={t.limits.id} class="wrap sec" aria-labelledby="lim-h">
+        <div class="head"><h2 id="lim-h">{t.limits.title}</h2></div>
+        <div class="cols two">
+          {
+            t.limits.items.map((it) => (
+              <div>
+                <h3>{it.title}</h3>
+                <p>{it.text}</p>
+              </div>
+            ))
+          }
+        </div>
+      </section>
     </div>
-    <p class="fine" style="margin-top:24px">{t.plans.note}</p>
-  </section>
 
-  <div class="band">
-    <section id={t.faq.id} class="wrap" aria-labelledby="faq-h">
-      <h2 id="faq-h" class="center">{t.faq.title}</h2>
-      <div class="faq" style="margin-top:28px">
+    <section id={t.operator.id} class="wrap sec" aria-labelledby="op-h">
+      <div class="head">
+        <h2 id="op-h">{t.operator.title}</h2>
+        <p class="sub">{t.operator.sub}</p>
+      </div>
+      <div class="operator">
+        <div class="rt-card">
+          <Revtriever size={36} />
+          <p>{t.operator.hosted.lead}</p>
+          <p>{t.operator.hosted.about}</p>
+          <dl>
+            <dt>{t.operator.hosted.company}</dt><dd translate="no">{t.operator.hosted.companyValue}</dd>
+            <dt>{t.operator.hosted.cnpj}</dt><dd>68.648.441/0001-38</dd>
+            <dt>{t.operator.hosted.contact}</dt><dd><a href="mailto:contato@revtriever.com" translate="no">contato@revtriever.com</a></dd>
+          </dl>
+          <a class="btn" href="https://revtriever.com">{t.operator.hosted.cta}</a>
+        </div>
+        <div class="self">
+          <h3>{t.operator.self.title}</h3>
+          <p>{t.operator.self.text}</p>
+          <p>{t.operator.self.text2}</p>
+          <a class="btn" href={repo}>{t.operator.self.cta}</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="band">
+      <section id={t.plans.id} class="wrap sec" aria-labelledby="plans-h">
+        <div class="head">
+          <h2 id="plans-h">{t.plans.title}</h2>
+          <p class="sub">{t.plans.sub}</p>
+        </div>
+        <div class="cards">
+          <div class="card">
+            <h3>{t.plans.free.name}</h3>
+            <p class="price">{t.plans.free.price}</p>
+            <ul class="list">{t.plans.free.items.map((b) => <li>{b}</li>)}</ul>
+            <a class="btn" href={signup}>{t.plans.free.cta}</a>
+          </div>
+          <div class="card pro">
+            <h3>{t.plans.premium.name}</h3>
+            <p class="price">{t.plans.premium.price} <small>{t.plans.premium.per}</small></p>
+            <ul class="list">{t.plans.premium.items.map((b) => <li>{b}</li>)}</ul>
+            <p class="fine">{t.plans.premium.quota}</p>
+            <a class="btn primary" href={signup}>{t.plans.premium.cta}</a>
+          </div>
+        </div>
+        <p class="fine">{t.plans.billing}</p>
+      </section>
+    </div>
+
+    <section id={t.faq.id} class="wrap sec" aria-labelledby="faq-h">
+      <div class="head"><h2 id="faq-h">{t.faq.title}</h2></div>
+      <div class="faq">
         {
           t.faq.items.map((it) => (
             <details>
@@ -260,30 +202,7 @@ const widths = [480, 720, 960, 1280];
         }
       </div>
     </section>
-  </div>
+  </main>
 
-  <footer>
-    <div class="wrap row">
-      <a class="endorse" href="https://revtriever.com">{t.footer.by}
-        <svg viewBox="0 0 84 20" width="84" height="20" role="img" aria-label="Revtriever"><text x="0" y="15" font-family="system-ui,sans-serif" font-size="16" font-weight="700" letter-spacing="-.3" fill="currentColor">Revtriever</text></svg>
-      </a>
-      <span>{t.footer.maintained}</span>
-      <a href={`${repo}/blob/main/LICENSE`}>{t.footer.license}</a>
-      <a href={`${import.meta.env.BASE_URL}privacidade/`}>{t.footer.privacy}</a>
-      <a href={`${import.meta.env.BASE_URL}termos/`}>{t.footer.terms}</a>
-    </div>
-  </footer>
+  <Footer f={t.footer} />
 </Base>
-
-<script>
-  // Spotlight dos cards: a posição do ponteiro vira variável CSS. Sem ponteiro fino, nada roda.
-  if (matchMedia('(hover: hover)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.querySelectorAll<HTMLElement>('.spot').forEach((el) => {
-      el.addEventListener('pointermove', (e) => {
-        const r = el.getBoundingClientRect();
-        el.style.setProperty('--mx', `${e.clientX - r.left}px`);
-        el.style.setProperty('--my', `${e.clientY - r.top}px`);
-      });
-    });
-  }
-</script>

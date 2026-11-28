@@ -1,6 +1,9 @@
 ---
 import { Font } from 'astro:assets';
 import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { pt } from '../i18n/pt';
 
 interface Props {
   title: string;
@@ -22,35 +25,35 @@ const favicon = `${home}favicon.svg`;
     <meta name="theme-color" content="#fbf6f8" />
     <link rel="icon" type="image/svg+xml" href={favicon} />
     <link rel="canonical" href={canonical} />
-    <Font cssVariable="--font-nunito" />
+    <Font cssVariable="--font-nunito" preload />
   </head>
   <body>
     <a class="skip" href="#main">Ir para o conteúdo</a>
-    <header class="legal-top wrap">
-      <a href={home} class="legal-home">Vera</a>
-      <nav aria-label="Documentos">
-        <a href={`${home}privacidade/`}>Privacidade</a>
-        <a href={`${home}termos/`}>Termos de uso</a>
-        <a href={`${home}exclusao-de-dados/`}>Exclusão de dados</a>
-      </nav>
-    </header>
+    <Header
+      home={home}
+      by={pt.nav.by}
+      byHref={`${home}#${pt.operator.id}`}
+      navLabel="Documentos"
+      links={[
+        { href: `${home}privacidade/`, label: 'Privacidade', hideSmall: true },
+        { href: `${home}termos/`, label: 'Termos de uso', hideSmall: true },
+        { href: `${home}exclusao-de-dados/`, label: 'Exclusão de dados', hideSmall: true },
+      ]}
+    />
     <main id="main" class="legal wrap">
       <slot />
     </main>
+    <Footer f={pt.footer} />
   </body>
 </html>
 
 <style is:global>
-  .legal-top{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;padding-block:20px;border-bottom:1px solid var(--line)}
-  .legal-top nav{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:15px}
-  .legal-top a{color:var(--ink-2)}
-  .legal-home{font-weight:800;font-size:20px;color:var(--ink)!important;text-decoration:none}
-  .legal{max-width:72ch;padding-block:40px 72px;color:var(--ink);line-height:1.65}
-  .legal h1{font-size:clamp(28px,4vw,40px);line-height:1.15;margin:0 0 12px}
-  .legal h2{font-size:21px;margin:40px 0 8px}
-  .legal p,.legal li{font-size:17px}
+  .legal{max-width:72ch;padding-block:var(--s6) var(--s8);color:var(--ink);line-height:1.65}
+  .legal h1{font-size:var(--t-2xl);line-height:1.15;margin:0 0 var(--s3)}
+  .legal h2{font-size:var(--t-lg);margin:var(--s7) 0 var(--s2)}
+  .legal p,.legal li{font-size:var(--t-base)}
   .legal ul,.legal ol{padding-left:1.25em}
-  .legal li+li{margin-top:6px}
+  .legal li+li{margin-top:var(--s2)}
   .legal a{color:var(--accent-strong)}
   .legal code{font-size:.92em;background:var(--accent-soft);padding:1px 5px;border-radius:4px}
 </style>
