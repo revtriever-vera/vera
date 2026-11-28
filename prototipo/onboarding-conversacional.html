@@ -309,17 +309,17 @@ const Onboarding = (() => {
     itau: {
       title: 'Extrato do Itaú', where: 'No internet banking, no computador. O app só gera PDF.', checked: false,
       steps: ['Vá em "Conta Corrente" › "Extrato".', 'Escolha o período (até 60 dias por vez).', 'Clique em "Salvar em outros formatos" e escolha "OFX/Money 2000".'],
-      links: [], notes: ['A fatura do cartão só sai em PDF, que eu ainda não leio. Para o cartão, conecte pelo Meu Pluggy.']
+      links: [], notes: ['A fatura do cartão só sai em PDF. Pode mandar que eu leio, ou use a sincronização automática.']
     },
     bradesco: {
       title: 'Extrato do Bradesco', where: 'No internet banking, no computador.', checked: false,
       steps: ['Vá em "Saldos e Extratos" › "Extrato Mensal / Por Período".', 'Escolha o período (até 60 dias) e clique em "Buscar".', 'Clique em "Salvar como arquivo" e escolha "OFX (Money 2000 em diante)".'],
-      links: [], notes: ['Para o cartão, conecte pelo Meu Pluggy.']
+      links: [], notes: ['Para o cartão, a sincronização automática é o mais prático.']
     },
     bb: {
       title: 'Extrato do Banco do Brasil', where: 'No internet banking, no computador.', checked: false,
       steps: ['Vá em "Conta Corrente" › "Extrato".', 'Escolha o mês (até os últimos 60 dias).', 'Clique em "Salvar" e escolha "Money 2000+ (ofx)".'],
-      links: [], notes: ['Para o cartão, conecte pelo Meu Pluggy.']
+      links: [], notes: ['Para o cartão, a sincronização automática é o mais prático.']
     },
     caixa: {
       title: 'Extrato da Caixa', where: 'No internet banking, no computador.', checked: false,
@@ -329,7 +329,7 @@ const Onboarding = (() => {
     santander: {
       title: 'Extrato do Santander', where: 'No internet banking, no computador.', checked: false,
       steps: ['Vá em "Conta Corrente" › "Extrato (Money)".', 'Escolha o período e clique em "Exportar".', 'Escolha "Money 2000 ou superior" e confirme.'],
-      links: [], notes: ['Para o cartão, conecte pelo Meu Pluggy.']
+      links: [], notes: ['Para o cartão, a sincronização automática é o mais prático.']
     },
     interbank: {
       title: 'Extrato do Inter', where: 'No internet banking do Inter.', checked: false,
@@ -358,7 +358,7 @@ const Onboarding = (() => {
       notes: ['O print não mostra quanto você pagou. Eu registro a quantidade, e você informa o preço médio depois, se quiser acompanhar o lucro.', 'Nunca mande a frase de recuperação (seed) nem a chave privada. Eu nunca vou pedir.']
     },
     pluggy: {
-      title: 'Conectar pelo Meu Pluggy', where: 'Dois sites da Pluggy. Leva uns 10 minutos na primeira vez.', checked: true,
+      title: 'Ligar a sincronização automática (Meu Pluggy)', where: 'Dois sites da Pluggy. Leva uns 10 minutos na primeira vez.', checked: true,
       steps: ['Crie sua conta em meu.pluggy.ai, toque em "Conectar Minha Conta" e conecte cada banco (a autorização é no app do banco).', 'Crie sua conta em dashboard.pluggy.ai, de preferência com o mesmo e-mail, e crie uma aplicação.', 'Em "Customization" › "Connectors", ligue o conector "MeuPluggy". Faça isso logo: a lista de conectores só pode ser mudada durante o teste do painel.', 'Copie o Client ID e o Client Secret da aplicação e cole abaixo. O Secret aparece uma vez só: copie na hora.'],
       links: [['Meu Pluggy', 'https://meu.pluggy.ai'], ['Painel da Pluggy', 'https://dashboard.pluggy.ai'], ['Guia oficial', 'https://docs.pluggy.ai/en/docs/guides/meu-pluggy-personal-use']],
       notes: ['O Meu Pluggy é grátis para uso pessoal, com até 5 bancos. O aviso de teste de 15 dias do painel não limita esse uso.']
@@ -479,15 +479,15 @@ const Onboarding = (() => {
           ]
         });
       case 'spendPath':
-        return say(t, ['Agora os gastos. Você pode conectar o banco pelo Meu Pluggy, que atualiza sozinho, ou mandar o extrato em OFX ou CSV.'], {
+        return say(t, ['Agora os gastos. Você pode ligar a sincronização automática, que traz as transações do banco sozinha todo dia, ou mandar o extrato em OFX ou CSV.'], {
           chips: [
-            { label: 'Conectar o banco', action: { type: 'SPEND_PATH', path: 'pluggy' } },
+            { label: 'Sincronização automática', action: { type: 'SPEND_PATH', path: 'pluggy' } },
             { label: 'Mandar o extrato', action: { type: 'SPEND_PATH', path: 'statement' } },
             { label: 'Depois', action: { type: 'SPEND_PATH', path: 'later' }, quiet: true }
           ]
         });
       case 'pluggySecret':
-        return say(t, ['A conexão usa a sua própria conta no Meu Pluggy. O passo a passo está abaixo; quando tiver os códigos, cola aqui.'], {
+        return say(t, ['A sincronização automática funciona pelo Meu Pluggy, com a sua própria conta. É só leitura: nada sai do seu banco. O passo a passo está abaixo; quando tiver os códigos, cola aqui.'], {
           card: { type: 'pluggy', guide: 'pluggy' },
           chips: [{ label: 'Prefiro mandar o extrato', action: { type: 'SPEND_PATH', path: 'statement' }, quiet: true }]
         });
@@ -784,11 +784,11 @@ const Onboarding = (() => {
       }
 
       case 'SPEND_PATH': {
-        const label = { pluggy: 'Conectar o banco', statement: 'Mandar o extrato', later: 'Depois' }[a.path];
+        const label = { pluggy: 'Sincronização automática', statement: 'Mandar o extrato', later: 'Depois' }[a.path];
         let t = me(s, a.path === 'statement' && s.step === 'pluggySecret' ? 'Prefiro mandar o extrato' : label);
         if (a.path === 'later') {
           t = addPending(t, 'Gastos: trazer as transações');
-          t = say(t, 'Ok. Os gastos ficam ligados, vazios até você trazer o extrato ou conectar o banco.');
+          t = say(t, 'Ok. Os gastos ficam ligados, vazios até você trazer o extrato ou ligar a sincronização automática.');
           return advance({ ...t, plan: ['goal', ...t.plan] });
         }
         return enter(t, a.path === 'pluggy' ? 'pluggySecret' : 'statementBank');
@@ -1164,7 +1164,7 @@ const Onboarding = (() => {
       text: 'A credencial entra por um cartão seguro e nunca aparece na conversa. Primeiro o Meu Pluggy recusa, depois aceita.',
       steps: [
         ['Escolher "Meus gastos"', { type: 'CHOOSE_MODULES', portfolio: false, spending: true }],
-        ['Escolher "Conectar o banco"', { type: 'SPEND_PATH', path: 'pluggy' }],
+        ['Escolher "Sincronização automática"', { type: 'SPEND_PATH', path: 'pluggy' }],
         ['Enviar uma credencial errada', { type: 'PLUGGY_SECRET', valid: false }],
         ['Enviar a credencial certa', { type: 'PLUGGY_SECRET', valid: true }],
         ['Abrir o Meu Pluggy e entrar', { type: 'PLUGGY_WIDGET', ok: true }],
