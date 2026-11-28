@@ -438,12 +438,12 @@ const Onboarding = (() => {
         return say(t, 'Onde estão seus investimentos hoje? Pode marcar mais de um.', { card: { type: 'sources' } });
       case 'b3File':
         return say(t, ['Na B3 são dois arquivos em Excel: primeiro a Negociação, com suas compras e vendas. Eu leio direto, sem modelo de linguagem.'], {
-          card: { type: 'upload', guide: 'b3neg', accept: '.xlsx', expect: 'a Negociação em Excel', sample: { name: 'negociacao-b3-2019-11-a-2026-11.xlsx', size: 48211 } },
+          card: { type: 'upload', guide: 'b3neg', accept: '', expect: 'a Negociação (Excel é o melhor)', sample: { name: 'negociacao-b3-2019-11-a-2026-11.xlsx', size: 48211 } },
           chips: [{ label: 'Não tenho agora', action: { type: 'NO_FILE' }, quiet: true }]
         });
       case 'b3Movement':
         return say(t, ['Agora a Movimentação: é ela que traz proventos, desdobramentos e transferências entre corretoras. Sem ela, a quantidade de alguns ativos fica errada.'], {
-          card: { type: 'upload', guide: 'b3mov', accept: '.xlsx', expect: 'a Movimentação em Excel', sample: { name: 'movimentacao-b3-2019-11-a-2026-11.xlsx', size: 61230 } },
+          card: { type: 'upload', guide: 'b3mov', accept: '', expect: 'a Movimentação (Excel é o melhor)', sample: { name: 'movimentacao-b3-2019-11-a-2026-11.xlsx', size: 61230 } },
           chips: [{ label: 'Não tenho agora', action: { type: 'NO_FILE' }, quiet: true }]
         });
       case 'extBroker':
@@ -510,8 +510,8 @@ const Onboarding = (() => {
           chips: BANKS.map(([id, label]) => ({ label, action: { type: 'PICK_BANK', bank: id }, quiet: id === 'otherbank' }))
         });
       case 'statement':
-        return say(t, 'Manda o extrato em OFX (o mais certeiro) ou CSV. Pode mandar um de cada conta.', {
-          card: { type: 'upload', guide: s.bank || 'otherbank', accept: '.ofx,.csv', expect: 'o extrato em OFX ou CSV', sample: { name: 'extrato-nubank-set-nov.ofx', size: 30544 } },
+        return say(t, ['Manda o extrato. OFX ou CSV eu leio direto; se só tiver PDF ou print, manda também que eu leio de outro jeito.', 'Pode mandar um de cada conta.'], {
+          card: { type: 'upload', guide: s.bank || 'otherbank', accept: '', expect: 'o extrato (OFX ou CSV é o melhor)', sample: { name: 'extrato-nubank-set-nov.ofx', size: 30544 } },
           chips: [{ label: 'Não tenho agora', action: { type: 'NO_FILE' }, quiet: true }]
         });
       case 'goal':
@@ -590,8 +590,7 @@ const Onboarding = (() => {
         if (kind === 'xlsx' && /mov/.test(file.name.toLowerCase())) return readMovement(t);
         if (kind === 'xlsx' && /posi/.test(file.name.toLowerCase())) return say(t, 'Esse é o relatório de Posição. Ele serve para conferir, mas não monta a carteira: preciso da Negociação e da Movimentação.', { keep: true, chips: currentChips(s) });
         if (kind === 'xlsx') return review({ ...t, b3: { ...t.b3, negotiation: true } }, SAMPLES.b3, 'b3');
-        if (kind === 'pdf' || kind === 'image') return askConsent(t, file, 'note', 'Isso parece uma nota de corretagem ou um print, não o relatório de posição. Consigo ler, mas com modelo de linguagem: só traz as operações dessa nota.');
-        return say(t, `Esse arquivo (${file.name}) eu não consigo ler. Para a B3, preciso do Excel de posição.`, { keep: true, chips: currentChips(s) });
+        return askConsent(t, file, 'note', `Esse arquivo (${file.name}) não é o Excel da B3, que eu leio direto. Consigo ler mesmo assim com um modelo de linguagem, por um serviço da Vercel: te mostro as operações que eu encontrar e só salvo se você confirmar. Para a carteira completa, o Excel continua sendo o melhor caminho.`);
       case 'extFile':
         return askConsent(t, file, 'ext', 'Para ler esse extrato, eu envio o arquivo a um modelo de linguagem, por um serviço da Vercel. Nome do titular, documento e número da conta vão mascarados quando o arquivo tem texto; numa imagem, podem aparecer.');
       case 'cryptoPrint':
@@ -601,8 +600,7 @@ const Onboarding = (() => {
         return say(t, 'Para cripto, preciso do CSV exportado da exchange.', { keep: true, chips: currentChips(s) });
       case 'statement':
         if (kind === 'ofx' || kind === 'csv') return readStatement(t);
-        if (kind === 'pdf') return say(t, 'Extrato em PDF eu ainda não leio. No app do banco, procura "Exportar" e escolhe OFX; se não tiver, CSV.', { keep: true, chips: currentChips(s) });
-        return say(t, `Esse arquivo (${file.name}) não é um extrato que eu leio. Preciso de OFX ou CSV.`, { keep: true, chips: currentChips(s) });
+        return askConsent(t, file, 'statement', `Esse arquivo (${file.name}) não é OFX nem CSV, que eu leio direto. Consigo ler mesmo assim com um modelo de linguagem, por um serviço da Vercel. As descrições das transações vão junto, então podem aparecer nomes de lojas e de pessoas. Te mostro o que eu vi e só salvo se você confirmar.`);
       default:
         return say(t, `Recebi ${file.name}, mas agora estamos em outra etapa (${STEP_LABEL[s.step] || s.step}). Termina esta que eu te peço o arquivo na hora certa.`, { keep: true, chips: currentChips(s) });
     }
@@ -722,11 +720,19 @@ const Onboarding = (() => {
         let t = me(s, a.allow ? 'Permitir este envio' : 'Não enviar');
         t = { ...t, pendingConsent: null, consents: [...t.consents, { file, allowed: a.allow }] };
         if (!a.allow) {
-          t = addPending(t, origin === 'ext' ? 'Investimentos: cadastrar o exterior à mão' : origin === 'cryptoPrint' ? 'Investimentos: cadastrar as criptos à mão' : 'Investimentos: cadastrar a nota à mão');
+          t = addPending(t, origin === 'ext' ? 'Investimentos: cadastrar o exterior à mão' : origin === 'cryptoPrint' ? 'Investimentos: cadastrar as criptos à mão' : origin === 'statement' ? 'Gastos: mandar o extrato em OFX ou CSV' : 'Investimentos: cadastrar a nota à mão');
           t = say(t, 'Não enviei nada. Descartei o arquivo e anotei para você cadastrar à mão depois.');
           return advance(t);
         }
         if (origin === 'cryptoPrint') return review(t, SAMPLES.crypto.map((r) => ({ ...r, noCost: true })), 'crypto');
+        if (origin === 'statement') {
+          return say(t, ['Foi isso que eu vi no arquivo: 84 transações de 01/09 a 27/11, com R$ 9.412,37 de saídas e R$ 12.500,00 de entradas. Confere antes de eu salvar nos gastos.'], {
+            chips: [
+              { label: 'Salvar nos gastos', action: { type: 'CONFIRM_STATEMENT' } },
+              { label: 'Tem algo errado', action: { type: 'FIX_STATEMENT' }, quiet: true }
+            ]
+          });
+        }
         return review(t, origin === 'ext' ? SAMPLES.ext : SAMPLES.note, origin);
       }
 
@@ -737,9 +743,22 @@ const Onboarding = (() => {
         const fresh = s.pendingImport.rows.filter((r) => !known.has(r.ticker));
         t = { ...t, assets: [...t.assets, ...fresh], pendingImport: null };
         if (s.pendingImport.origin === 'b3' && !t.b3.movement && !t.plan.includes('b3Movement')) t = { ...t, plan: ['b3Movement', ...t.plan] };
+        if (s.pendingImport.origin === 'note') t = addPending(t, 'Investimentos: mandar a Negociação e a Movimentação da B3 para a carteira completa');
         t = dropPending(t, s.pendingImport.origin === 'b3' ? 'Investimentos: mandar a Negociação' : s.pendingImport.origin === 'ext' ? 'Investimentos: mandar o extrato do exterior' : 'Investimentos: mandar o CSV');
         t = say(t, `Adicionei ${fresh.length} ${fresh.length === 1 ? 'ativo' : 'ativos'}. Sua carteira está em ${money(t.assets.reduce((acc, x) => acc + valueOf(x), 0))}.`);
         return advance(t);
+      }
+
+      case 'CONFIRM_STATEMENT': {
+        let t = me(s, 'Salvar nos gastos');
+        return readStatement(t);
+      }
+
+      case 'FIX_STATEMENT': {
+        let t = me(s, 'Tem algo errado');
+        return say(t, 'Você corrige na tela de revisão (data, valor, tirar a transação). No protótipo, sigo como se estivesse certo.', {
+          chips: [{ label: 'Salvar nos gastos', action: { type: 'CONFIRM_STATEMENT' } }]
+        });
       }
 
       case 'FIX_IMPORT': {
