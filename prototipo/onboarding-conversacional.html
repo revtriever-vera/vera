@@ -352,14 +352,14 @@ const Onboarding = (() => {
       links: [], notes: []
     },
     selfcustody: {
-      title: 'Print da sua carteira de cripto', where: 'No app ou na extensão da carteira (Ledger Live, MetaMask, Trust Wallet e afins).', checked: true,
-      steps: ['Abra a carteira e vá na tela que lista os saldos de cada moeda.', 'Se a carteira separa por rede (Ethereum, Solana, Bitcoin…), tire um print de cada rede.', 'Confira que o nome da moeda e a quantidade aparecem inteiros no print.', 'Mande aqui. Pode mandar vários de uma vez.'],
+      title: 'Saldos da sua carteira de cripto', where: 'No app ou na extensão da carteira (Ledger Live, MetaMask, Trust Wallet e afins).', checked: true,
+      steps: ['Abra a carteira e vá na tela que lista os saldos de cada moeda.', 'Se a carteira separa por rede (Ethereum, Solana, Bitcoin…), tire um print de cada rede.', 'Confira que o nome da moeda e a quantidade aparecem inteiros no print.', 'Mande aqui, no formato que tiver (print, PDF, planilha). Pode mandar vários de uma vez.'],
       links: [],
       notes: ['O print não mostra quanto você pagou. Eu registro a quantidade, e você informa o preço médio depois, se quiser acompanhar o lucro.', 'Nunca mande a frase de recuperação (seed) nem a chave privada. Eu nunca vou pedir.']
     },
     pluggy: {
       title: 'Conectar pelo Meu Pluggy', where: 'Dois sites da Pluggy. Leva uns 10 minutos na primeira vez.', checked: true,
-      steps: ['Crie sua conta em meu.pluggy.ai, toque em "Conectar Minha Conta" e conecte cada banco (a autorização é no app do banco).', 'Crie sua conta em dashboard.pluggy.ai, de preferência com o mesmo e-mail, e crie uma aplicação.', 'Copie o Client ID e o Client Secret da aplicação. O Secret aparece uma vez só: copie na hora.', 'Em "Customization" › "Connectors", ligue o conector "MeuPluggy".', 'Na aplicação, abra "Demo" › "Connect Account", escolha "MeuPluggy", entre e copie o Item ID de cada banco em "Connected Items".'],
+      steps: ['Crie sua conta em meu.pluggy.ai, toque em "Conectar Minha Conta" e conecte cada banco (a autorização é no app do banco).', 'Crie sua conta em dashboard.pluggy.ai, de preferência com o mesmo e-mail, e crie uma aplicação.', 'Em "Customization" › "Connectors", ligue o conector "MeuPluggy". Faça isso logo: a lista de conectores só pode ser mudada durante o teste do painel.', 'Copie o Client ID e o Client Secret da aplicação e cole abaixo. O Secret aparece uma vez só: copie na hora.'],
       links: [['Meu Pluggy', 'https://meu.pluggy.ai'], ['Painel da Pluggy', 'https://dashboard.pluggy.ai'], ['Guia oficial', 'https://docs.pluggy.ai/en/docs/guides/meu-pluggy-personal-use']],
       notes: ['O Meu Pluggy é grátis para uso pessoal, com até 5 bancos. O aviso de teste de 15 dias do painel não limita esse uso.']
     }
@@ -374,7 +374,7 @@ const Onboarding = (() => {
     b3File: 'Negociação da B3', b3Movement: 'Movimentação da B3', extBroker: 'Corretora no exterior', extFile: 'Extrato do exterior',
     cryptoExchange: 'Onde está a cripto', cryptoPrint: 'Print da carteira de cripto', statementBank: 'Banco do extrato', cryptoFile: 'CSV da exchange', bankFixed: 'Renda fixa no banco',
     target: 'Carteira-alvo', spendPath: 'Como trazer os gastos', pluggySecret: 'Credencial do Meu Pluggy',
-    pluggyRange: 'Período dos gastos', statement: 'Extrato do banco', goal: 'Meta de economia', done: 'Pronto'
+    pluggyWidget: 'Entrar no Meu Pluggy', pluggyRange: 'Período dos gastos', statement: 'Extrato do banco', goal: 'Meta de economia', done: 'Pronto'
   };
 
   const money = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
@@ -451,8 +451,8 @@ const Onboarding = (() => {
           chips: [...BROKERS.map(([id, label]) => ({ label, action: { type: 'PICK_BROKER', broker: id } })), { label: 'Outra', action: { type: 'PICK_BROKER', broker: 'other' }, quiet: true }]
         });
       case 'extFile':
-        return say(t, ['Manda o extrato mensal em PDF. Esse eu leio com um modelo de linguagem, então antes de ler eu te peço a permissão para o arquivo.'], {
-          card: { type: 'upload', guide: s.broker && GUIDES[s.broker] ? s.broker : null, accept: '.pdf', expect: 'o extrato mensal em PDF', sample: { name: 'extrato-avenue-out-2026.pdf', size: 182330 } },
+        return say(t, ['Manda o extrato mensal, de preferência o PDF. Se só tiver print ou outro formato, manda também.', 'Eu leio com um modelo de linguagem, te mostro o que entendi e só salvo depois que você confirmar.'], {
+          card: { type: 'upload', guide: s.broker && GUIDES[s.broker] ? s.broker : null, accept: '', expect: 'o extrato (PDF, print ou o que tiver)', sample: { name: 'extrato-avenue-out-2026.pdf', size: 182330 } },
           chips: [{ label: 'Não tenho agora', action: { type: 'NO_FILE' }, quiet: true }]
         });
       case 'cryptoExchange':
@@ -460,8 +460,8 @@ const Onboarding = (() => {
           chips: [...EXCHANGES.map(([id, label]) => ({ label, action: { type: 'PICK_EXCHANGE', exchange: id } })), { label: 'Outra', action: { type: 'PICK_EXCHANGE', exchange: 'other' }, quiet: true }]
         });
       case 'cryptoPrint':
-        return say(t, [s.exchange === 'selfcustody' ? 'Na carteira própria não tem extrato para exportar, então me manda um print dos saldos.' : 'Dessa exchange eu ainda não leio o CSV, então me manda um print da tela de saldos.', 'O print eu leio com um modelo de linguagem; antes de ler, te peço a permissão para o arquivo.'], {
-          card: { type: 'upload', guide: 'selfcustody', accept: '.png,.jpg,.jpeg,.webp,.pdf', expect: 'o print dos saldos', sample: { name: 'print-carteira-metamask.png', size: 238400 } },
+        return say(t, [s.exchange === 'selfcustody' ? 'Na carteira própria não tem extrato para exportar. Me manda um print dos saldos ou qualquer arquivo que mostre as moedas e as quantidades.' : 'Me manda um print da tela de saldos ou o que a exchange exportar, no formato que for.', 'Eu leio com um modelo de linguagem, te mostro o que entendi e só salvo depois que você confirmar.'], {
+          card: { type: 'upload', guide: 'selfcustody', accept: '', expect: 'o print ou arquivo com os saldos', sample: { name: 'print-carteira-metamask.png', size: 238400 } },
           chips: [{ label: 'Não tenho agora', action: { type: 'NO_FILE' }, quiet: true }]
         });
       case 'cryptoFile':
@@ -491,8 +491,15 @@ const Onboarding = (() => {
           card: { type: 'pluggy', guide: 'pluggy' },
           chips: [{ label: 'Prefiro mandar o extrato', action: { type: 'SPEND_PATH', path: 'statement' }, quiet: true }]
         });
+      case 'pluggyWidget':
+        return say(t, ['Guardei a chave cifrada e testei: está funcionando.', 'Agora abre a janela do Meu Pluggy aqui mesmo e entra com a sua conta. Eu pego seus bancos sozinha, sem você copiar nada.'], {
+          chips: [
+            { label: 'Abrir o Meu Pluggy', action: { type: 'PLUGGY_WIDGET', ok: true } },
+            { label: 'Fechei sem entrar', action: { type: 'PLUGGY_WIDGET', ok: false }, quiet: true }
+          ]
+        });
       case 'pluggyRange':
-        return say(t, ['Guardei a credencial cifrada e testei: está funcionando.', `Encontrei ${SAMPLES.banks.length} conexões: ${SAMPLES.banks.map((b) => `${b.name} (${b.what})`).join(' e ')}.`, 'Puxo desde quando?'], {
+        return say(t, [`Encontrei ${SAMPLES.banks.length} conexões: ${SAMPLES.banks.map((b) => `${b.name} (${b.what})`).join(' e ')}.`, 'Puxo desde quando?'], {
           chips: [
             { label: 'Últimos 90 dias', action: { type: 'PLUGGY_RANGE', days: 90 } },
             { label: 'Só a partir de hoje', action: { type: 'PLUGGY_RANGE', days: 0 }, quiet: true }
@@ -535,7 +542,7 @@ const Onboarding = (() => {
   function review(s, rows, origin) {
     const t = { ...s, pendingImport: { rows, origin } };
     const total = rows.reduce((acc, r) => acc + valueOf(r), 0);
-    return say(t, [`Li ${rows.length} ${rows.length === 1 ? 'posição' : 'posições'}, somando ${money(total)}. Confere antes de eu adicionar à carteira:`], {
+    return say(t, [`Foi isso que eu vi no arquivo: ${rows.length} ${rows.length === 1 ? 'posição' : 'posições'}, somando ${money(total)}. Confere antes de eu salvar na carteira:`], {
       card: { type: 'review', rows },
       chips: [
         { label: 'Adicionar à carteira', action: { type: 'CONFIRM_IMPORT' } },
@@ -586,11 +593,9 @@ const Onboarding = (() => {
         if (kind === 'pdf' || kind === 'image') return askConsent(t, file, 'note', 'Isso parece uma nota de corretagem ou um print, não o relatório de posição. Consigo ler, mas com modelo de linguagem: só traz as operações dessa nota.');
         return say(t, `Esse arquivo (${file.name}) eu não consigo ler. Para a B3, preciso do Excel de posição.`, { keep: true, chips: currentChips(s) });
       case 'extFile':
-        if (kind === 'pdf' || kind === 'image') return askConsent(t, file, 'ext', 'Para ler esse extrato, eu envio o arquivo a um modelo de linguagem, por um serviço da Vercel. Nome do titular, documento e número da conta vão mascarados no texto; numa imagem, podem aparecer.');
-        return say(t, `Para o exterior, preciso do extrato em PDF. Esse (${file.name}) não é o que eu leio aqui.`, { keep: true, chips: currentChips(s) });
+        return askConsent(t, file, 'ext', 'Para ler esse extrato, eu envio o arquivo a um modelo de linguagem, por um serviço da Vercel. Nome do titular, documento e número da conta vão mascarados quando o arquivo tem texto; numa imagem, podem aparecer.');
       case 'cryptoPrint':
-        if (kind === 'image' || kind === 'pdf') return askConsent(t, file, 'cryptoPrint', 'Para ler esse print, eu envio a imagem a um modelo de linguagem, por um serviço da Vercel. Endereços de carteira que aparecerem na imagem vão junto; seed e chave privada nunca devem estar no print.');
-        return say(t, 'Para a carteira própria, preciso de um print (PNG ou JPG) da tela de saldos.', { keep: true, chips: currentChips(s) });
+        return askConsent(t, file, 'cryptoPrint', 'Para ler esse arquivo, eu envio ele a um modelo de linguagem, por um serviço da Vercel. Endereços de carteira que aparecerem vão junto; seed e chave privada nunca devem estar no arquivo.');
       case 'cryptoFile':
         if (kind === 'csv') return review(t, SAMPLES.crypto, 'crypto');
         return say(t, 'Para cripto, preciso do CSV exportado da exchange.', { keep: true, chips: currentChips(s) });
@@ -778,7 +783,22 @@ const Onboarding = (() => {
             chips: [{ label: 'Prefiro mandar o extrato', action: { type: 'SPEND_PATH', path: 'statement' }, quiet: true }]
           });
         }
-        t = { ...t, secrets: [...t.secrets.filter((x) => x !== 'Meu Pluggy'), 'Meu Pluggy'], banks: SAMPLES.banks };
+        t = { ...t, secrets: [...t.secrets.filter((x) => x !== 'Meu Pluggy'), 'Meu Pluggy'] };
+        return enter(t, 'pluggyWidget');
+      }
+
+      case 'PLUGGY_WIDGET': {
+        if (!a.ok) {
+          let t = sys(s, 'A janela do Meu Pluggy foi fechada sem entrar.');
+          return say(t, 'Sem problema. Quando quiser, abre de novo. Se preferir, dá para mandar o extrato.', {
+            chips: [
+              { label: 'Abrir o Meu Pluggy', action: { type: 'PLUGGY_WIDGET', ok: true } },
+              { label: 'Mandar o extrato', action: { type: 'SPEND_PATH', path: 'statement' }, quiet: true }
+            ]
+          });
+        }
+        let t = sys(s, 'A pessoa entrou no Meu Pluggy pela janela da Pluggy. A Vera recebeu os 2 bancos.');
+        t = { ...t, banks: SAMPLES.banks };
         return enter(t, 'pluggyRange');
       }
 
@@ -953,7 +973,7 @@ const Onboarding = (() => {
       return `<form class="card${done}" data-form="sources"><div class="checks">${Onboarding.SOURCES.map((src) => `<label><input type="checkbox" name="src" value="${src.id}" id="src-${m.id}-${src.id}"${off}><span><b>${esc(src.label)}</b><small>${esc(src.hint)}</small></span></label>`).join('')}</div><div class="row"><button class="btn primary" type="submit"${off}>Continuar</button></div></form>`;
     }
     if (c.type === 'upload') {
-      return `<div class="card${done}">${guideHtml(c.guide)}<div class="drop" data-drop="${m.id}">${ICON.upload}<b>Arraste ${esc(c.expect)} aqui</b><span>ou</span><div class="row"><button class="btn" type="button" data-pick="${esc(c.accept)}"${off}>Escolher arquivo</button><button class="btn" type="button" data-sample='${esc(JSON.stringify(c.sample))}'${off}>Usar um de exemplo</button></div><span>Até 10 MB · ${esc(c.accept.replace(/\./g, '').toUpperCase().replace(/,/g, ', '))}</span></div></div>`;
+      return `<div class="card${done}">${guideHtml(c.guide)}<div class="drop" data-drop="${m.id}">${ICON.upload}<b>Arraste ${esc(c.expect)} aqui</b><span>ou</span><div class="row"><button class="btn" type="button" data-pick="${esc(c.accept)}"${off}>Escolher arquivo</button><button class="btn" type="button" data-sample='${esc(JSON.stringify(c.sample))}'${off}>Usar um de exemplo</button></div><span>Até 10 MB · ${c.accept ? esc(c.accept.replace(/\./g, '').toUpperCase().replace(/,/g, ', ')) : 'qualquer formato'}</span></div></div>`;
     }
     if (c.type === 'review') {
       return `<div class="card${done}"><div class="tablewrap"><table><thead><tr><th>Ativo</th><th>Classe</th><th class="r">Qtd.</th><th class="r">Valor</th></tr></thead><tbody>${c.rows.map((r) => `<tr><td><b>${esc(r.ticker)}</b><br><small>${esc(r.name)}</small></td><td>${esc(r.cls)}</td><td class="r">${r.qty.toLocaleString('pt-BR')}</td><td class="r">${Onboarding.money(Onboarding.valueOf(r))}</td></tr>`).join('')}</tbody></table></div>${c.rows.some((r) => r.cur === 'USD') ? '<p class="hint">Valores em dólar convertidos pela PTAX de hoje (R$ 5,42, exemplo).</p>' : ''}${c.rows.some((r) => r.noCost) ? '<p class="hint">Valor pela cotação de hoje. O print não traz o preço de compra: você informa o preço médio depois, na carteira.</p>' : ''}</div>`;
@@ -965,7 +985,7 @@ const Onboarding = (() => {
       return `<form class="card${done}" data-form="fixed"><div class="grid2"><div class="field"><label for="fx-issuer-${m.id}">Banco emissor</label><input id="fx-issuer-${m.id}" name="issuer" value="Banco Inter"${off}></div><div class="field"><label for="fx-amount-${m.id}">Valor aplicado (R$)</label><input id="fx-amount-${m.id}" name="amount" inputmode="decimal" value="15000"${off}></div><div class="field"><label for="fx-rate-${m.id}">Taxa</label><input id="fx-rate-${m.id}" name="rate" value="110% do CDI"${off}></div><div class="field"><label for="fx-mat-${m.id}">Vencimento</label><input id="fx-mat-${m.id}" name="maturity" value="03/2028"${off}></div></div><div class="row"><button class="btn primary" type="submit"${off}>Adicionar</button></div></form>`;
     }
     if (c.type === 'pluggy') {
-      return `<form class="card${done}" data-form="pluggy" autocomplete="off">${c.retry ? '' : guideHtml(c.guide)}<div class="grid2"><div class="field"><label for="pg-id-${m.id}">Client ID</label><input id="pg-id-${m.id}" name="clientId" placeholder="ex.: 6f1c…" spellcheck="false"${off}></div><div class="field"><label for="pg-secret-${m.id}">Client Secret</label><input id="pg-secret-${m.id}" name="clientSecret" type="password" placeholder="••••••••" spellcheck="false"${off}></div></div><div class="field"><label for="pg-items-${m.id}">Item ID de cada banco</label><textarea id="pg-items-${m.id}" name="itemIds" rows="2" placeholder="Um por linha" spellcheck="false"${off}></textarea></div><p class="lockline">${ICON.lock}<span>Vai cifrado direto para o cofre da Vera. Não aparece na conversa, no histórico nem para o suporte, e dá para apagar em Configurações › Conexões.</span></p><div class="row"><button class="btn primary" type="submit"${off}>Salvar com segurança</button><button class="btn" type="button" data-fill="ok"${off}>Preencher exemplo válido</button><button class="btn" type="button" data-fill="bad"${off}>Preencher exemplo errado</button></div></form>`;
+      return `<form class="card${done}" data-form="pluggy" autocomplete="off">${c.retry ? '' : guideHtml(c.guide)}<div class="grid2"><div class="field"><label for="pg-id-${m.id}">Client ID</label><input id="pg-id-${m.id}" name="clientId" placeholder="ex.: 6f1c…" spellcheck="false"${off}></div><div class="field"><label for="pg-secret-${m.id}">Client Secret</label><input id="pg-secret-${m.id}" name="clientSecret" type="password" placeholder="••••••••" spellcheck="false"${off}></div></div><p class="lockline">${ICON.lock}<span>Vai cifrado direto para o cofre da Vera. Não aparece na conversa, no histórico nem para o suporte, e dá para apagar em Configurações › Conexões.</span></p><div class="row"><button class="btn primary" type="submit"${off}>Salvar com segurança</button><button class="btn" type="button" data-fill="ok"${off}>Preencher exemplo válido</button><button class="btn" type="button" data-fill="bad"${off}>Preencher exemplo errado</button></div></form>`;
     }
     if (c.type === 'summary') {
       const s = Onboarding.snapshot(state);
@@ -1054,7 +1074,6 @@ const Onboarding = (() => {
       const form = fill.closest('form');
       form.clientId.value = '6f1c2a90-3b7e-4d21-9c55-8e0f4a7b1d23';
       form.clientSecret.value = fill.dataset.fill === 'ok' ? 'exemplo-valido-123456' : 'curta';
-      form.itemIds.value = '1b2c3d4e-0000-4a5b-8c9d-aaaaaaaa0001\n1b2c3d4e-0000-4a5b-8c9d-aaaaaaaa0002';
     }
   });
   $('msgs').addEventListener('submit', (e) => {
@@ -1068,8 +1087,8 @@ const Onboarding = (() => {
       return dispatch({ type: 'BANK_FIXED', issuer: form.issuer.value.trim() || 'Banco', amount: Number(String(form.amount.value).replace(/\./g, '').replace(',', '.')) || 0, rate: form.rate.value.trim(), maturity: form.maturity.value.trim() }, 'cadastrou a renda fixa');
     }
     if (form.dataset.form === 'pluggy') {
-      const valid = form.clientId.value.trim().length >= 8 && form.clientSecret.value.trim().length >= 12 && form.itemIds.value.trim().length > 0;
-      form.clientSecret.value = ''; form.clientId.value = ''; form.itemIds.value = '';
+      const valid = form.clientId.value.trim().length >= 8 && form.clientSecret.value.trim().length >= 12;
+      form.clientSecret.value = ''; form.clientId.value = '';
       return dispatch({ type: 'PLUGGY_SECRET', valid }, valid ? 'enviou uma credencial válida' : 'enviou uma credencial que o Meu Pluggy recusa');
     }
   });
@@ -1129,6 +1148,7 @@ const Onboarding = (() => {
         ['Escolher "Conectar o banco"', { type: 'SPEND_PATH', path: 'pluggy' }],
         ['Enviar uma credencial errada', { type: 'PLUGGY_SECRET', valid: false }],
         ['Enviar a credencial certa', { type: 'PLUGGY_SECRET', valid: true }],
+        ['Abrir o Meu Pluggy e entrar', { type: 'PLUGGY_WIDGET', ok: true }],
         ['Puxar os últimos 90 dias', { type: 'PLUGGY_RANGE', days: 90 }],
         ['Meta de R$ 1.000', { type: 'GOAL', amount: 1000 }],
         ['Ir para o painel', { type: 'GO_DASHBOARD' }]
