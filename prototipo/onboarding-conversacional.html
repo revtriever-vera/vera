@@ -15,19 +15,8 @@
   --f-word:"Bricolage Grotesque","Nunito",system-ui,sans-serif;
   --f-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --r:18px; --rc:12px;
+  color-scheme:light;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#1a1216; --surface:#241a1f; --surface-2:#2e2228; --hover:#33262d; --line:#3b2c34;
-  --ink:#f6ecf1; --ink-2:#cdb8c3; --ink-3:#a28d99;
-  --accent:#f0619a; --accent-strong:#ff86b3; --accent-soft:#4a2133; --on-accent:#1a1216;
-  --good:#52c493; --good-soft:#173a2c; --warn:#f0a35a; --warn-soft:#3d2a16; --bad:#f2717c; --bad-soft:#40191e;
-  --changed:#4a3d12; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#1a1216; --surface:#241a1f; --surface-2:#2e2228; --hover:#33262d; --line:#3b2c34;
-  --ink:#f6ecf1; --ink-2:#cdb8c3; --ink-3:#a28d99;
-  --accent:#f0619a; --accent-strong:#ff86b3; --accent-soft:#4a2133; --on-accent:#1a1216;
-  --good:#52c493; --good-soft:#173a2c; --warn:#f0a35a; --warn-soft:#3d2a16; --bad:#f2717c; --bad-soft:#40191e;
-  --changed:#4a3d12; color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
 h1,h2,h3{text-wrap:balance;margin:0}p{text-wrap:pretty}
@@ -41,6 +30,25 @@ a{color:var(--accent-strong);font-weight:700}
 .intro p{margin:0;color:var(--ink-2)}
 .layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:20px;align-items:start}
 @media (max-width:980px){.layout{grid-template-columns:minmax(0,1fr)}}
+
+/* guia de onde baixar */
+.guide{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--surface)}
+.guide summary{font-weight:800;font-size:14px;cursor:pointer}
+.guide .hint{margin:6px 0 8px}
+.guide .steps{font-size:13.5px}
+.guide .notes{margin:8px 0 0;padding-left:18px;font-size:12.5px;color:var(--ink-2);display:grid;gap:4px}
+.guide .links{display:flex;flex-wrap:wrap;gap:6px 14px;margin:8px 0 0;font-size:13px}
+.guide .checked{margin:8px 0 0;font-size:12px}
+.guide .checked.ok{color:var(--good)}
+.guide .checked.warn{color:var(--warn)}
+.field textarea{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 12px;width:100%;min-width:0;font:inherit;font-family:var(--f-mono);font-size:13px;resize:vertical}
+
+/* barra de rolagem fina e clara */
+*{scrollbar-width:thin;scrollbar-color:#e9dfe4 transparent}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#e9dfe4;border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:#dccfd6}
 
 /* chat */
 .chat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);display:grid;grid-template-rows:auto minmax(0,1fr) auto;height:min(820px,calc(100dvh - 40px));min-height:560px;overflow:hidden}
@@ -152,8 +160,7 @@ svg.i{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke
   <header class="intro">
     <span class="eyebrow">Protótipo · descartável</span>
     <h1>Onboarding conversacional da Vera</h1>
-    <p><b>A pergunta:</b> um onboarding em que a Vera conduz a conversa (primeiro pergunta se a pessoa quer gastos, investimentos ou os dois, depois pede o arquivo ou a credencial certa para cada caso e se adapta ao que chega) faz sentido para quem acabou de criar a conta? E o que acontece quando a pessoa foge do roteiro, manda o arquivo errado, nega uma permissão ou decide ligar um módulo depois?</p>
-    <p>Converse no chat à esquerda como a pessoa faria, inclusive mandando arquivos de verdade (a leitura é simulada pelo nome e pelo tipo do arquivo). À direita, o estado da conta muda a cada resposta e o que mudou fica marcado. Os roteiros guiados repetem os casos difíceis sempre do mesmo jeito. Nada sai deste navegador: a credencial digitada nunca é mostrada nem guardada.</p>
+    <p>Converse como a pessoa faria. À direita, o que a conversa grava na conta.</p>
   </header>
 
   <div class="layout">
@@ -232,9 +239,134 @@ const Onboarding = (() => {
     { id: 'bank', label: 'Renda fixa no banco', hint: 'CDB, LCI ou LCA direto no banco' }
   ];
 
+  // Guias conferidos nas páginas de ajuda em 28/11/2026. checked=false: caminho não conferido numa conta real.
+  const GUIDES = {
+    b3neg: {
+      title: 'Negociação da B3 (compras e vendas)', where: 'No computador, pelo site da B3. O app da B3 ainda não baixa o Excel.', checked: true,
+      steps: ['Entre em investidor.b3.com.br com CPF e senha. Se nunca entrou, toque em "Primeiro acesso" e crie a senha (é grátis).', 'No menu da esquerda, abra "Extratos" e escolha a aba "Negociação".', 'Toque em "Filtrar" e escolha o período: de novembro de 2019 até hoje.', 'Toque em "Baixar" e escolha "Arquivo em Excel".'],
+      links: [['Área do Investidor da B3', 'https://www.investidor.b3.com.br/login']],
+      notes: ['Os dados da B3 começam em novembro de 2019. O que você comprou antes entra pela nota de corretagem ou à mão.', 'Se o arquivo ficar grande, baixe por ano e mande todos.']
+    },
+    b3mov: {
+      title: 'Movimentação da B3 (proventos, desdobramentos, transferências)', where: 'No mesmo site, logo depois da Negociação.', checked: true,
+      steps: ['Em "Extratos", escolha a aba "Movimentação".', 'Toque em "Filtrar" e use o mesmo período da Negociação.', 'Toque em "Baixar" e escolha "Arquivo em Excel".'],
+      links: [['Área do Investidor da B3', 'https://www.investidor.b3.com.br/login']],
+      notes: ['Tesouro Direto, CDB, LCI e LCA comprados por corretora aparecem aqui como aplicações e vencimentos.']
+    },
+    avenue: {
+      title: 'Extrato mensal da Avenue', where: 'No app da Avenue.', checked: true,
+      steps: ['Toque em "Olá, seu nome", no topo.', 'Toque em "Extratos e documentos".', 'Abra "Extrato Mensal" (também chamado "Extrato na Conta da Clearing").', 'Escolha o mês e baixe o PDF. Repita para cada mês que quiser trazer.'],
+      links: [['Ajuda da Avenue', 'https://avenue.us/duvidas/como-acessar-o-extrato-na-conta-da-clearing/']],
+      notes: ['O extrato do mês sai até o 5º dia útil do mês seguinte e vem em inglês.']
+    },
+    inter: {
+      title: 'Extrato mensal do Inter (investimentos nos EUA)', where: 'No app do Inter.', checked: false,
+      steps: ['Abra "Investir" e depois "Investimentos EUA".', 'Toque em "Ações, ETFs e REITs".', 'Toque na engrenagem, no canto de cima, e em "Resumo da conta".', 'Escolha o mês. O PDF chega no seu e-mail.'],
+      links: [['Ajuda do Inter', 'https://ajuda.inter.co/investimentos/como-ficam-registrados-os-investimentos-no-exterior']],
+      notes: ['Não confunda com "Global › Exportar Extrato": esse é o da conta em dólar, não o dos investimentos.', 'Em julho de 2025 a custódia mudou de corretora; naquele mês vieram dois extratos. Mande os dois.']
+    },
+    nomad: {
+      title: 'Extrato mensal da Nomad', where: 'No app da Nomad.', checked: false,
+      steps: ['Toque em "Investimentos", depois em "Gerenciar" e em "Documentos".', 'Toque em "Ações, ETFs e REITs".', 'Abra "Extratos mensais" e escolha o mês.'],
+      links: [['Anúncio da corretora própria da Nomad', 'https://www.nomadglobal.com/conteudos/nomad-anuncia-broker-dealer']],
+      notes: ['Extratos de antes de meados de 2025 ficam em "Documentos – Nomad Fintech Inc."; os novos, em "Documentos – Nomad Investments Service".']
+    },
+    xp: {
+      title: 'Extrato mensal da XP Internacional', where: 'No app ou no site da XP.', checked: false,
+      steps: ['Abra "Investimento Global".', 'Toque em "Saldo Conta Investimento Global" e depois em "Extrato".', 'Em "Extrato Mensal", escolha o mês e toque em "Consultar Extrato".'],
+      links: [],
+      notes: ['O extrato vem em inglês.']
+    },
+    btg: {
+      title: 'Extrato mensal do BTG Global', where: 'No app BTG Pactual Global.', checked: false,
+      steps: ['Abra o app BTG Pactual Global (é separado do app do BTG).', 'Procure a área de extratos e documentos da conta de investimentos.', 'Escolha o mês e baixe o PDF.'],
+      links: [['Contas internacionais do BTG', 'https://www.btgpactual.us/international-accounts']],
+      notes: []
+    },
+    binance: {
+      title: 'Histórico de trades da Binance', where: 'No site da Binance, no computador.', checked: true,
+      steps: ['Clique no seu perfil e vá em "Orders" › "Spot Order".', 'Abra "Trade History" e clique em "Export Trade History".', 'Escolha as datas (até 1 ano por arquivo) e clique em "Generate".', 'Quando chegar o aviso por e-mail ou SMS, volte e clique em "Download".'],
+      links: [['Ajuda da Binance', 'https://www.binance.com/en/support/faq/detail/e4ff64f2533f4d23a0b3f8f17f510eab']],
+      notes: ['É o "Trade History", não o "Transaction History": é ele que traz as compras e vendas.', 'Para mais de um ano, gere um arquivo por ano e mande todos. O link vale 7 dias.']
+    },
+    coinbase: {
+      title: 'Extrato da Coinbase', where: 'No site da Coinbase.', checked: false,
+      steps: ['Clique no seu perfil e abra "Statements".', 'Em "Generate custom statement", deixe "all" nos ativos e nos tipos de transação.', 'Escolha o período e o formato "CSV" e clique em "Generate".', 'Baixe pelo link que chega no seu e-mail.'],
+      links: [['Ajuda da Coinbase', 'https://help.coinbase.com/en-gb/coinbase/taxes/tools/statements']],
+      notes: []
+    },
+    mb: {
+      title: 'Extrato do Mercado Bitcoin', where: 'No site do Mercado Bitcoin.', checked: false,
+      steps: ['Clique em "Extrato".', 'Deixe em "Extrato Geral", com todas as moedas.', 'Escolha o ano e clique em "Download" › "Baixar extrato .CSV".', 'Repita para cada ano desde que abriu a conta.'],
+      links: [],
+      notes: ['Sai um arquivo por ano, na hora.']
+    },
+    nubank: {
+      title: 'Extrato do Nubank', where: 'No app do Nubank.', checked: false,
+      steps: ['Na área da conta, toque em "Exportar extrato".', 'Escolha o mês e o formato OFX.', 'O arquivo chega no seu e-mail em alguns minutos.'],
+      links: [], notes: ['A fatura fechada do cartão também exporta em OFX: abra a fatura e toque em compartilhar.']
+    },
+    itau: {
+      title: 'Extrato do Itaú', where: 'No internet banking, no computador. O app só gera PDF.', checked: false,
+      steps: ['Vá em "Conta Corrente" › "Extrato".', 'Escolha o período (até 60 dias por vez).', 'Clique em "Salvar em outros formatos" e escolha "OFX/Money 2000".'],
+      links: [], notes: ['A fatura do cartão só sai em PDF, que eu ainda não leio. Para o cartão, conecte pelo Meu Pluggy.']
+    },
+    bradesco: {
+      title: 'Extrato do Bradesco', where: 'No internet banking, no computador.', checked: false,
+      steps: ['Vá em "Saldos e Extratos" › "Extrato Mensal / Por Período".', 'Escolha o período (até 60 dias) e clique em "Buscar".', 'Clique em "Salvar como arquivo" e escolha "OFX (Money 2000 em diante)".'],
+      links: [], notes: ['Para o cartão, conecte pelo Meu Pluggy.']
+    },
+    bb: {
+      title: 'Extrato do Banco do Brasil', where: 'No internet banking, no computador.', checked: false,
+      steps: ['Vá em "Conta Corrente" › "Extrato".', 'Escolha o mês (até os últimos 60 dias).', 'Clique em "Salvar" e escolha "Money 2000+ (ofx)".'],
+      links: [], notes: ['Para o cartão, conecte pelo Meu Pluggy.']
+    },
+    caixa: {
+      title: 'Extrato da Caixa', where: 'No internet banking, no computador.', checked: false,
+      steps: ['Vá em "Minha Conta" › "Extrato em Arquivo".', 'Escolha o período (até 60 dias).', 'Marque "Gerar Arquivo para Gerenciadores Financeiros", escolha "OFX" e clique em "Continuar".'],
+      links: [], notes: []
+    },
+    santander: {
+      title: 'Extrato do Santander', where: 'No internet banking, no computador.', checked: false,
+      steps: ['Vá em "Conta Corrente" › "Extrato (Money)".', 'Escolha o período e clique em "Exportar".', 'Escolha "Money 2000 ou superior" e confirme.'],
+      links: [], notes: ['Para o cartão, conecte pelo Meu Pluggy.']
+    },
+    interbank: {
+      title: 'Extrato do Inter', where: 'No internet banking do Inter.', checked: false,
+      steps: ['Vá em "Conta Digital" › "Extrato".', 'Escolha o período (até 2 anos por vez) e clique em "Consultar".', 'Clique em "Exportar OFX".'],
+      links: [['Blog do Inter', 'https://blog.inter.co/super-extrato-inter']], notes: []
+    },
+    c6bank: {
+      title: 'Extrato do C6 Bank', where: 'No app do C6.', checked: false,
+      steps: ['Toque em "Ver extrato" e depois em "exportar extrato".', 'Escolha o período (até 180 dias).', 'O arquivo chega no seu e-mail.'],
+      links: [], notes: ['Se o arquivo vier em PDF, use o Web Banking, que exporta OFX.']
+    },
+    pagbank: {
+      title: 'Extrato do PagBank', where: 'No app do PagBank.', checked: false,
+      steps: ['Toque em "Extrato", na barra de baixo.', 'Toque nos três pontos e em "Exportar Extrato".', 'Escolha o período e o formato (OFX ou CSV). O arquivo chega no seu e-mail.'],
+      links: [['Blog do PagBank', 'https://blog.pagbank.com.br/extrato-pagbank']], notes: []
+    },
+    otherbank: {
+      title: 'Extrato de outro banco', where: 'Quase sempre no internet banking, no computador.', checked: false,
+      steps: ['Abra o extrato da conta.', 'Procure "Exportar", "Salvar como" ou "Salvar em outros formatos".', 'Escolha OFX (às vezes aparece como "Money"). Se não tiver, CSV.'],
+      links: [], notes: []
+    },
+    pluggy: {
+      title: 'Conectar pelo Meu Pluggy', where: 'Dois sites da Pluggy. Leva uns 10 minutos na primeira vez.', checked: true,
+      steps: ['Crie sua conta em meu.pluggy.ai, toque em "Conectar Minha Conta" e conecte cada banco (a autorização é no app do banco).', 'Crie sua conta em dashboard.pluggy.ai, de preferência com o mesmo e-mail, e crie uma aplicação.', 'Copie o Client ID e o Client Secret da aplicação. O Secret aparece uma vez só: copie na hora.', 'Em "Customization" › "Connectors", ligue o conector "MeuPluggy".', 'Na aplicação, abra "Demo" › "Connect Account", escolha "MeuPluggy", entre e copie o Item ID de cada banco em "Connected Items".'],
+      links: [['Meu Pluggy', 'https://meu.pluggy.ai'], ['Painel da Pluggy', 'https://dashboard.pluggy.ai'], ['Guia oficial', 'https://docs.pluggy.ai/en/docs/guides/meu-pluggy-personal-use']],
+      notes: ['O Meu Pluggy é grátis para uso pessoal, com até 5 bancos. O aviso de teste de 15 dias do painel não limita esse uso.']
+    }
+  };
+
+  const BROKERS = [['avenue', 'Avenue'], ['inter', 'Inter'], ['nomad', 'Nomad'], ['xp', 'XP Internacional'], ['btg', 'BTG Global'], ['c6', 'C6 Global Invest']];
+  const EXCHANGES = [['binance', 'Binance'], ['coinbase', 'Coinbase'], ['mb', 'Mercado Bitcoin']];
+  const BANKS = [['nubank', 'Nubank'], ['itau', 'Itaú'], ['bradesco', 'Bradesco'], ['bb', 'Banco do Brasil'], ['caixa', 'Caixa'], ['santander', 'Santander'], ['interbank', 'Inter'], ['c6bank', 'C6 Bank'], ['pagbank', 'PagBank'], ['otherbank', 'Outro banco']];
+
   const STEP_LABEL = {
     modules: 'Escolher o que acompanhar', explain: 'Explicar os módulos', sources: 'Onde estão os investimentos',
-    b3File: 'Relatório da B3', extFile: 'Extrato do exterior', cryptoFile: 'CSV da exchange', bankFixed: 'Renda fixa no banco',
+    b3File: 'Negociação da B3', b3Movement: 'Movimentação da B3', extBroker: 'Corretora no exterior', extFile: 'Extrato do exterior',
+    cryptoExchange: 'Exchange de cripto', statementBank: 'Banco do extrato', cryptoFile: 'CSV da exchange', bankFixed: 'Renda fixa no banco',
     target: 'Carteira-alvo', spendPath: 'Como trazer os gastos', pluggySecret: 'Credencial do Meu Pluggy',
     pluggyRange: 'Período dos gastos', statement: 'Extrato do banco', goal: 'Meta de economia', done: 'Pronto'
   };
@@ -258,7 +390,8 @@ const Onboarding = (() => {
       name, step: 'modules', plan: [], modules: { portfolio: false, spending: false }, chosen: false,
       files: [], secrets: [], assets: [], banks: [], transactions: 0, uncategorized: 0,
       consents: [], pending: [], goal: null, target: null, paused: false, done: false,
-      pendingImport: null, pendingConsent: null, pendingModuleFile: null, messages: [], seq: 0
+      pendingImport: null, pendingConsent: null, pendingModuleFile: null, messages: [], seq: 0,
+      broker: null, exchange: null, bank: null, b3: { negotiation: false, movement: false }
     };
     return say(s, [`Oi, ${name}! Eu sou a Vera. Vou montar sua conta com você em poucos minutos.`, 'Para começar: o que você quer acompanhar aqui?'], { chips: moduleChips() });
   }
@@ -298,18 +431,31 @@ const Onboarding = (() => {
       case 'sources':
         return say(t, 'Onde estão seus investimentos hoje? Pode marcar mais de um.', { card: { type: 'sources' } });
       case 'b3File':
-        return say(t, ['Para o que está na B3, o caminho mais rápido é o relatório de posição.', 'Na Área do Investidor da B3: Extratos › Posição › Baixar em Excel. Manda o arquivo aqui que eu leio, sem modelo de linguagem.'], {
-          card: { type: 'upload', accept: '.xlsx', expect: 'o Excel de posição da B3', sample: { name: 'posicao-b3-2026-11-28.xlsx', size: 48211 } },
+        return say(t, ['Na B3 são dois arquivos em Excel: primeiro a Negociação, com suas compras e vendas. Eu leio direto, sem modelo de linguagem.'], {
+          card: { type: 'upload', guide: 'b3neg', accept: '.xlsx', expect: 'a Negociação em Excel', sample: { name: 'negociacao-b3-2019-11-a-2026-11.xlsx', size: 48211 } },
           chips: [{ label: 'Não tenho agora', action: { type: 'NO_FILE' }, quiet: true }]
+        });
+      case 'b3Movement':
+        return say(t, ['Agora a Movimentação: é ela que traz proventos, desdobramentos e transferências entre corretoras. Sem ela, a quantidade de alguns ativos fica errada.'], {
+          card: { type: 'upload', guide: 'b3mov', accept: '.xlsx', expect: 'a Movimentação em Excel', sample: { name: 'movimentacao-b3-2019-11-a-2026-11.xlsx', size: 61230 } },
+          chips: [{ label: 'Não tenho agora', action: { type: 'NO_FILE' }, quiet: true }]
+        });
+      case 'extBroker':
+        return say(t, 'Em qual corretora no exterior?', {
+          chips: [...BROKERS.map(([id, label]) => ({ label, action: { type: 'PICK_BROKER', broker: id } })), { label: 'Outra', action: { type: 'PICK_BROKER', broker: 'other' }, quiet: true }]
         });
       case 'extFile':
-        return say(t, ['Do exterior, manda o extrato mensal da corretora em PDF.', 'Esse eu leio com um modelo de linguagem, então antes de ler eu te peço a permissão para esse arquivo.'], {
-          card: { type: 'upload', accept: '.pdf', expect: 'o extrato mensal em PDF', sample: { name: 'extrato-avenue-out-2026.pdf', size: 182330 } },
+        return say(t, ['Manda o extrato mensal em PDF. Esse eu leio com um modelo de linguagem, então antes de ler eu te peço a permissão para o arquivo.'], {
+          card: { type: 'upload', guide: s.broker && GUIDES[s.broker] ? s.broker : null, accept: '.pdf', expect: 'o extrato mensal em PDF', sample: { name: 'extrato-avenue-out-2026.pdf', size: 182330 } },
           chips: [{ label: 'Não tenho agora', action: { type: 'NO_FILE' }, quiet: true }]
         });
+      case 'cryptoExchange':
+        return say(t, 'Em qual exchange?', {
+          chips: [...EXCHANGES.map(([id, label]) => ({ label, action: { type: 'PICK_EXCHANGE', exchange: id } })), { label: 'Outra', action: { type: 'PICK_EXCHANGE', exchange: 'other' }, quiet: true }]
+        });
       case 'cryptoFile':
-        return say(t, 'Para cripto, exporta o histórico da exchange em CSV e manda aqui. Esse eu leio direto.', {
-          card: { type: 'upload', accept: '.csv', expect: 'o CSV da exchange', sample: { name: 'binance-historico.csv', size: 9120 } },
+        return say(t, 'Exporta o histórico em CSV e manda aqui. Esse eu leio direto.', {
+          card: { type: 'upload', guide: s.exchange, accept: '.csv', expect: 'o CSV da exchange', sample: { name: 'binance-trade-history-2025.csv', size: 9120 } },
           chips: [{ label: 'Não tenho agora', action: { type: 'NO_FILE' }, quiet: true }]
         });
       case 'bankFixed':
@@ -330,8 +476,8 @@ const Onboarding = (() => {
           ]
         });
       case 'pluggySecret':
-        return say(t, ['A conexão usa a sua própria conta no Meu Pluggy. São três passos fora daqui:'], {
-          card: { type: 'pluggy' },
+        return say(t, ['A conexão usa a sua própria conta no Meu Pluggy. O passo a passo está abaixo; quando tiver os códigos, cola aqui.'], {
+          card: { type: 'pluggy', guide: 'pluggy' },
           chips: [{ label: 'Prefiro mandar o extrato', action: { type: 'SPEND_PATH', path: 'statement' }, quiet: true }]
         });
       case 'pluggyRange':
@@ -341,9 +487,13 @@ const Onboarding = (() => {
             { label: 'Só a partir de hoje', action: { type: 'PLUGGY_RANGE', days: 0 }, quiet: true }
           ]
         });
+      case 'statementBank':
+        return say(t, 'De qual banco é o extrato? Se tiver mais de um, começa pelo principal.', {
+          chips: BANKS.map(([id, label]) => ({ label, action: { type: 'PICK_BANK', bank: id }, quiet: id === 'otherbank' }))
+        });
       case 'statement':
-        return say(t, 'Manda o extrato do banco em OFX (o mais certeiro) ou CSV. Pode mandar um de cada conta.', {
-          card: { type: 'upload', accept: '.ofx,.csv', expect: 'o extrato em OFX ou CSV', sample: { name: 'extrato-nubank-set-nov.ofx', size: 30544 } },
+        return say(t, 'Manda o extrato em OFX (o mais certeiro) ou CSV. Pode mandar um de cada conta.', {
+          card: { type: 'upload', guide: s.bank || 'otherbank', accept: '.ofx,.csv', expect: 'o extrato em OFX ou CSV', sample: { name: 'extrato-nubank-set-nov.ofx', size: 30544 } },
           chips: [{ label: 'Não tenho agora', action: { type: 'NO_FILE' }, quiet: true }]
         });
       case 'goal':
@@ -409,7 +559,7 @@ const Onboarding = (() => {
         if (kind === 'xlsx') {
           t = { ...t, modules: { ...t.modules, portfolio: true }, chosen: true, plan: ['target'] };
           t = sys(t, 'Investimentos ligado pelo arquivo. Gastos fica desligado; dá para ligar depois.');
-          return review({ ...t, step: 'b3File' }, SAMPLES.b3, 'b3');
+          return review({ ...t, step: 'b3File', b3: { ...t.b3, negotiation: true } }, SAMPLES.b3, 'b3');
         }
         if (kind === 'ofx') {
           t = { ...t, modules: { ...t.modules, spending: true }, chosen: true, plan: ['goal'] };
@@ -418,7 +568,10 @@ const Onboarding = (() => {
         }
         return say(t, ['Antes do arquivo, me diz o que você quer acompanhar: assim eu sei o que fazer com ele.'], { chips: moduleChips() });
       case 'b3File':
-        if (kind === 'xlsx') return review(t, SAMPLES.b3, 'b3');
+      case 'b3Movement':
+        if (kind === 'xlsx' && /mov/.test(file.name.toLowerCase())) return readMovement(t);
+        if (kind === 'xlsx' && /posi/.test(file.name.toLowerCase())) return say(t, 'Esse é o relatório de Posição. Ele serve para conferir, mas não monta a carteira: preciso da Negociação e da Movimentação.', { keep: true, chips: currentChips(s) });
+        if (kind === 'xlsx') return review({ ...t, b3: { ...t.b3, negotiation: true } }, SAMPLES.b3, 'b3');
         if (kind === 'pdf' || kind === 'image') return askConsent(t, file, 'note', 'Isso parece uma nota de corretagem ou um print, não o relatório de posição. Consigo ler, mas com modelo de linguagem: só traz as operações dessa nota.');
         return say(t, `Esse arquivo (${file.name}) eu não consigo ler. Para a B3, preciso do Excel de posição.`, { keep: true, chips: currentChips(s) });
       case 'extFile':
@@ -450,6 +603,14 @@ const Onboarding = (() => {
         { label: 'Não enviar', action: { type: 'CONSENT', allow: false }, quiet: true }
       ]
     });
+  }
+
+  function readMovement(s) {
+    let t = { ...s, b3: { ...s.b3, movement: true } };
+    t = dropPending(t, 'Investimentos: mandar a Movimentação');
+    t = say(t, ['Li a Movimentação: 23 proventos, 1 desdobramento de ITUB4 e 1 transferência entre corretoras. Já apliquei na carteira.']);
+    if (t.step === 'b3Movement') return advance(t);
+    return t.b3.negotiation ? advance(t) : enter(t, 'b3File');
   }
 
   function readStatement(s) {
@@ -495,7 +656,7 @@ const Onboarding = (() => {
           t = addPending(t, 'Investimentos: cadastrar os ativos à mão');
           return advance({ ...t, plan: ['target', ...t.plan] });
         }
-        const stepOf = { b3: 'b3File', ext: 'extFile', crypto: 'cryptoFile', bank: 'bankFixed' };
+        const stepOf = { b3: 'b3File', ext: 'extBroker', crypto: 'cryptoExchange', bank: 'bankFixed' };
         const steps = chosen.map((c) => stepOf[c.id]);
         return advance({ ...t, plan: [...steps, 'target', ...t.plan] });
       }
@@ -503,9 +664,38 @@ const Onboarding = (() => {
       case 'FILE':
         return handleFile(s, a.file);
 
+      case 'PICK_BROKER': {
+        const label = (BROKERS.find(([id]) => id === a.broker) || [null, 'Outra'])[1];
+        let t = me(s, label);
+        t = { ...t, broker: a.broker };
+        if (a.broker === 'c6') {
+          t = addPending(t, 'Investimentos: cadastrar o C6 Global Invest à mão');
+          t = say(t, ['No C6 Global Invest o dinheiro fica num fundo do próprio C6, então não existe o extrato mensal de corretora que eu leio.', 'Anotei para você cadastrar esses ativos à mão na carteira. Seguindo.']);
+          return advance(t);
+        }
+        return enter(t, 'extFile');
+      }
+
+      case 'PICK_EXCHANGE': {
+        const label = (EXCHANGES.find(([id]) => id === a.exchange) || [null, 'Outra'])[1];
+        let t = me(s, label);
+        if (a.exchange === 'other') {
+          t = addPending(t, 'Investimentos: cadastrar as criptos à mão');
+          t = say(t, 'Por enquanto eu leio o CSV da Binance, da Coinbase e do Mercado Bitcoin. Anotei para você cadastrar à mão. Seguindo.');
+          return advance(t);
+        }
+        return enter({ ...t, exchange: a.exchange }, 'cryptoFile');
+      }
+
+      case 'PICK_BANK': {
+        const label = BANKS.find(([id]) => id === a.bank)[1];
+        let t = me(s, label);
+        return enter({ ...t, bank: a.bank }, 'statement');
+      }
+
       case 'NO_FILE': {
         let t = me(s, 'Não tenho agora');
-        const what = { b3File: 'Investimentos: mandar o relatório da B3', extFile: 'Investimentos: mandar o extrato do exterior', cryptoFile: 'Investimentos: mandar o CSV da exchange', statement: 'Gastos: mandar o extrato do banco' }[s.step];
+        const what = { b3File: 'Investimentos: mandar a Negociação da B3', b3Movement: 'Investimentos: mandar a Movimentação da B3', extFile: 'Investimentos: mandar o extrato do exterior', cryptoFile: 'Investimentos: mandar o CSV da exchange', statement: 'Gastos: mandar o extrato do banco' }[s.step];
         if (what) t = addPending(t, what);
         t = say(t, 'Sem problema, deixo anotado e te lembro no painel. Seguindo.');
         return advance(t);
@@ -530,7 +720,8 @@ const Onboarding = (() => {
         const known = new Set(t.assets.map((x) => x.ticker));
         const fresh = s.pendingImport.rows.filter((r) => !known.has(r.ticker));
         t = { ...t, assets: [...t.assets, ...fresh], pendingImport: null };
-        t = dropPending(t, s.pendingImport.origin === 'b3' ? 'Investimentos: mandar o relatório da B3' : s.pendingImport.origin === 'ext' ? 'Investimentos: mandar o extrato do exterior' : 'Investimentos: mandar o CSV');
+        if (s.pendingImport.origin === 'b3' && !t.b3.movement && !t.plan.includes('b3Movement')) t = { ...t, plan: ['b3Movement', ...t.plan] };
+        t = dropPending(t, s.pendingImport.origin === 'b3' ? 'Investimentos: mandar a Negociação' : s.pendingImport.origin === 'ext' ? 'Investimentos: mandar o extrato do exterior' : 'Investimentos: mandar o CSV');
         t = say(t, `Adicionei ${fresh.length} ${fresh.length === 1 ? 'ativo' : 'ativos'}. Sua carteira está em ${money(t.assets.reduce((acc, x) => acc + valueOf(x), 0))}.`);
         return advance(t);
       }
@@ -565,7 +756,7 @@ const Onboarding = (() => {
           t = say(t, 'Ok. Os gastos ficam ligados, vazios até você trazer o extrato ou conectar o banco.');
           return advance({ ...t, plan: ['goal', ...t.plan] });
         }
-        return enter(t, a.path === 'pluggy' ? 'pluggySecret' : 'statement');
+        return enter(t, a.path === 'pluggy' ? 'pluggySecret' : 'statementBank');
       }
 
       case 'PLUGGY_SECRET': {
@@ -637,7 +828,7 @@ const Onboarding = (() => {
           t = { ...t, pendingModuleFile: null };
           const k = kindOf(file);
           if (a.module === 'spending') return readStatement({ ...t, step: 'statement', plan: ['goal', ...t.plan] });
-          if (k === 'xlsx') return review({ ...t, step: 'b3File', plan: ['target', ...t.plan] }, SAMPLES.b3, 'b3');
+          if (k === 'xlsx') return review({ ...t, step: 'b3File', plan: ['target', ...t.plan], b3: { ...t.b3, negotiation: true } }, SAMPLES.b3, 'b3');
           return askConsent({ ...t, step: 'extFile', plan: ['target', ...t.plan] }, file, 'ext', 'Esse PDF eu leio com modelo de linguagem, por um serviço da Vercel. Dados de identificação vão mascarados no texto.');
         }
         t = say(t, `${name} ligado. Quer configurar agora? Leva uns dois minutos.`, {
@@ -701,7 +892,7 @@ const Onboarding = (() => {
     };
   }
 
-  return { initial, reduce, snapshot, kindOf, SOURCES, SAMPLES, money, valueOf };
+  return { initial, reduce, snapshot, kindOf, SOURCES, SAMPLES, GUIDES, money, valueOf };
 })();
 </script>
 
@@ -737,6 +928,13 @@ const Onboarding = (() => {
 
   const kb = (n) => (n > 1024 * 1024 ? `${(n / 1024 / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(n / 1024))} KB`);
 
+  function guideHtml(key) {
+    const g = key && Onboarding.GUIDES[key];
+    if (!g) return '';
+    const rich = (txt) => esc(txt).replace(/&quot;(.+?)&quot;/g, '<b>"$1"</b>');
+    return `<details class="guide" open><summary>${esc(g.title)}</summary><p class="hint">${esc(g.where)}</p><ol class="steps">${g.steps.map((st) => `<li>${rich(st)}</li>`).join('')}</ol>${g.notes.length ? `<ul class="notes">${g.notes.map((n) => `<li>${esc(n)}</li>`).join('')}</ul>` : ''}${g.links.length ? `<p class="links">${g.links.map(([l, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(l)} ↗</a>`).join('')}</p>` : ''}<p class="checked ${g.checked ? 'ok' : 'warn'}">${g.checked ? 'Caminho conferido na ajuda oficial em 28/11/2026.' : 'Caminho tirado de tutoriais e respostas do atendimento; falta conferir numa conta real.'}</p></details>`;
+  }
+
   function cardHtml(m) {
     const c = m.card; const off = m.open ? '' : ' disabled';
     const done = m.open ? '' : ' done';
@@ -744,7 +942,7 @@ const Onboarding = (() => {
       return `<form class="card${done}" data-form="sources"><div class="checks">${Onboarding.SOURCES.map((src) => `<label><input type="checkbox" name="src" value="${src.id}" id="src-${m.id}-${src.id}"${off}><span><b>${esc(src.label)}</b><small>${esc(src.hint)}</small></span></label>`).join('')}</div><div class="row"><button class="btn primary" type="submit"${off}>Continuar</button></div></form>`;
     }
     if (c.type === 'upload') {
-      return `<div class="card${done}"><div class="drop" data-drop="${m.id}">${ICON.upload}<b>Arraste ${esc(c.expect)} aqui</b><span>ou</span><div class="row"><button class="btn" type="button" data-pick="${esc(c.accept)}"${off}>Escolher arquivo</button><button class="btn" type="button" data-sample='${esc(JSON.stringify(c.sample))}'${off}>Usar um de exemplo</button></div><span>Até 10 MB · ${esc(c.accept.replace(/\./g, '').toUpperCase().replace(/,/g, ', '))}</span></div></div>`;
+      return `<div class="card${done}">${guideHtml(c.guide)}<div class="drop" data-drop="${m.id}">${ICON.upload}<b>Arraste ${esc(c.expect)} aqui</b><span>ou</span><div class="row"><button class="btn" type="button" data-pick="${esc(c.accept)}"${off}>Escolher arquivo</button><button class="btn" type="button" data-sample='${esc(JSON.stringify(c.sample))}'${off}>Usar um de exemplo</button></div><span>Até 10 MB · ${esc(c.accept.replace(/\./g, '').toUpperCase().replace(/,/g, ', '))}</span></div></div>`;
     }
     if (c.type === 'review') {
       return `<div class="card${done}"><div class="tablewrap"><table><thead><tr><th>Ativo</th><th>Classe</th><th class="r">Qtd.</th><th class="r">Valor</th></tr></thead><tbody>${c.rows.map((r) => `<tr><td><b>${esc(r.ticker)}</b><br><small>${esc(r.name)}</small></td><td>${esc(r.cls)}</td><td class="r">${r.qty.toLocaleString('pt-BR')}</td><td class="r">${Onboarding.money(Onboarding.valueOf(r))}</td></tr>`).join('')}</tbody></table></div>${c.rows.some((r) => r.cur === 'USD') ? '<p class="hint">Valores em dólar convertidos pela PTAX de hoje (R$ 5,42, exemplo).</p>' : ''}</div>`;
@@ -756,7 +954,7 @@ const Onboarding = (() => {
       return `<form class="card${done}" data-form="fixed"><div class="grid2"><div class="field"><label for="fx-issuer-${m.id}">Banco emissor</label><input id="fx-issuer-${m.id}" name="issuer" value="Banco Inter"${off}></div><div class="field"><label for="fx-amount-${m.id}">Valor aplicado (R$)</label><input id="fx-amount-${m.id}" name="amount" inputmode="decimal" value="15000"${off}></div><div class="field"><label for="fx-rate-${m.id}">Taxa</label><input id="fx-rate-${m.id}" name="rate" value="110% do CDI"${off}></div><div class="field"><label for="fx-mat-${m.id}">Vencimento</label><input id="fx-mat-${m.id}" name="maturity" value="03/2028"${off}></div></div><div class="row"><button class="btn primary" type="submit"${off}>Adicionar</button></div></form>`;
     }
     if (c.type === 'pluggy') {
-      return `<form class="card${done}" data-form="pluggy" autocomplete="off">${c.retry ? '' : `<ol class="steps"><li>Crie a conta em <a href="https://meu.pluggy.ai" target="_blank" rel="noopener">meu.pluggy.ai</a> e conecte seus bancos lá.</li><li>Em <a href="https://dashboard.pluggy.ai" target="_blank" rel="noopener">dashboard.pluggy.ai</a>, crie uma aplicação e inclua o conector MeuPluggy.</li><li>Copie o Client ID e o Client Secret da aplicação e cole abaixo.</li></ol>`}<div class="grid2"><div class="field"><label for="pg-id-${m.id}">Client ID</label><input id="pg-id-${m.id}" name="clientId" placeholder="ex.: 6f1c…" spellcheck="false"${off}></div><div class="field"><label for="pg-secret-${m.id}">Client Secret</label><input id="pg-secret-${m.id}" name="clientSecret" type="password" placeholder="••••••••" spellcheck="false"${off}></div></div><p class="lockline">${ICON.lock}<span>Vai cifrado direto para o cofre da Vera. Não aparece na conversa, no histórico nem para o suporte, e dá para apagar em Configurações › Conexões.</span></p><div class="row"><button class="btn primary" type="submit"${off}>Salvar com segurança</button><button class="btn" type="button" data-fill="ok"${off}>Preencher exemplo válido</button><button class="btn" type="button" data-fill="bad"${off}>Preencher exemplo errado</button></div></form>`;
+      return `<form class="card${done}" data-form="pluggy" autocomplete="off">${c.retry ? '' : guideHtml(c.guide)}<div class="grid2"><div class="field"><label for="pg-id-${m.id}">Client ID</label><input id="pg-id-${m.id}" name="clientId" placeholder="ex.: 6f1c…" spellcheck="false"${off}></div><div class="field"><label for="pg-secret-${m.id}">Client Secret</label><input id="pg-secret-${m.id}" name="clientSecret" type="password" placeholder="••••••••" spellcheck="false"${off}></div></div><div class="field"><label for="pg-items-${m.id}">Item ID de cada banco</label><textarea id="pg-items-${m.id}" name="itemIds" rows="2" placeholder="Um por linha" spellcheck="false"${off}></textarea></div><p class="lockline">${ICON.lock}<span>Vai cifrado direto para o cofre da Vera. Não aparece na conversa, no histórico nem para o suporte, e dá para apagar em Configurações › Conexões.</span></p><div class="row"><button class="btn primary" type="submit"${off}>Salvar com segurança</button><button class="btn" type="button" data-fill="ok"${off}>Preencher exemplo válido</button><button class="btn" type="button" data-fill="bad"${off}>Preencher exemplo errado</button></div></form>`;
     }
     if (c.type === 'summary') {
       const s = Onboarding.snapshot(state);
@@ -845,6 +1043,7 @@ const Onboarding = (() => {
       const form = fill.closest('form');
       form.clientId.value = '6f1c2a90-3b7e-4d21-9c55-8e0f4a7b1d23';
       form.clientSecret.value = fill.dataset.fill === 'ok' ? 'exemplo-valido-123456' : 'curta';
+      form.itemIds.value = '1b2c3d4e-0000-4a5b-8c9d-aaaaaaaa0001\n1b2c3d4e-0000-4a5b-8c9d-aaaaaaaa0002';
     }
   });
   $('msgs').addEventListener('submit', (e) => {
@@ -858,8 +1057,8 @@ const Onboarding = (() => {
       return dispatch({ type: 'BANK_FIXED', issuer: form.issuer.value.trim() || 'Banco', amount: Number(String(form.amount.value).replace(/\./g, '').replace(',', '.')) || 0, rate: form.rate.value.trim(), maturity: form.maturity.value.trim() }, 'cadastrou a renda fixa');
     }
     if (form.dataset.form === 'pluggy') {
-      const valid = form.clientId.value.trim().length >= 8 && form.clientSecret.value.trim().length >= 12;
-      form.clientSecret.value = ''; form.clientId.value = '';
+      const valid = form.clientId.value.trim().length >= 8 && form.clientSecret.value.trim().length >= 12 && form.itemIds.value.trim().length > 0;
+      form.clientSecret.value = ''; form.clientId.value = ''; form.itemIds.value = '';
       return dispatch({ type: 'PLUGGY_SECRET', valid }, valid ? 'enviou uma credencial válida' : 'enviou uma credencial que o Meu Pluggy recusa');
     }
   });
@@ -887,7 +1086,9 @@ const Onboarding = (() => {
 
   // ---- roteiros guiados ----
   const F = {
-    b3: { name: 'posicao-b3-2026-11-28.xlsx', size: 48211 },
+    b3: { name: 'negociacao-b3-2019-11-a-2026-11.xlsx', size: 48211 },
+    mov: { name: 'movimentacao-b3-2019-11-a-2026-11.xlsx', size: 61230 },
+    pos: { name: 'posicao-b3-2026-11-28.xlsx', size: 22100 },
     ext: { name: 'extrato-avenue-out-2026.pdf', size: 182330 },
     ofx: { name: 'extrato-nubank-set-nov.ofx', size: 30544 },
     csv: { name: 'binance-historico.csv', size: 9120 },
@@ -897,19 +1098,20 @@ const Onboarding = (() => {
   const SCENARIOS = [
     {
       title: 'Só investimentos',
-      text: 'Caminho feliz de quem só quer a carteira. Repare que Gastos fica desligado e o resumo final diz onde ligar.',
+      text: 'Caminho feliz da carteira: Negociação e Movimentação da B3. Gastos fica desligado.',
       steps: [
         ['Escolher "Meus investimentos"', { type: 'CHOOSE_MODULES', portfolio: true, spending: false }],
-        ['Marcar "Corretora no Brasil" e continuar', { type: 'PICK_SOURCES', sources: ['b3'] }],
-        ['Mandar o Excel de posição da B3', { type: 'FILE', file: F.b3 }],
+        ['Marcar "Corretora no Brasil"', { type: 'PICK_SOURCES', sources: ['b3'] }],
+        ['Mandar a Negociação da B3', { type: 'FILE', file: F.b3 }],
         ['Adicionar à carteira', { type: 'CONFIRM_IMPORT' }],
+        ['Mandar a Movimentação da B3', { type: 'FILE', file: F.mov }],
         ['Carteira-alvo: depois', { type: 'TARGET', choice: 'depois' }],
         ['Ir para o painel', { type: 'GO_DASHBOARD' }]
       ]
     },
     {
       title: 'Só gastos, com o Meu Pluggy',
-      text: 'A credencial entra por um cartão seguro. Confira que o valor nunca aparece na conversa nem no estado, e o que acontece quando o Meu Pluggy recusa.',
+      text: 'A credencial entra por um cartão seguro e nunca aparece na conversa. Primeiro o Meu Pluggy recusa, depois aceita.',
       steps: [
         ['Escolher "Meus gastos"', { type: 'CHOOSE_MODULES', portfolio: false, spending: true }],
         ['Escolher "Conectar o banco"', { type: 'SPEND_PATH', path: 'pluggy' }],
@@ -922,33 +1124,38 @@ const Onboarding = (() => {
     },
     {
       title: 'Os dois, permissão negada',
-      text: 'O PDF do exterior precisa de modelo de linguagem. A pessoa nega: nada é enviado, o arquivo é descartado e vira pendência.',
+      text: 'Sem a Movimentação agora, Avenue no exterior com a permissão negada, e extrato do Nubank nos gastos.',
       steps: [
         ['Escolher "Os dois"', { type: 'CHOOSE_MODULES', portfolio: true, spending: true }],
         ['Marcar Brasil e exterior', { type: 'PICK_SOURCES', sources: ['b3', 'ext'] }],
-        ['Mandar o Excel da B3', { type: 'FILE', file: F.b3 }],
+        ['Mandar a Negociação da B3', { type: 'FILE', file: F.b3 }],
         ['Adicionar à carteira', { type: 'CONFIRM_IMPORT' }],
-        ['Mandar o PDF do exterior', { type: 'FILE', file: F.ext }],
+        ['Movimentação: não tenho agora', { type: 'NO_FILE' }],
+        ['Escolher a Avenue', { type: 'PICK_BROKER', broker: 'avenue' }],
+        ['Mandar o PDF da Avenue', { type: 'FILE', file: F.ext }],
         ['Não enviar', { type: 'CONSENT', allow: false }],
         ['Carteira-alvo: depois', { type: 'TARGET', choice: 'depois' }],
         ['Gastos: mandar o extrato', { type: 'SPEND_PATH', path: 'statement' }],
-        ['Mandar o OFX do banco', { type: 'FILE', file: F.ofx }],
+        ['Escolher o Nubank', { type: 'PICK_BANK', bank: 'nubank' }],
+        ['Mandar o OFX', { type: 'FILE', file: F.ofx }],
         ['Revisar depois', { type: 'REVIEW_UNCATEGORIZED', now: false }],
         ['Sem meta por enquanto', { type: 'GOAL', amount: null }]
       ]
     },
     {
       title: 'Liga Gastos depois',
-      text: 'A pessoa começa só com investimentos e, depois de pronto, liga Gastos em Configurações. A conversa retoma só o que falta.',
+      text: 'Começa só com investimentos e, depois de pronto, liga Gastos em Configurações. A conversa retoma só o que falta.',
       steps: [
         ['Escolher "Meus investimentos"', { type: 'CHOOSE_MODULES', portfolio: true, spending: false }],
         ['Marcar "Corretora no Brasil"', { type: 'PICK_SOURCES', sources: ['b3'] }],
-        ['Mandar o Excel da B3', { type: 'FILE', file: F.b3 }],
+        ['Mandar a Negociação da B3', { type: 'FILE', file: F.b3 }],
         ['Adicionar à carteira', { type: 'CONFIRM_IMPORT' }],
+        ['Mandar a Movimentação', { type: 'FILE', file: F.mov }],
         ['Carteira-alvo: depois', { type: 'TARGET', choice: 'depois' }],
         ['Ligar Gastos em Configurações', { type: 'ENABLE_MODULE', module: 'spending' }],
         ['Configurar agora', { type: 'CONFIGURE_MODULE', module: 'spending' }],
         ['Mandar o extrato', { type: 'SPEND_PATH', path: 'statement' }],
+        ['Escolher o Itaú', { type: 'PICK_BANK', bank: 'itau' }],
         ['Mandar o OFX', { type: 'FILE', file: F.ofx }],
         ['Revisar as 12 agora', { type: 'REVIEW_UNCATEGORIZED', now: true }],
         ['Meta de R$ 500', { type: 'GOAL', amount: 500 }]
@@ -956,12 +1163,12 @@ const Onboarding = (() => {
     },
     {
       title: 'Fora do roteiro',
-      text: 'Pergunta solta, arquivo antes da hora, arquivo errado e pausa. A Vera deve reorientar sem travar e sem perder o que já foi feito.',
+      text: 'Pergunta solta, arquivo antes da hora, a Posição no lugar da Movimentação, pausa e um arquivo de módulo desligado.',
       steps: [
         ['Escrever "quanto rendeu minha carteira?"', { type: 'TEXT', text: 'quanto rendeu minha carteira?' }],
-        ['Mandar o Excel da B3 antes de escolher', { type: 'FILE', file: F.b3 }],
+        ['Mandar a Negociação antes de escolher', { type: 'FILE', file: F.b3 }],
         ['Adicionar à carteira', { type: 'CONFIRM_IMPORT' }],
-        ['Mandar um .docx na etapa errada', { type: 'FILE', file: F.docx }],
+        ['Mandar a Posição no lugar da Movimentação', { type: 'FILE', file: F.pos }],
         ['Pular por agora', { type: 'SKIP' }],
         ['Mandar o OFX com Gastos desligado', { type: 'FILE', file: F.ofx }],
         ['Retomar a configuração', { type: 'RESUME' }],
@@ -995,9 +1202,11 @@ const Onboarding = (() => {
 
   // ---- ações livres ----
   const FREE = [
-    ['Mandar Excel da B3', { type: 'FILE', file: F.b3 }],
+    ['Mandar Negociação da B3', { type: 'FILE', file: F.b3 }],
+    ['Mandar Movimentação da B3', { type: 'FILE', file: F.mov }],
+    ['Mandar Posição da B3', { type: 'FILE', file: F.pos }],
     ['Mandar PDF do exterior', { type: 'FILE', file: F.ext }],
-    ['Mandar CSV da exchange', { type: 'FILE', file: F.csv }],
+    ['Mandar CSV da Binance', { type: 'FILE', file: F.csv }],
     ['Mandar OFX do banco', { type: 'FILE', file: F.ofx }],
     ['Mandar print da corretora', { type: 'FILE', file: F.photo }],
     ['Mandar arquivo errado (.docx)', { type: 'FILE', file: F.docx }],
