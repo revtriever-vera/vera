@@ -186,5 +186,7 @@ export const en: Dict = {
     by: 'Vera, by',
     maintained: 'Maintained by Lucas Oliveira. The hosted version is operated by Revtriever.',
     license: 'AGPL-3.0 license',
+    privacy: 'Privacy (in Portuguese)',
+    terms: 'Terms (in Portuguese)',
   },
 };

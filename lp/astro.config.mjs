@@ -1,6 +1,7 @@
 import { defineConfig, fontProviders } from 'astro/config';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
+import { rehypeLegalLinks } from './src/lib/legal-links.mjs';
 
 // SITE_URL e BASE_PATH vêm do ambiente: o domínio e a publicação são do card #25.
 const site = process.env.SITE_URL ?? 'http://localhost:4321';
@@ -28,5 +29,7 @@ export default defineConfig({
       fallbacks: ['system-ui', 'sans-serif'],
     },
   ],
-  vite: { build: { cssCodeSplit: false } },
+  markdown: { rehypePlugins: [rehypeLegalLinks({ base })] },
+  // As páginas legais importam os .md de ../docs (fonte única com o repositório).
+  vite: { build: { cssCodeSplit: false }, server: { fs: { allow: ['..'] } } },
 });

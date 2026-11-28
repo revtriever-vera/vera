@@ -1,10 +1,12 @@
 # Política de Privacidade
 
-Rascunho de produto, a revisar antes da publicação. Vale para a Vera hospedada pela Revtriever. Quem hospeda a Vera por conta própria é o controlador dos próprios dados e não passa por esta política.
+Última atualização: 28 de novembro de 2026. Vale para a Vera hospedada pela Revtriever. Quem hospeda a Vera por conta própria é o controlador dos próprios dados e não passa por esta política.
 
 ## Quem trata os dados
 
-A Revtriever é a controladora dos dados da sua conta na Vera hospedada, nos termos da LGPD (Lei 13.709/2018).
+A Revtriever LTDA, CNPJ 68.648.441/0001-38, é a controladora dos dados da sua conta na Vera hospedada, nos termos da LGPD (Lei 13.709/2018).
+
+**Encarregado e contato:** contato@revtriever.com. É o canal para dúvidas sobre esta política e para os pedidos da seção "Seus direitos".
 
 ## O que a Vera guarda
 
@@ -18,6 +20,16 @@ A Revtriever é a controladora dos dados da sua conta na Vera hospedada, nos ter
 ## WhatsApp
 
 Quando você vincula o WhatsApp, a Vera guarda o texto das mensagens trocadas por **30 dias**. Depois disso, o texto é apagado. A Vera usa as últimas mensagens da conversa para responder e não grava conversa própria. Desvincular o número apaga o vínculo.
+
+## Google Agenda
+
+Só no Premium e só se você conectar a Agenda em Configurações. A Vera pede ao Google apenas a permissão `calendar.events`.
+
+- **O que a Vera lê:** título, data e hora dos seus próximos eventos, para listar os compromissos quando você pergunta.
+- **O que a Vera escreve:** só os eventos que você pede pelo WhatsApp e confirma antes de serem criados.
+- **Modelo de linguagem:** quando você pergunta pelo WhatsApp sobre a sua agenda, o título e o horário dos eventos vão ao modelo de linguagem para montar a resposta, como em "Resumos escritos por modelo de linguagem".
+- **O que a Vera não faz:** não guarda o conteúdo dos seus eventos (dos que ela cria, guarda só o identificador do Google, para não criar duas vezes), não vende esses dados, não usa para publicidade e não usa para treinar modelos. O uso dos dados vindos das APIs do Google segue a [Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy), incluindo os requisitos de uso limitado.
+- **Desconectar:** em Configurações › Google Agenda, ou na sua conta Google, em "Apps com acesso à sua conta". Desconectar revoga a permissão no Google e apaga o token guardado. O fim do Premium também desconecta a Agenda.
 
 ## Resumos escritos por modelo de linguagem
 
@@ -61,9 +73,27 @@ Cada conta faz um teste grátis só. Para impedir que o mesmo e-mail abra contas
 - **Base legal:** legítimo interesse, na prevenção de fraude.
 - **Efeito:** o mesmo e-mail não faz um segundo teste em conta nova.
 
+## Medição de uso do app
+
+Para saber quais telas e funções são usadas, o app registra eventos de uso no PostHog: páginas abertas e ações como "resumo visto" ou "permissão dada".
+
+- Os eventos não levam o seu nome, o seu e-mail nem os valores da sua carteira ou dos seus gastos.
+- A Vera não grava a sessão nem captura cliques automaticamente.
+- O PostHog guarda um identificador anônimo no navegador (cookie e armazenamento local) para contar visitas.
+
+## Por quanto tempo os dados ficam
+
+- **Dados da conta:** enquanto a conta existir. A exclusão da conta apaga os dados na hora.
+- **Cópias de segurança do banco:** são sobrescritas em até 35 dias. Um dado apagado some delas nesse prazo.
+- **Registros técnicos (logs):** até 30 dias, para investigar falhas e abuso. Eles não guardam o conteúdo da carteira, dos gastos nem das conversas.
+- **WhatsApp:** texto das mensagens por 30 dias, como descrito acima.
+- **Importação de investimentos:** operações lidas por até 30 minutos, como descrito acima.
+- **Marca do e-mail do teste grátis:** 2 anos, como descrito acima.
+- **Notas fiscais e registros de pagamento:** pelo prazo que a lei fiscal exige, inclusive depois da exclusão da conta.
+
 ## Seus direitos
 
-Você pode exportar os dados da conta em planilha, corrigi-los no app e excluir a conta em Dados e privacidade. A exclusão apaga carteira, gastos, pessoas, chaves e vínculos. Ficam só o que a lei exige guardar (como notas fiscais da assinatura) e a marca do e-mail descrita acima. Pedidos que o app não cobre vão pelo canal de contato indicado no app.
+Você pode exportar os dados da conta em planilha, corrigi-los no app e excluir a conta em Dados e privacidade. A exclusão apaga carteira, gastos, pessoas, chaves e vínculos. Ficam só o que a lei exige guardar (como notas fiscais da assinatura) e a marca do e-mail descrita acima. Pedidos que o app não cobre (confirmação do tratamento, informação sobre compartilhamento, revisão de decisão, portabilidade, revogação de consentimento) vão para contato@revtriever.com e são respondidos em até 15 dias. Você também pode reclamar à Autoridade Nacional de Proteção de Dados (ANPD).
 
 ## Com quem os dados são compartilhados
 
@@ -71,9 +101,15 @@ Você pode exportar os dados da conta em planilha, corrigi-los no app e excluir 
 - Meta: entrega das mensagens do WhatsApp.
 - Vercel e o provedor do modelo: totais agregados dos resumos, se você permitir; e os arquivos de importação que não são Excel da B3 nem CSV de exchange (nota, extrato, PDF, print e foto), um a um, quando você confirmar o envio, para a leitura das operações.
 - Google e Facebook: login. Google também para a Agenda, se você conectar.
-- Revtriever e o provedor de pagamento: cobrança do Premium.
+- Revtriever e o provedor de pagamento (Stripe): cobrança do Premium. Nome, e-mail, documento e dados do cartão ficam com eles, não com a Vera.
+- PostHog: eventos de uso do app, sem identificar você.
+- Infraestrutura: Amazon Web Services (servidores, banco e e-mail), Cloudflare (rede e site) e Grafana (registros técnicos).
 
 A Vera não vende dados nem usa a sua carteira para publicidade.
+
+## Transferência internacional
+
+Vários desses provedores processam dados fora do Brasil, principalmente nos Estados Unidos: a Amazon Web Services, onde ficam os servidores e o banco da Vera, a Vercel, o provedor do modelo, a Meta, o Google, o PostHog, a Cloudflare, a Grafana e a Stripe. A transferência acontece para executar o serviço que você contratou e com as garantias contratuais de cada provedor.
 
 ## Mudanças nesta política
 
