@@ -351,6 +351,12 @@ const Onboarding = (() => {
       steps: ['Abra o extrato da conta.', 'Procure "Exportar", "Salvar como" ou "Salvar em outros formatos".', 'Escolha OFX (às vezes aparece como "Money"). Se não tiver, CSV.'],
       links: [], notes: []
     },
+    selfcustody: {
+      title: 'Print da sua carteira de cripto', where: 'No app ou na extensão da carteira (Ledger Live, MetaMask, Trust Wallet e afins).', checked: true,
+      steps: ['Abra a carteira e vá na tela que lista os saldos de cada moeda.', 'Se a carteira separa por rede (Ethereum, Solana, Bitcoin…), tire um print de cada rede.', 'Confira que o nome da moeda e a quantidade aparecem inteiros no print.', 'Mande aqui. Pode mandar vários de uma vez.'],
+      links: [],
+      notes: ['O print não mostra quanto você pagou. Eu registro a quantidade, e você informa o preço médio depois, se quiser acompanhar o lucro.', 'Nunca mande a frase de recuperação (seed) nem a chave privada. Eu nunca vou pedir.']
+    },
     pluggy: {
       title: 'Conectar pelo Meu Pluggy', where: 'Dois sites da Pluggy. Leva uns 10 minutos na primeira vez.', checked: true,
       steps: ['Crie sua conta em meu.pluggy.ai, toque em "Conectar Minha Conta" e conecte cada banco (a autorização é no app do banco).', 'Crie sua conta em dashboard.pluggy.ai, de preferência com o mesmo e-mail, e crie uma aplicação.', 'Copie o Client ID e o Client Secret da aplicação. O Secret aparece uma vez só: copie na hora.', 'Em "Customization" › "Connectors", ligue o conector "MeuPluggy".', 'Na aplicação, abra "Demo" › "Connect Account", escolha "MeuPluggy", entre e copie o Item ID de cada banco em "Connected Items".'],
@@ -360,13 +366,13 @@ const Onboarding = (() => {
   };
 
   const BROKERS = [['avenue', 'Avenue'], ['inter', 'Inter'], ['nomad', 'Nomad'], ['xp', 'XP Internacional'], ['btg', 'BTG Global'], ['c6', 'C6 Global Invest']];
-  const EXCHANGES = [['binance', 'Binance'], ['coinbase', 'Coinbase'], ['mb', 'Mercado Bitcoin']];
+  const EXCHANGES = [['binance', 'Binance'], ['coinbase', 'Coinbase'], ['mb', 'Mercado Bitcoin'], ['selfcustody', 'Carteira própria']];
   const BANKS = [['nubank', 'Nubank'], ['itau', 'Itaú'], ['bradesco', 'Bradesco'], ['bb', 'Banco do Brasil'], ['caixa', 'Caixa'], ['santander', 'Santander'], ['interbank', 'Inter'], ['c6bank', 'C6 Bank'], ['pagbank', 'PagBank'], ['otherbank', 'Outro banco']];
 
   const STEP_LABEL = {
     modules: 'Escolher o que acompanhar', explain: 'Explicar os módulos', sources: 'Onde estão os investimentos',
     b3File: 'Negociação da B3', b3Movement: 'Movimentação da B3', extBroker: 'Corretora no exterior', extFile: 'Extrato do exterior',
-    cryptoExchange: 'Exchange de cripto', statementBank: 'Banco do extrato', cryptoFile: 'CSV da exchange', bankFixed: 'Renda fixa no banco',
+    cryptoExchange: 'Onde está a cripto', cryptoPrint: 'Print da carteira de cripto', statementBank: 'Banco do extrato', cryptoFile: 'CSV da exchange', bankFixed: 'Renda fixa no banco',
     target: 'Carteira-alvo', spendPath: 'Como trazer os gastos', pluggySecret: 'Credencial do Meu Pluggy',
     pluggyRange: 'Período dos gastos', statement: 'Extrato do banco', goal: 'Meta de economia', done: 'Pronto'
   };
@@ -450,8 +456,13 @@ const Onboarding = (() => {
           chips: [{ label: 'Não tenho agora', action: { type: 'NO_FILE' }, quiet: true }]
         });
       case 'cryptoExchange':
-        return say(t, 'Em qual exchange?', {
+        return say(t, 'Onde está sua cripto? Se estiver em mais de um lugar, começa pelo maior.', {
           chips: [...EXCHANGES.map(([id, label]) => ({ label, action: { type: 'PICK_EXCHANGE', exchange: id } })), { label: 'Outra', action: { type: 'PICK_EXCHANGE', exchange: 'other' }, quiet: true }]
+        });
+      case 'cryptoPrint':
+        return say(t, [s.exchange === 'selfcustody' ? 'Na carteira própria não tem extrato para exportar, então me manda um print dos saldos.' : 'Dessa exchange eu ainda não leio o CSV, então me manda um print da tela de saldos.', 'O print eu leio com um modelo de linguagem; antes de ler, te peço a permissão para o arquivo.'], {
+          card: { type: 'upload', guide: 'selfcustody', accept: '.png,.jpg,.jpeg,.webp,.pdf', expect: 'o print dos saldos', sample: { name: 'print-carteira-metamask.png', size: 238400 } },
+          chips: [{ label: 'Não tenho agora', action: { type: 'NO_FILE' }, quiet: true }]
         });
       case 'cryptoFile':
         return say(t, 'Exporta o histórico em CSV e manda aqui. Esse eu leio direto.', {
@@ -577,6 +588,9 @@ const Onboarding = (() => {
       case 'extFile':
         if (kind === 'pdf' || kind === 'image') return askConsent(t, file, 'ext', 'Para ler esse extrato, eu envio o arquivo a um modelo de linguagem, por um serviço da Vercel. Nome do titular, documento e número da conta vão mascarados no texto; numa imagem, podem aparecer.');
         return say(t, `Para o exterior, preciso do extrato em PDF. Esse (${file.name}) não é o que eu leio aqui.`, { keep: true, chips: currentChips(s) });
+      case 'cryptoPrint':
+        if (kind === 'image' || kind === 'pdf') return askConsent(t, file, 'cryptoPrint', 'Para ler esse print, eu envio a imagem a um modelo de linguagem, por um serviço da Vercel. Endereços de carteira que aparecerem na imagem vão junto; seed e chave privada nunca devem estar no print.');
+        return say(t, 'Para a carteira própria, preciso de um print (PNG ou JPG) da tela de saldos.', { keep: true, chips: currentChips(s) });
       case 'cryptoFile':
         if (kind === 'csv') return review(t, SAMPLES.crypto, 'crypto');
         return say(t, 'Para cripto, preciso do CSV exportado da exchange.', { keep: true, chips: currentChips(s) });
@@ -679,11 +693,7 @@ const Onboarding = (() => {
       case 'PICK_EXCHANGE': {
         const label = (EXCHANGES.find(([id]) => id === a.exchange) || [null, 'Outra'])[1];
         let t = me(s, label);
-        if (a.exchange === 'other') {
-          t = addPending(t, 'Investimentos: cadastrar as criptos à mão');
-          t = say(t, 'Por enquanto eu leio o CSV da Binance, da Coinbase e do Mercado Bitcoin. Anotei para você cadastrar à mão. Seguindo.');
-          return advance(t);
-        }
+        if (a.exchange === 'other' || a.exchange === 'selfcustody') return enter({ ...t, exchange: a.exchange }, 'cryptoPrint');
         return enter({ ...t, exchange: a.exchange }, 'cryptoFile');
       }
 
@@ -695,7 +705,7 @@ const Onboarding = (() => {
 
       case 'NO_FILE': {
         let t = me(s, 'Não tenho agora');
-        const what = { b3File: 'Investimentos: mandar a Negociação da B3', b3Movement: 'Investimentos: mandar a Movimentação da B3', extFile: 'Investimentos: mandar o extrato do exterior', cryptoFile: 'Investimentos: mandar o CSV da exchange', statement: 'Gastos: mandar o extrato do banco' }[s.step];
+        const what = { cryptoPrint: 'Investimentos: mandar o print da carteira de cripto', b3File: 'Investimentos: mandar a Negociação da B3', b3Movement: 'Investimentos: mandar a Movimentação da B3', extFile: 'Investimentos: mandar o extrato do exterior', cryptoFile: 'Investimentos: mandar o CSV da exchange', statement: 'Gastos: mandar o extrato do banco' }[s.step];
         if (what) t = addPending(t, what);
         t = say(t, 'Sem problema, deixo anotado e te lembro no painel. Seguindo.');
         return advance(t);
@@ -707,10 +717,11 @@ const Onboarding = (() => {
         let t = me(s, a.allow ? 'Permitir este envio' : 'Não enviar');
         t = { ...t, pendingConsent: null, consents: [...t.consents, { file, allowed: a.allow }] };
         if (!a.allow) {
-          t = addPending(t, origin === 'ext' ? 'Investimentos: cadastrar o exterior à mão' : 'Investimentos: cadastrar a nota à mão');
+          t = addPending(t, origin === 'ext' ? 'Investimentos: cadastrar o exterior à mão' : origin === 'cryptoPrint' ? 'Investimentos: cadastrar as criptos à mão' : 'Investimentos: cadastrar a nota à mão');
           t = say(t, 'Não enviei nada. Descartei o arquivo e anotei para você cadastrar à mão depois.');
           return advance(t);
         }
+        if (origin === 'cryptoPrint') return review(t, SAMPLES.crypto.map((r) => ({ ...r, noCost: true })), 'crypto');
         return review(t, origin === 'ext' ? SAMPLES.ext : SAMPLES.note, origin);
       }
 
@@ -945,7 +956,7 @@ const Onboarding = (() => {
       return `<div class="card${done}">${guideHtml(c.guide)}<div class="drop" data-drop="${m.id}">${ICON.upload}<b>Arraste ${esc(c.expect)} aqui</b><span>ou</span><div class="row"><button class="btn" type="button" data-pick="${esc(c.accept)}"${off}>Escolher arquivo</button><button class="btn" type="button" data-sample='${esc(JSON.stringify(c.sample))}'${off}>Usar um de exemplo</button></div><span>Até 10 MB · ${esc(c.accept.replace(/\./g, '').toUpperCase().replace(/,/g, ', '))}</span></div></div>`;
     }
     if (c.type === 'review') {
-      return `<div class="card${done}"><div class="tablewrap"><table><thead><tr><th>Ativo</th><th>Classe</th><th class="r">Qtd.</th><th class="r">Valor</th></tr></thead><tbody>${c.rows.map((r) => `<tr><td><b>${esc(r.ticker)}</b><br><small>${esc(r.name)}</small></td><td>${esc(r.cls)}</td><td class="r">${r.qty.toLocaleString('pt-BR')}</td><td class="r">${Onboarding.money(Onboarding.valueOf(r))}</td></tr>`).join('')}</tbody></table></div>${c.rows.some((r) => r.cur === 'USD') ? '<p class="hint">Valores em dólar convertidos pela PTAX de hoje (R$ 5,42, exemplo).</p>' : ''}</div>`;
+      return `<div class="card${done}"><div class="tablewrap"><table><thead><tr><th>Ativo</th><th>Classe</th><th class="r">Qtd.</th><th class="r">Valor</th></tr></thead><tbody>${c.rows.map((r) => `<tr><td><b>${esc(r.ticker)}</b><br><small>${esc(r.name)}</small></td><td>${esc(r.cls)}</td><td class="r">${r.qty.toLocaleString('pt-BR')}</td><td class="r">${Onboarding.money(Onboarding.valueOf(r))}</td></tr>`).join('')}</tbody></table></div>${c.rows.some((r) => r.cur === 'USD') ? '<p class="hint">Valores em dólar convertidos pela PTAX de hoje (R$ 5,42, exemplo).</p>' : ''}${c.rows.some((r) => r.noCost) ? '<p class="hint">Valor pela cotação de hoje. O print não traz o preço de compra: você informa o preço médio depois, na carteira.</p>' : ''}</div>`;
     }
     if (c.type === 'consent') {
       return `<div class="card${done}"><h3>O que vai para o modelo</h3><p class="hint">O arquivo ${esc(c.file)}, uma vez, só para ler as operações. Ele é descartado depois da leitura; o que você não confirmar some em 30 minutos. Isso é separado da permissão dos resumos.</p></div>`;
@@ -1089,6 +1100,7 @@ const Onboarding = (() => {
     b3: { name: 'negociacao-b3-2019-11-a-2026-11.xlsx', size: 48211 },
     mov: { name: 'movimentacao-b3-2019-11-a-2026-11.xlsx', size: 61230 },
     pos: { name: 'posicao-b3-2026-11-28.xlsx', size: 22100 },
+    wallet: { name: 'print-carteira-metamask.png', size: 238400 },
     ext: { name: 'extrato-avenue-out-2026.pdf', size: 182330 },
     ofx: { name: 'extrato-nubank-set-nov.ofx', size: 30544 },
     csv: { name: 'binance-historico.csv', size: 9120 },
@@ -1140,6 +1152,19 @@ const Onboarding = (() => {
         ['Mandar o OFX', { type: 'FILE', file: F.ofx }],
         ['Revisar depois', { type: 'REVIEW_UNCATEGORIZED', now: false }],
         ['Sem meta por enquanto', { type: 'GOAL', amount: null }]
+      ]
+    },
+    {
+      title: 'Cripto na carteira própria',
+      text: 'Cripto fora de exchange: a Vera pede um print dos saldos, pede a permissão para ler a imagem e avisa que falta o preço de compra.',
+      steps: [
+        ['Escolher "Meus investimentos"', { type: 'CHOOSE_MODULES', portfolio: true, spending: false }],
+        ['Marcar "Cripto"', { type: 'PICK_SOURCES', sources: ['crypto'] }],
+        ['Escolher "Carteira própria"', { type: 'PICK_EXCHANGE', exchange: 'selfcustody' }],
+        ['Mandar o print da MetaMask', { type: 'FILE', file: F.wallet }],
+        ['Permitir este envio', { type: 'CONSENT', allow: true }],
+        ['Adicionar à carteira', { type: 'CONFIRM_IMPORT' }],
+        ['Carteira-alvo: depois', { type: 'TARGET', choice: 'depois' }]
       ]
     },
     {
@@ -1207,6 +1232,7 @@ const Onboarding = (() => {
     ['Mandar Posição da B3', { type: 'FILE', file: F.pos }],
     ['Mandar PDF do exterior', { type: 'FILE', file: F.ext }],
     ['Mandar CSV da Binance', { type: 'FILE', file: F.csv }],
+    ['Mandar print da carteira de cripto', { type: 'FILE', file: F.wallet }],
     ['Mandar OFX do banco', { type: 'FILE', file: F.ofx }],
     ['Mandar print da corretora', { type: 'FILE', file: F.photo }],
     ['Mandar arquivo errado (.docx)', { type: 'FILE', file: F.docx }],
