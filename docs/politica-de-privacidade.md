@@ -84,8 +84,8 @@ Para saber quais telas e funções são usadas, o app registra eventos de uso no
 ## Por quanto tempo os dados ficam
 
 - **Dados da conta:** enquanto a conta existir. A exclusão da conta apaga os dados na hora.
-- **Cópias de segurança do banco:** são sobrescritas em até 35 dias. Um dado apagado some delas nesse prazo.
-- **Registros técnicos (logs):** até 30 dias, para investigar falhas e abuso. Eles não guardam o conteúdo da carteira, dos gastos nem das conversas.
+- **Cópias de segurança do banco:** são sobrescritas em até 7 dias. Um dado apagado some delas nesse prazo.
+- **Registros técnicos (logs):** até 7 dias, para investigar falhas e abuso. Eles não guardam o conteúdo da carteira, dos gastos nem das conversas.
 - **WhatsApp:** texto das mensagens por 30 dias, como descrito acima.
 - **Importação de investimentos:** operações lidas por até 30 minutos, como descrito acima.
 - **Marca do e-mail do teste grátis:** 2 anos, como descrito acima.

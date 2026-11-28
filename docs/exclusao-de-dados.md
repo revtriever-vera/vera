@@ -9,7 +9,7 @@
 3. Se quiser uma cópia, use **Exportar tudo** antes: baixa os dados da conta em planilhas.
 4. Use **Excluir conta** e confirme digitando o seu e-mail.
 
-A exclusão é imediata e não tem volta. Ela cancela a assinatura do Premium, se houver, e apaga carteira, gastos, pessoas da conta, chaves, vínculos do WhatsApp e da Google Agenda e o cadastro. As cópias de segurança do banco são sobrescritas em até 35 dias.
+A exclusão é imediata e não tem volta. Ela cancela a assinatura do Premium, se houver, e apaga carteira, gastos, pessoas da conta, chaves, vínculos do WhatsApp e da Google Agenda e o cadastro. As cópias de segurança do banco são sobrescritas em até 7 dias.
 
 Ficam só o que a lei exige guardar, como as notas fiscais da assinatura, e a marca do e-mail contra abuso do teste grátis, descrita na [Política de Privacidade](politica-de-privacidade.md).
 
