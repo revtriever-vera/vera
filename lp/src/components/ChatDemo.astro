@@ -1,0 +1,61 @@
+---
+interface Props {
+  question: string;
+  answer: string;
+  thinking: string;
+  note: string;
+  label: string;
+}
+const { question, answer, thinking, note, label } = Astro.props;
+---
+
+<div class="chat" role="group" aria-label={label} data-chat data-thinking={`${thinking}…`}>
+  <p class="msg me" data-q>{question}</p>
+  <p class="msg vera" data-a>{answer}</p>
+  <p class="note">{note}</p>
+</div>
+
+<script>
+  // O HTML já traz a conversa completa. Com movimento liberado, quando o bloco entra na tela,
+  // a pergunta é digitada e a resposta aparece em seguida. Sem JS ou com movimento reduzido, nada muda.
+  // O texto que falta fica invisível (visibility) para os balões manterem a altura final.
+  const root = document.querySelector<HTMLElement>('[data-chat]');
+  if (root && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const q = root.querySelector<HTMLElement>('[data-q]')!;
+    const a = root.querySelector<HTMLElement>('[data-a]')!;
+    const full = { q: q.textContent ?? '', a: a.textContent ?? '' };
+    const paint = (el: HTMLElement, text: string, n: number) => {
+      el.textContent = text.slice(0, n);
+      const ghost = document.createElement('span');
+      ghost.className = 'ghost';
+      ghost.textContent = text.slice(n);
+      el.append(ghost);
+    };
+    paint(q, full.q, 0);
+    a.style.visibility = 'hidden';
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting) return;
+        io.disconnect();
+        let i = 0;
+        const typeQ = () => {
+          paint(q, full.q, ++i);
+          if (i < full.q.length) return setTimeout(typeQ, 32);
+          paint(a, full.a, 0);
+          const think = document.createElement('span');
+          think.className = 'think';
+          think.textContent = root.dataset.thinking ?? '';
+          a.prepend(think);
+          a.style.visibility = '';
+          setTimeout(() => {
+            a.textContent = full.a;
+            a.animate([{ opacity: 0, transform: 'translateY(4px)' }, { opacity: 1, transform: 'none' }], { duration: 240, easing: 'ease-out' });
+          }, 700);
+        };
+        typeQ();
+      },
+      { threshold: 0.6 },
+    );
+    io.observe(root);
+  }
+</script>

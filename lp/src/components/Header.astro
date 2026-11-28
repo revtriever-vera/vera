@@ -1,0 +1,45 @@
+---
+import Revtriever from './Revtriever.astro';
+
+interface Link {
+  href: string;
+  label: string;
+  hideSmall?: boolean;
+  lang?: string;
+}
+interface Props {
+  home: string;
+  by: string;
+  byHref: string;
+  navLabel: string;
+  links: Link[];
+}
+const { home, by, byHref, navLabel, links } = Astro.props;
+---
+
+<header class="top wrap">
+  <div class="lockup">
+    <a class="brand" href={home} translate="no">
+      <span class="logo" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24"
+          ><path d="M4.8 6 L12 19.2 L19.2 6" fill="none" stroke="#fff" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="12" cy="8.6" r="2.2" fill="#fff"></circle></svg
+        >
+      </span>
+      <span>Vera</span>
+    </a>
+    <a class="by" href={byHref}>
+      <span>{by}</span>
+      <Revtriever size={28} class="rt-full" />
+      <Revtriever size={28} variant="mark" class="rt-mark" />
+    </a>
+  </div>
+  <nav aria-label={navLabel}>
+    {
+      links.map((l) => (
+        <a class={l.hideSmall ? 'hide-s' : undefined} href={l.href} hreflang={l.lang} lang={l.lang}>
+          {l.label}
+        </a>
+      ))
+    }
+  </nav>
+</header>

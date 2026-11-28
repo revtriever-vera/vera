@@ -1,5 +1,4 @@
 import { defineConfig, fontProviders } from 'astro/config';
-import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import { rehypeLegalLinks } from './src/lib/legal-links.mjs';
 
@@ -13,7 +12,6 @@ export default defineConfig({
   trailingSlash: 'always',
   build: { inlineStylesheets: 'always' },
   integrations: [
-    react(),
     sitemap({
       i18n: { defaultLocale: 'pt', locales: { pt: 'pt-BR', en: 'en' } },
     }),
